@@ -77,4 +77,69 @@ describe('CoreAuthService', () => {
     expect(storageServiceSpy.clearBucket).toHaveBeenCalled();
     expect(localStorageServiceSpy.clear).toHaveBeenCalled();
   });
+
+  it('should sync with storage events', () => {
+    service = TestBed.inject(CoreAuthService);
+    const mockUser: User = {
+      id: '2',
+      name: 'Other User',
+      email: 'other@test.com',
+      role: 'client',
+      isBlocked: false,
+    };
+
+    localStorageServiceSpy.getItem.mockReturnValueOnce(mockUser);
+
+    // Simulate storage event
+    const event = new StorageEvent('storage', {
+      key: 'auth_user',
+      newValue: JSON.stringify(mockUser)
+    });
+    window.dispatchEvent(event);
+
+    expect(service.isLoggedIn()).toBe(true);
+    expect(service.user()).toEqual(mockUser);
+  });
+
+  it('should sync with storage events (logout)', () => {
+    service = TestBed.inject(CoreAuthService);
+    service.login();
+    localStorageServiceSpy.getItem.mockReturnValueOnce(null);
+
+    // Simulate storage event with null value
+    const event = new StorageEvent('storage', {
+      key: 'auth_user',
+      newValue: null
+    });
+    window.dispatchEvent(event);
+
+    expect(service.isLoggedIn()).toBe(false);
+    expect(service.user()).toBe(null);
+  });
+
+  it('should ignore irrelevant storage events', () => {
+    service = TestBed.inject(CoreAuthService);
+    service.login();
+    const event = new StorageEvent('storage', {
+      key: 'other_key',
+      newValue: 'something'
+    });
+    window.dispatchEvent(event);
+
+    // Should still be logged in
+    expect(service.isLoggedIn()).toBe(true);
+  });
+
+  it('should handle clear storage event (key is null)', () => {
+    service = TestBed.inject(CoreAuthService);
+    service.login();
+    localStorageServiceSpy.getItem.mockReturnValueOnce(null);
+
+    const event = new StorageEvent('storage', {
+      key: null
+    });
+    window.dispatchEvent(event);
+
+    expect(service.isLoggedIn()).toBe(false);
+  });
 });

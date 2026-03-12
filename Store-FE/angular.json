@@ -79,7 +79,13 @@
               "buildTarget": "Store-FE:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "allowedHosts": [
+              "c1ba-194-44-70-160.ngrok-free.app",
+              "*.loca.lt"
+            ]
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"
