@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   loginViaTelegram(user: TelegramUser) {
-    console.log('Logged in as', user.first_name);
+    console.log('Logged in as', user.user.name);
     this.authService.loginTg(user);
   }
 }

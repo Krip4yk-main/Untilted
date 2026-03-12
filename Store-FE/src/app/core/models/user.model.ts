@@ -11,14 +11,21 @@ export interface User {
   token?: string;
 }
 
+export interface TelegramUserNested {
+  aud: `${number}`;
+  exp: number;
+  iat: number;
+  id: `${number}`;
+  iss: string;
+  name: string;
+  picture: string;
+  preferred_username: string;
+  sub: `${number}`;
+}
+
 export interface TelegramUser {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: number;
-  hash: string;
+  id_token: number;
+  user: TelegramUserNested;
 }
 
 export interface UserTg {
