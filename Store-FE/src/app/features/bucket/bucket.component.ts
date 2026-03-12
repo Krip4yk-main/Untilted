@@ -3,11 +3,13 @@ import { CurrencyPipe, CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/storage.service';
 import { ApplyFormComponent } from './components/apply-form/apply-form.component';
 import { OrderDetails } from '../../core/models/order-details.model';
+import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-bucket',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, ApplyFormComponent],
+  imports: [CommonModule, CurrencyPipe, ApplyFormComponent, Button, Card],
   templateUrl: './bucket.component.html',
   styleUrl: './bucket.component.less',
 })

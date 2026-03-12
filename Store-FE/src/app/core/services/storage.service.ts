@@ -1,73 +1,23 @@
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Good } from '../models/good.model';
 import { User } from '../models/user.model';
 import { Sale } from '../models/sale.model';
 import { BucketItem } from '../models/bucket-item.model';
 import { LocalStorageService } from './local-storage.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StorageService {
   private readonly localStorageService = inject(LocalStorageService);
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = environment.apiUrl;
   private readonly BUCKET_KEY = 'user-bucket';
 
-  private readonly _goods = signal<Good[]>([
-    {
-      id: 1,
-      name: 'Product A',
-      description: 'Short description for Product A',
-      fullDescription: 'Full description for Product A. Very high quality.',
-      price: 99.99,
-      imageUrl: 'https://via.placeholder.com/250x200?text=Product+A',
-      count: 10,
-      priceHistory: [{ price: 99.99, date: new Date().toISOString() }],
-    },
-    {
-      id: 2,
-      name: 'Product B',
-      description: 'Short description for Product B',
-      fullDescription: 'Full description for Product B. Very high quality.',
-      price: 149.5,
-      imageUrl: 'https://via.placeholder.com/250x200?text=Product+B',
-      count: 5,
-      priceHistory: [{ price: 149.5, date: new Date().toISOString() }],
-    },
-    {
-      id: 3,
-      name: 'Product C',
-      description: 'Short description for Product C',
-      fullDescription: 'Full description for Product C. Very high quality.',
-      price: 19.9,
-      imageUrl: 'https://via.placeholder.com/250x200?text=Product+C',
-      count: 20,
-      priceHistory: [{ price: 19.9, date: new Date().toISOString() }],
-    },
-  ]);
-
-  private readonly _users = signal<User[]>([
-    {
-      id: '1',
-      name: 'Admin User',
-      email: 'admin@test.com',
-      role: 'admin',
-      isBlocked: false,
-    },
-    {
-      id: '2',
-      name: 'Manager User',
-      email: 'manager@test.com',
-      role: 'manager',
-      isBlocked: false,
-    },
-    {
-      id: '3',
-      name: 'Client User',
-      email: 'client@test.com',
-      role: 'client',
-      isBlocked: false,
-    },
-  ]);
+  private readonly _goods = signal<Good[]>([]);
+  private readonly _users = signal<User[]>([]);
 
   private readonly _sales = signal<Sale[]>([]);
 
@@ -80,6 +30,9 @@ export class StorageService {
   readonly bucketCount = computed(() => this._bucket().reduce((sum, item) => sum + item.count, 0));
 
   constructor() {
+    this.fetchGoods();
+    this.fetchUsers();
+
     const savedBucket = this.localStorageService.getItem<BucketItem[]>(this.BUCKET_KEY);
     if (savedBucket) {
       this._bucket.set(savedBucket);
@@ -214,5 +167,17 @@ export class StorageService {
 
   clearBucket() {
     this._bucket.set([]);
+  }
+
+  private fetchGoods() {
+    this.http.get<Good[]>(`${this.apiUrl}/api/goods`).subscribe((goods) => {
+      this._goods.set(goods);
+    });
+  }
+
+  private fetchUsers() {
+    this.http.get<User[]>(`${this.apiUrl}/api/users`).subscribe((users) => {
+      this._users.set(users);
+    });
   }
 }

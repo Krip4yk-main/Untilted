@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OrderDetails } from '../../../../core/models/order-details.model';
 import { LocalStorageService } from '../../../../core/services/local-storage.service';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-apply-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, Button, InputText],
   templateUrl: './apply-form.component.html',
   styleUrl: './apply-form.component.less',
 })

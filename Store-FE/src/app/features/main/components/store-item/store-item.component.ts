@@ -3,10 +3,12 @@ import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Good } from '../../../../core/models/good.model';
 import { StorageService } from '../../../../core/services/storage.service';
+import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-store-item',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, Button, Card],
   templateUrl: './store-item.component.html',
   styleUrl: './store-item.component.less',
 })

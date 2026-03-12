@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { StorageService } from './storage.service';
 import { Good } from '../models/good.model';
 import { User } from '../models/user.model';
@@ -7,6 +8,30 @@ import { LocalStorageService } from './local-storage.service';
 describe('StorageService', () => {
   let service: StorageService;
   let localStorageMock: jest.Mocked<LocalStorageService>;
+  let httpMock: HttpTestingController;
+
+  const mockGoods: Good[] = [
+    {
+      id: 1,
+      name: 'Product A',
+      description: 'Short description for Product A',
+      fullDescription: 'Full description for Product A. Very high quality.',
+      price: 99.99,
+      imageUrl: 'https://via.placeholder.com/250x200?text=Product+A',
+      count: 10,
+      priceHistory: [{ price: 99.99, date: new Date().toISOString() }],
+    },
+  ];
+
+  const mockUsers: User[] = [
+    {
+      id: '1',
+      name: 'Admin User',
+      email: 'admin@test.com',
+      role: 'admin',
+      isBlocked: false,
+    },
+  ];
 
   beforeEach(() => {
     localStorageMock = {
@@ -17,9 +42,22 @@ describe('StorageService', () => {
     } as any;
 
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [{ provide: LocalStorageService, useValue: localStorageMock }],
     });
     service = TestBed.inject(StorageService);
+    httpMock = TestBed.inject(HttpTestingController);
+
+    // Handle initial fetchGoods and fetchUsers
+    const reqGoods = httpMock.expectOne((req) => req.url.includes('/api/goods'));
+    reqGoods.flush(mockGoods);
+
+    const reqUsers = httpMock.expectOne((req) => req.url.includes('/api/users'));
+    reqUsers.flush(mockUsers);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
   });
 
   it('should be created', () => {
@@ -239,11 +277,22 @@ describe('StorageService', () => {
 
   it('should load bucket from localStorage in constructor', () => {
     localStorageMock.getItem.mockReturnValue([{ good: { id: 99 }, count: 5 }]);
+    // We need to re-trigger constructor, but TestBed.inject already did it.
+    // In actual app, it happens once. For testing constructor logic with mock data,
+    // we can create a new instance manually or reset TestBed.
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [{ provide: LocalStorageService, useValue: localStorageMock }],
     });
     const newService = TestBed.inject(StorageService);
+    const newHttpMock = TestBed.inject(HttpTestingController);
+
+    const reqG = newHttpMock.expectOne((req) => req.url.includes('/api/goods'));
+    reqG.flush(mockGoods);
+    const reqU = newHttpMock.expectOne((req) => req.url.includes('/api/users'));
+    reqU.flush(mockUsers);
+
     expect(newService.bucket().length).toBe(1);
     expect(newService.bucket()[0].good.id).toBe(99);
   });

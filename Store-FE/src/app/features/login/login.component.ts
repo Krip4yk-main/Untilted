@@ -6,9 +6,11 @@ import CryptoJS from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
 import { from, lastValueFrom } from 'rxjs';
 import { TelegramUser } from '../../core/models/user.model';
+import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-login',
+  imports: [Button],
   templateUrl: './login.component.html',
   styleUrl: './login.component.less',
 })
@@ -22,7 +24,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   protected readonly tgBotToken = environment.tgBotToken;
   protected readonly tgBotClientId = environment.tgBotClientId;
   protected readonly tgBotClientSecret = environment.tgBotClientSecret;
-  protected readonly tgBotCallbackUrl = environment.tgBotCallbackUrl;
+  protected readonly tgBotCallbackUrl = (environment as any).tgBotCallbackUrl;
 
   @ViewChild('script', { static: true }) script: ElementRef | undefined;
 

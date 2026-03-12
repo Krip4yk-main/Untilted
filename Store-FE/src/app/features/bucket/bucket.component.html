@@ -2,7 +2,7 @@
   <div class="header-with-clear">
     <h1>Your Bucket</h1>
     @if (storageService.bucketCount() > 0) {
-      <span class="clear-bucket" (click)="onClear()">clear bucket</span>
+      <p-button class="clear-bucket" (onClick)="onClear()" label="clear bucket" icon="pi pi-trash" text></p-button>
     }
   </div>
 
@@ -10,36 +10,33 @@
     <div class="bucket-content">
       <div class="items-list">
         @for (item of storageService.bucket(); track item.good.id) {
-          <div class="bucket-item">
-            <img [src]="item.good.imageUrl" [alt]="item.good.name" />
-            <div class="item-info">
-              <h3>{{ item.good.name }}</h3>
-              <p>{{ item.good.price | currency }}</p>
-            </div>
-            <div class="item-controls">
-              <div class="counter">
-                <button (click)="onDecrement(item.good.id)" [title]="item.count === 1 ? 'Remove' : 'Decrease'">
-                  @if (item.count === 1) {
-                    🗑️
-                  } @else {
-                    -
-                  }
-                </button>
-                <span>{{ item.count }}</span>
-                <button (click)="onIncrement(item.good.id)" title="Increase">+</button>
+          <p-card class="bucket-item-card">
+            <div class="bucket-item">
+              <img [src]="item.good.imageUrl" [alt]="item.good.name" />
+              <div class="item-info">
+                <h3>{{ item.good.name }}</h3>
+                <p>{{ item.good.price | currency }}</p>
               </div>
-              <button class="remove-btn" (click)="onRemove(item.good.id)" title="Remove item from bucket">X</button>
+              <div class="item-controls">
+                <div class="counter">
+                  <p-button (onClick)="onDecrement(item.good.id)" [title]="item.count === 1 ? 'Remove' : 'Decrease'" [icon]="item.count === 1 ? 'pi pi-trash' : ''" [label]="item.count === 1 ? '' : '-'" [severity]="item.count === 1 ? 'danger' : 'secondary'" text></p-button>
+                  <span>{{ item.count }}</span>
+                  <p-button (onClick)="onIncrement(item.good.id)" label="+" title="Increase" severity="success" text></p-button>
+                </div>
+                <p-button class="remove-btn" (onClick)="onRemove(item.good.id)" title="Remove item from bucket" icon="pi pi-times" severity="danger" text></p-button>
+              </div>
             </div>
-          </div>
+          </p-card>
         }
       </div>
 
-      <div class="bucket-summary">
-        <h3>Summary</h3>
-        <p>Total items: {{ storageService.bucketCount() }}</p>
-        <p class="total">Total price: {{ getTotal() | currency }}</p>
-        <button class="apply-btn" (click)="onApply()">Apply to Buy</button>
-      </div>
+      <p-card class="bucket-summary-card" header="Summary">
+        <div class="bucket-summary">
+          <p>Total items: {{ storageService.bucketCount() }}</p>
+          <p class="total">Total price: {{ getTotal() | currency }}</p>
+          <p-button class="apply-btn" (onClick)="onApply()" label="Apply to Buy" icon="pi pi-check"></p-button>
+        </div>
+      </p-card>
     </div>
   } @else {
     <div class="empty-bucket">

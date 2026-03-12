@@ -1,15 +1,20 @@
-import { Component, input, output, signal, OnInit, inject, effect } from '@angular/core';
+import { Component, input, output, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Good } from '../../../../core/models/good.model';
 import { LocalStorageService } from '../../../../core/services/local-storage.service';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Textarea } from 'primeng/textarea';
+import { InputNumber } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
 
 export type EditorMode = 'view' | 'edit' | 'add';
 
 @Component({
   selector: 'app-good-editor',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Button, InputText, Textarea, InputNumber, TableModule],
   templateUrl: './good-editor.component.html',
   styleUrl: './good-editor.component.less',
 })

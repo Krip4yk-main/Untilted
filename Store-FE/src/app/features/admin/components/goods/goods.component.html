@@ -1,15 +1,13 @@
 <div class="goods-tab-container">
   <div class="actions">
-    <button class="btn btn-success" (click)="openAdd()">Add Item</button>
+    <p-button class="btn btn-success" (onClick)="openAdd()" label="Add Item" icon="pi pi-plus" severity="success"></p-button>
     @if (authService.user()?.role === 'admin') {
-      <button class="btn btn-warning" (click)="isPriceModifierOpen.set(true)">
-        Price Modifier
-      </button>
+      <p-button class="btn btn-warning" (onClick)="isPriceModifierOpen.set(true)" label="Price Modifier" icon="pi pi-percentage" severity="warn"></p-button>
     }
   </div>
 
-  <table class="goods-table">
-    <thead>
+  <p-table [value]="storageService.goods()" [tableStyle]="{ 'min-width': '50rem' }" class="goods-table">
+    <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
         <th>Image</th>
@@ -18,24 +16,22 @@
         <th>Price</th>
         <th>Actions</th>
       </tr>
-    </thead>
-    <tbody>
-      @for (item of storageService.goods(); track item.id) {
-        <tr>
-          <td>{{ item.id }}</td>
-          <td><img [src]="item.imageUrl" [alt]="item.name" class="small-img" /></td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.price | currency }}</td>
-          <td class="action-icons">
-            <button (click)="openView(item)" title="View">👁️</button>
-            <button (click)="openEdit(item)" title="Edit">✏️</button>
-            <button (click)="deleteItem(item.id)" title="Delete">🗑️</button>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+    </ng-template>
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.id }}</td>
+        <td><img [src]="item.imageUrl" [alt]="item.name" class="small-img" /></td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.price | currency }}</td>
+        <td class="action-icons">
+          <p-button (onClick)="openView(item)" title="View" icon="pi pi-eye" text></p-button>
+          <p-button (onClick)="openEdit(item)" title="Edit" icon="pi pi-pencil" text></p-button>
+          <p-button (onClick)="deleteItem(item.id)" title="Delete" icon="pi pi-trash" severity="danger" text></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 
   @if (isEditorOpen()) {
     <app-good-editor

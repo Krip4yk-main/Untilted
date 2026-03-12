@@ -10,75 +10,68 @@
               : 'View Item'
         }}
       </h2>
-      <button class="close-btn" (click)="onClose()">×</button>
+      <p-button class="close-btn" (onClick)="onClose()" icon="pi pi-times" text></p-button>
     </header>
 
     <div class="form-body">
       <div class="form-group">
-        <label>
-          Name
-          <input [(ngModel)]="formData().name" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-        </label>
+        <label for="name">Name</label>
+        <input id="name" pInputText [(ngModel)]="formData().name" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
       </div>
       <div class="form-group">
-        <label>
-          Image URL
-          <input [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-        </label>
+        <label for="imageUrl">Image URL</label>
+        <input id="imageUrl" pInputText [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
       </div>
       <div class="form-group">
-        <label>
-          Short Description
-          <textarea
-            [(ngModel)]="formData().description"
-            (ngModelChange)="onDataChange()"
-            [disabled]="currentMode() === 'view'"
-          ></textarea>
-        </label>
+        <label for="description">Short Description</label>
+        <textarea
+          id="description"
+          pTextarea
+          [(ngModel)]="formData().description"
+          (ngModelChange)="onDataChange()"
+          [disabled]="currentMode() === 'view'"
+          [autoResize]="true"
+        ></textarea>
       </div>
       <div class="form-group">
-        <label>
-          Full Description
-          <textarea
-            [(ngModel)]="formData().fullDescription"
-            (ngModelChange)="onDataChange()"
-            [disabled]="currentMode() === 'view'"
-          ></textarea>
-        </label>
+        <label for="fullDescription">Full Description</label>
+        <textarea
+          id="fullDescription"
+          pTextarea
+          [(ngModel)]="formData().fullDescription"
+          (ngModelChange)="onDataChange()"
+          [disabled]="currentMode() === 'view'"
+          [autoResize]="true"
+        ></textarea>
       </div>
       <div class="form-group">
-        <label>
-          Price
-          <input
-            type="number"
-            [(ngModel)]="formData().price"
-            (ngModelChange)="onDataChange()"
-            [disabled]="currentMode() === 'view'"
-          />
-        </label>
+        <label for="price">Price</label>
+        <p-inputNumber
+          id="price"
+          [(ngModel)]="formData().price"
+          (onModelChange)="onDataChange()"
+          [disabled]="currentMode() === 'view'"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+        ></p-inputNumber>
       </div>
       <div class="form-group">
-        <label>
-          Notes
-          <textarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'"></textarea>
-        </label>
+        <label for="notes">Notes</label>
+        <textarea id="notes" pInputTextarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" [autoResize]="true"></textarea>
       </div>
       <div class="form-group">
-        <label>
-          Count
-          <input
-            type="number"
-            [(ngModel)]="formData().count"
-            (ngModelChange)="onDataChange()"
-            [disabled]="currentMode() === 'view'"
-          />
-        </label>
+        <label for="count">Count</label>
+        <p-inputNumber
+          id="count"
+          [(ngModel)]="formData().count"
+          (onModelChange)="onDataChange()"
+          [disabled]="currentMode() === 'view'"
+        ></p-inputNumber>
       </div>
       <div class="form-group">
-        <label>
-          Unique ID (Optional)
-          <input [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-        </label>
+        <label for="externalId">Unique ID (Optional)</label>
+        <input id="externalId" pInputText [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
       </div>
 
       @if (
@@ -86,33 +79,31 @@
       ) {
         <div class="price-history">
           <h3>Price History</h3>
-          <table>
-            <thead>
+          <p-table [value]="formData().priceHistory!" [tableStyle]="{ 'min-width': '20rem' }">
+            <ng-template pTemplate="header">
               <tr>
                 <th>Price</th>
                 <th>Date</th>
               </tr>
-            </thead>
-            <tbody>
-              @for (record of formData().priceHistory; track record.date) {
-                <tr>
-                  <td>{{ record.price | currency }}</td>
-                  <td>{{ record.date | date: 'short' }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
+            </ng-template>
+            <ng-template pTemplate="body" let-record>
+              <tr>
+                <td>{{ record.price | currency }}</td>
+                <td>{{ record.date | date: 'short' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
       }
     </div>
 
     <footer>
       @if (currentMode() === 'view') {
-        <button class="btn btn-primary" (click)="enableEdit()">Edit</button>
+        <p-button class="btn btn-primary" (onClick)="enableEdit()" label="Edit" icon="pi pi-pencil"></p-button>
       } @else {
-        <button class="btn btn-primary" (click)="onSave()">Save</button>
+        <p-button class="btn btn-primary" (onClick)="onSave()" label="Save" icon="pi pi-save"></p-button>
       }
-      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+      <p-button class="btn btn-secondary" (onClick)="onClose()" label="Cancel" icon="pi pi-times" severity="secondary"></p-button>
     </footer>
   </div>
 </div>

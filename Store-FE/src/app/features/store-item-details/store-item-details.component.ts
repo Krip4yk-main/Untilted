@@ -4,10 +4,12 @@ import { CurrencyPipe } from '@angular/common';
 import { Good } from '../../core/models/good.model';
 import { StorageService } from '../../core/services/storage.service';
 import { CoreAuthService } from '../../core/services/core-auth.service';
+import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-store-item-details',
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, Button, Card],
   templateUrl: './store-item-details.component.html',
   styleUrl: './store-item-details.component.less',
 })

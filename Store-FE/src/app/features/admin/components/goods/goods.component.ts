@@ -5,11 +5,13 @@ import { CoreAuthService } from '../../../../core/services/core-auth.service';
 import { Good } from '../../../../core/models/good.model';
 import { GoodEditorComponent, EditorMode } from '../good-editor/good-editor.component';
 import { PriceModifierComponent } from './price-modifier.component';
+import { Button } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-goods-tab',
   standalone: true,
-  imports: [CommonModule, GoodEditorComponent, PriceModifierComponent],
+  imports: [CommonModule, GoodEditorComponent, PriceModifierComponent, Button, TableModule],
   templateUrl: './goods.component.html',
   styleUrl: './goods.component.less',
 })

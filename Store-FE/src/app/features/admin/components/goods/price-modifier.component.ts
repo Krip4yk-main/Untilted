@@ -2,11 +2,13 @@ import { output, signal, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LocalStorageService } from '../../../../core/services/local-storage.service';
+import { Button } from 'primeng/button';
+import { InputNumber } from 'primeng/inputnumber';
 
 @Component({
   selector: 'app-price-modifier',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Button, InputNumber],
   templateUrl: './price-modifier.component.html',
   styleUrl: './price-modifier.component.less',
 })
