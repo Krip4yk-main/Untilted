@@ -1,4 +1,3 @@
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:3000'
-};
+import { environment as currentEnvironment } from './environments.dev';
+
+export const environment = currentEnvironment;
