@@ -1,0 +1,40 @@
+.admin-container {
+  padding: 20px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+
+    .tab-button {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      cursor: pointer;
+      border-radius: 4px;
+
+      &.active {
+        background: #007bff;
+        color: white;
+        border-color: #0056b3;
+      }
+
+      &:hover:not(.active) {
+        background: #eee;
+      }
+    }
+  }
+
+  .tab-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

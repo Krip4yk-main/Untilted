@@ -1,0 +1,7 @@
+<div class="user-container">
+  <h2>User Profile</h2>
+  @if (authService.user(); as user) {
+    <p><strong>Name:</strong> {{ user.name }}</p>
+    <p>You are successfully logged in and can see this protected page.</p>
+  }
+</div>

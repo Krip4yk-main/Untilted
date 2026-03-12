@@ -1,0 +1,53 @@
+<div class="bucket-container">
+  <div class="header-with-clear">
+    <h1>Your Bucket</h1>
+    @if (storageService.bucketCount() > 0) {
+      <span class="clear-bucket" (click)="onClear()">clear bucket</span>
+    }
+  </div>
+
+  @if (storageService.bucketCount() > 0) {
+    <div class="bucket-content">
+      <div class="items-list">
+        @for (item of storageService.bucket(); track item.good.id) {
+          <div class="bucket-item">
+            <img [src]="item.good.imageUrl" [alt]="item.good.name" />
+            <div class="item-info">
+              <h3>{{ item.good.name }}</h3>
+              <p>{{ item.good.price | currency }}</p>
+            </div>
+            <div class="item-controls">
+              <div class="counter">
+                <button (click)="onDecrement(item.good.id)" [title]="item.count === 1 ? 'Remove' : 'Decrease'">
+                  @if (item.count === 1) {
+                    🗑️
+                  } @else {
+                    -
+                  }
+                </button>
+                <span>{{ item.count }}</span>
+                <button (click)="onIncrement(item.good.id)" title="Increase">+</button>
+              </div>
+              <button class="remove-btn" (click)="onRemove(item.good.id)" title="Remove item from bucket">X</button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="bucket-summary">
+        <h3>Summary</h3>
+        <p>Total items: {{ storageService.bucketCount() }}</p>
+        <p class="total">Total price: {{ getTotal() | currency }}</p>
+        <button class="apply-btn" (click)="onApply()">Apply to Buy</button>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-bucket">
+      <p>Your bucket is empty. Go find something awesome!</p>
+    </div>
+  }
+
+  @if (isApplying()) {
+    <app-apply-form (cancelForm)="onCancelApply()" (submitOrder)="onSubmitOrder($event)" />
+  }
+</div>

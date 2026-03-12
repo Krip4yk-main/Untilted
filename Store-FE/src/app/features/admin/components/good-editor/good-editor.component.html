@@ -1,0 +1,118 @@
+<div class="modal-backdrop">
+  <div class="modal-content">
+    <header>
+      <h2>
+        {{
+          currentMode() === 'add'
+            ? 'Add Item'
+            : currentMode() === 'edit'
+              ? 'Edit Item'
+              : 'View Item'
+        }}
+      </h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </header>
+
+    <div class="form-body">
+      <div class="form-group">
+        <label>
+          Name
+          <input [(ngModel)]="formData().name" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Image URL
+          <input [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Short Description
+          <textarea
+            [(ngModel)]="formData().description"
+            (ngModelChange)="onDataChange()"
+            [disabled]="currentMode() === 'view'"
+          ></textarea>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Full Description
+          <textarea
+            [(ngModel)]="formData().fullDescription"
+            (ngModelChange)="onDataChange()"
+            [disabled]="currentMode() === 'view'"
+          ></textarea>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Price
+          <input
+            type="number"
+            [(ngModel)]="formData().price"
+            (ngModelChange)="onDataChange()"
+            [disabled]="currentMode() === 'view'"
+          />
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Notes
+          <textarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'"></textarea>
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Count
+          <input
+            type="number"
+            [(ngModel)]="formData().count"
+            (ngModelChange)="onDataChange()"
+            [disabled]="currentMode() === 'view'"
+          />
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          Unique ID (Optional)
+          <input [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
+        </label>
+      </div>
+
+      @if (
+        currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0
+      ) {
+        <div class="price-history">
+          <h3>Price History</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Price</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (record of formData().priceHistory; track record.date) {
+                <tr>
+                  <td>{{ record.price | currency }}</td>
+                  <td>{{ record.date | date: 'short' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <footer>
+      @if (currentMode() === 'view') {
+        <button class="btn btn-primary" (click)="enableEdit()">Edit</button>
+      } @else {
+        <button class="btn btn-primary" (click)="onSave()">Save</button>
+      }
+      <button class="btn btn-secondary" (click)="onClose()">Cancel</button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+.history-tab-container {
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f8f9fa;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+
+      &.disabled {
+        color: #333;
+        cursor: default;
+        pointer-events: none;
+      }
+
+      &:hover:not(.disabled) {
+        text-decoration: underline;
+      }
+    }
+  }
+}

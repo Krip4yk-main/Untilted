@@ -1,0 +1,100 @@
+<div class="statistics-tab-container">
+  <div class="filters">
+    <h3>Filters</h3>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>
+          Date From
+          <input
+            type="date"
+            [(ngModel)]="filters().dateFrom"
+            (ngModelChange)="updateFilter('dateFrom', $event)"
+          />
+        </label>
+      </div>
+      <div class="filter-group">
+        <label>
+          Date To
+          <input
+            type="date"
+            [(ngModel)]="filters().dateTo"
+            (ngModelChange)="updateFilter('dateTo', $event)"
+          />
+        </label>
+      </div>
+      <div class="filter-group">
+        <label>
+          User
+          <select [(ngModel)]="filters().userId" (ngModelChange)="updateFilter('userId', $event)">
+            <option value="">All Users</option>
+            @for (user of storageService.users(); track user.id) {
+              <option [value]="user.id">{{ user.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>
+          Store Item
+          <select [(ngModel)]="filters().goodId" (ngModelChange)="updateFilter('goodId', $event)">
+            <option value="">All Items</option>
+            @for (item of storageService.goods(); track item.id) {
+              <option [value]="item.id">{{ item.name }}</option>
+            }
+          </select>
+        </label>
+      </div>
+      <div class="filter-group">
+        <label>
+          Price Range
+          <div class="range-inputs">
+            <input
+              type="number"
+              placeholder="Min"
+              [(ngModel)]="filters().priceMin"
+              (ngModelChange)="updateFilter('priceMin', $event)"
+            />
+            <input
+              type="number"
+              placeholder="Max"
+              [(ngModel)]="filters().priceMax"
+              (ngModelChange)="updateFilter('priceMax', $event)"
+            />
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <div class="summary-cards">
+      <div class="card">
+        <h4>Total Sales</h4>
+        <p class="value">{{ stats().totalSales }}</p>
+      </div>
+      <div class="card">
+        <h4>Total Revenue</h4>
+        <p class="value">{{ stats().totalRevenue | currency }}</p>
+      </div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-container">
+        <h4>Sales by Item</h4>
+        <div class="bar-chart">
+          @for (item of stats().itemsChart; track item.name) {
+            <div class="bar-row">
+              <span class="bar-label">{{ item.name }}</span>
+              <div class="bar-wrap">
+                <div class="bar-fill" [style.width.%]="item.percent"></div>
+              </div>
+              <span class="bar-value">{{ item.count }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

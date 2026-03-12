@@ -1,0 +1,88 @@
+<div class="modal-backdrop" (click)="onCancel()" (keydown.escape)="onCancel()" tabindex="0">
+  <div
+    class="modal-content"
+    (click)="$event.stopPropagation()"
+    (keydown)="$event.stopPropagation()"
+    tabindex="0"
+  >
+    <h2>Apply Order</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="firstName">Firstname*</label>
+        <input id="firstName" formControlName="firstName" type="text" />
+        @if (form.get('firstName')?.touched && form.get('firstName')?.invalid) {
+          <span class="error">Firstname is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Lastname*</label>
+        <input id="lastName" formControlName="lastName" type="text" />
+        @if (form.get('lastName')?.touched && form.get('lastName')?.invalid) {
+          <span class="error">Lastname is required</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="country">Country*</label>
+          <input id="country" formControlName="country" type="text" />
+          @if (form.get('country')?.touched && form.get('country')?.invalid) {
+            <span class="error">Country is required</span>
+          }
+        </div>
+        <div class="form-group">
+          <label for="city">City*</label>
+          <input id="city" formControlName="city" type="text" />
+          @if (form.get('city')?.touched && form.get('city')?.invalid) {
+            <span class="error">City is required</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="street">Street</label>
+        <input
+          id="street"
+          formControlName="street"
+          type="text"
+          placeholder="At least one: Street or Nova Post department"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="novaPostDepartment">Nova Post department</label>
+        <input id="novaPostDepartment" formControlName="novaPostDepartment" type="text" />
+        @if (form.touched && form.hasError('atLeastOneRequired')) {
+          <span class="error">Either Street or Nova Post department is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone number*</label>
+        <input id="phoneNumber" formControlName="phoneNumber" type="tel" />
+        @if (form.get('phoneNumber')?.touched && form.get('phoneNumber')?.invalid) {
+          <span class="error">Phone number is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email*</label>
+        <input id="email" formControlName="email" type="email" />
+        @if (form.get('email')?.touched && form.get('email')?.invalid) {
+          <span class="error">Valid email is required</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="telegramNickname">Telegram nickname (optional)</label>
+        <input id="telegramNickname" formControlName="telegramNickname" type="text" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" (click)="onCancel()">Cancel</button>
+        <button type="submit" [disabled]="form.invalid">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>

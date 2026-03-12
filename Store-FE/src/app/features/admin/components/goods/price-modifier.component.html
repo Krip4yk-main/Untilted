@@ -1,0 +1,30 @@
+<div class="modal-backdrop">
+  <div class="modal-content">
+    <header>
+      <h2>Price Modifier</h2>
+    </header>
+    <div class="form-body">
+      <p>Adjust the price of all items by a multiplier.</p>
+      <div class="form-group">
+        <label>
+          Multiplier (e.g., 1.1 for +10%, 0.9 for -10%)
+          <input type="number" [(ngModel)]="multiplier" (ngModelChange)="onMultiplierChange()" step="0.01" />
+        </label>
+      </div>
+      @if (showConfirmation()) {
+        <p class="warning">Are you sure you want to apply this modifier to ALL items?</p>
+      }
+    </div>
+    <footer>
+      @if (!showConfirmation()) {
+        <button class="btn btn-primary" (click)="confirm()">Apply</button>
+      } @else {
+        <button class="btn btn-danger" (click)="apply()">Yes, Apply to All</button>
+        <button class="btn btn-secondary" (click)="showConfirmation.set(false)">Cancel</button>
+      }
+      <button class="btn btn-secondary" (click)="modalClose.emit()" [disabled]="showConfirmation()">
+        Close
+      </button>
+    </footer>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/">Store-FE</a>
+  </div>
+
+  <div class="store-nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
+  </div>
+
+  <nav>
+    <ul class="nav-list">
+      <li class="bucket-nav">
+        <a routerLink="/bucket" class="icon-link">
+          <span class="icon">🛒</span>
+          @if (storageService.bucketCount() > 0) {
+            <span class="badge">{{ storageService.bucketCount() }}</span>
+          }
+        </a>
+      </li>
+      @if (authService.isLoggedIn()) {
+        @if (authService.user()?.role === 'admin' || authService.user()?.role === 'manager') {
+          <li><a routerLink="/admin">Admin</a></li>
+        }
+        <li><button (click)="authService.logout()">Logout</button></li>
+      }
+      <li>
+        <a [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" class="icon-link" [title]="authService.isLoggedIn() ? 'User Info' : 'Login'">
+          <span class="icon">👤</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

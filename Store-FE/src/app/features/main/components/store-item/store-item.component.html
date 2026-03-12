@@ -1,0 +1,11 @@
+<div class="good-card" [routerLink]="['/store-item', good().id]">
+  <img [src]="good().imageUrl" [alt]="good().name" class="good-image" />
+  <div class="good-info">
+    <h3>{{ good().name }}</h3>
+    <p class="description">{{ good().description }}</p>
+    <div class="good-footer">
+      <p class="price">{{ good().price | currency }}</p>
+      <button class="add-btn" (click)="addToBucket($event)">Add to bucket</button>
+    </div>
+  </div>
+</div>

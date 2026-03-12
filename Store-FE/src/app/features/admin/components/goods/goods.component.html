@@ -1,0 +1,55 @@
+<div class="goods-tab-container">
+  <div class="actions">
+    <button class="btn btn-success" (click)="openAdd()">Add Item</button>
+    @if (authService.user()?.role === 'admin') {
+      <button class="btn btn-warning" (click)="isPriceModifierOpen.set(true)">
+        Price Modifier
+      </button>
+    }
+  </div>
+
+  <table class="goods-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Short Description</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (item of storageService.goods(); track item.id) {
+        <tr>
+          <td>{{ item.id }}</td>
+          <td><img [src]="item.imageUrl" [alt]="item.name" class="small-img" /></td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.price | currency }}</td>
+          <td class="action-icons">
+            <button (click)="openView(item)" title="View">👁️</button>
+            <button (click)="openEdit(item)" title="Edit">✏️</button>
+            <button (click)="deleteItem(item.id)" title="Delete">🗑️</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (isEditorOpen()) {
+    <app-good-editor
+      [mode]="editorMode()"
+      [item]="selectedItem()"
+      (itemSave)="onSave($event)"
+      (modalClose)="isEditorOpen.set(false)"
+    />
+  }
+
+  @if (isPriceModifierOpen()) {
+    <app-price-modifier
+      (applyModifier)="applyModifier($event)"
+      (modalClose)="isPriceModifierOpen.set(false)"
+    />
+  }
+</div>
