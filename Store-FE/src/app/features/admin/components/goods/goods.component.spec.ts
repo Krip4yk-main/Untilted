@@ -52,4 +52,44 @@ describe('GoodsTabComponent', () => {
     component['onSave'](mockGood);
     expect(storageService.addGood).toHaveBeenCalledWith(mockGood);
   });
+
+  it('should open editor in view mode', () => {
+    const mockGood = { id: 1 } as any;
+    component.openView(mockGood);
+    expect(component['isEditorOpen']()).toBe(true);
+    expect(component['editorMode']()).toBe('view');
+    expect(component['selectedItem']()).toBe(mockGood);
+  });
+
+  it('should open editor in edit mode', () => {
+    const mockGood = { id: 1 } as any;
+    component.openEdit(mockGood);
+    expect(component['isEditorOpen']()).toBe(true);
+    expect(component['editorMode']()).toBe('edit');
+    expect(component['selectedItem']()).toBe(mockGood);
+  });
+
+  it('should call storageService.updateGood on save in edit mode', () => {
+    const mockGood = { id: 1 } as any;
+    component.openEdit(mockGood);
+    component['onSave'](mockGood);
+    expect(storageService.updateGood).toHaveBeenCalledWith(mockGood);
+  });
+
+  it('should delete item if confirmed', () => {
+    window.confirm = jest.fn().mockReturnValue(true);
+    component.deleteItem(1);
+    expect(storageService.deleteGood).toHaveBeenCalledWith(1);
+  });
+
+  it('should not delete item if not confirmed', () => {
+    window.confirm = jest.fn().mockReturnValue(false);
+    component.deleteItem(1);
+    expect(storageService.deleteGood).not.toHaveBeenCalled();
+  });
+
+  it('should apply modifier', () => {
+    component.applyModifier(1.1);
+    expect(storageService.applyPriceModifier).toHaveBeenCalledWith(1.1);
+  });
 });

@@ -36,4 +36,20 @@ describe('ManagementTabComponent', () => {
     expect(component['isEditorOpen']()).toBe(true);
     expect(component['editorMode']()).toBe('view');
   });
+
+  it('should open modify', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = { id: '1' } as any;
+    component.openModify(user);
+    expect(component['isEditorOpen']()).toBe(true);
+    expect(component['editorMode']()).toBe('modify');
+  });
+
+  it('should call storageService.updateUser on save', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const user = { id: '1' } as any;
+    component.onSave(user);
+    expect(storageService.updateUser).toHaveBeenCalledWith(user);
+    expect(component['isEditorOpen']()).toBe(false);
+  });
 });

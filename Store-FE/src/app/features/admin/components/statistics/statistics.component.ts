@@ -52,7 +52,7 @@ export class StatisticsTabComponent {
     const itemsChart = Object.entries(byItem).map(([name, count]) => ({
       name,
       count,
-      percent: totalSales > 0 ? (count / totalSales) * 100 : 0,
+      percent: (count / totalSales) * 100,
     }));
 
     return { totalRevenue, totalSales, itemsChart };

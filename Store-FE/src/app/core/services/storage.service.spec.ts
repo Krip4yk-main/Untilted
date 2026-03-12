@@ -172,6 +172,15 @@ describe('StorageService', () => {
     expect(result?.priceHistory.length).toBeGreaterThan(good.priceHistory.length);
   });
 
+  it('should not update price history if price is same in updateGood', () => {
+    const good = service.goods()[0];
+    const updatedGood = { ...good };
+    const initialHistoryLength = good.priceHistory.length;
+    service.updateGood(updatedGood);
+    const result = service.getGoodById(good.id);
+    expect(result?.priceHistory.length).toBe(initialHistoryLength);
+  });
+
   it('should delete a good', () => {
     const initialCount = service.goods().length;
     const goodId = service.goods()[0].id;
@@ -226,5 +235,57 @@ describe('StorageService', () => {
     service.clearBucket();
     TestBed.flushEffects();
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('user-bucket');
+  });
+
+  it('should load bucket from localStorage in constructor', () => {
+    localStorageMock.getItem.mockReturnValue([{ good: { id: 99 }, count: 5 }]);
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [{ provide: LocalStorageService, useValue: localStorageMock }],
+    });
+    const newService = TestBed.inject(StorageService);
+    expect(newService.bucket().length).toBe(1);
+    expect(newService.bucket()[0].good.id).toBe(99);
+  });
+
+  it('should return current bucket if item not found in incrementFromBucket', () => {
+    service.incrementFromBucket(999);
+    expect(service.bucketCount()).toBe(0);
+  });
+
+  it('should return current bucket if item not found in decrementFromBucket', () => {
+    service.decrementFromBucket(999);
+    expect(service.bucketCount()).toBe(0);
+  });
+
+  it('should return current goods if good not found in updateGood', () => {
+    const initialGoods = service.goods();
+    service.updateGood({ id: 999 } as any);
+    expect(service.goods()).toBe(initialGoods);
+  });
+
+  it('should return current users if user not found in updateUser', () => {
+    const initialUsers = service.users();
+    service.updateUser({ id: 'non-existing' } as any);
+    expect(service.users()).toBe(initialUsers);
+  });
+
+  it('should generate correct ID for sales when some sales exist', () => {
+    service.logSale({
+      userId: '1',
+      userName: 'U1',
+      goodId: 1,
+      goodName: 'G1',
+      price: 10,
+    });
+    service.logSale({
+      userId: '1',
+      userName: 'U1',
+      goodId: 1,
+      goodName: 'G1',
+      price: 10,
+    });
+    expect(service.sales().length).toBe(2);
+    expect(service.sales()[1].id).toBe(service.sales()[0].id + 1);
   });
 });

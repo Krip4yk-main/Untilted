@@ -41,5 +41,32 @@ describe('PriceModifierComponent', () => {
     component.apply();
     expect(component.applyModifier.emit).toHaveBeenCalledWith(1.0);
     expect(component.modalClose.emit).toHaveBeenCalled();
+    expect(localStorageMock.removeItem).toHaveBeenCalled();
+  });
+
+  it('should load saved multiplier on init', () => {
+    localStorageMock.getItem.mockReturnValue({ multiplier: 1.5 });
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      imports: [PriceModifierComponent, FormsModule],
+      providers: [{ provide: LocalStorageService, useValue: localStorageMock }],
+    });
+    const newFixture = TestBed.createComponent(PriceModifierComponent);
+    const newComponent = newFixture.componentInstance;
+    newFixture.detectChanges();
+    expect(newComponent['multiplier']).toBe(1.5);
+  });
+
+  it('should save multiplier on change', () => {
+    component['multiplier'] = 2.0;
+    component.onMultiplierChange();
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('price-modifier-data', { multiplier: 2.0 });
+  });
+
+  it('should clear data and close on cancel', () => {
+    jest.spyOn(component.modalClose, 'emit');
+    component.cancel();
+    expect(localStorageMock.removeItem).toHaveBeenCalled();
+    expect(component.modalClose.emit).toHaveBeenCalled();
   });
 });

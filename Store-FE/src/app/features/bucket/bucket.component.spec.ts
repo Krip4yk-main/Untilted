@@ -65,7 +65,16 @@ describe('BucketComponent', () => {
     expect(storageService.clearBucket).toHaveBeenCalled();
   });
 
+  it('should open and close apply form', () => {
+    component.onApply();
+    expect(component['isApplying']()).toBe(true);
+    component.onCancelApply();
+    expect(component['isApplying']()).toBe(false);
+  });
+
   it('should clear bucket and close apply form on submit order', () => {
+    jest.spyOn(console, 'log').mockImplementation();
+    jest.spyOn(window, 'alert').mockImplementation();
     component.onSubmitOrder({
       firstName: '',
       lastName: '',

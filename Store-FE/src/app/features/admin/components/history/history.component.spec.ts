@@ -28,4 +28,30 @@ describe('HistoryTabComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should open user modal for known user', () => {
+    const mockUser = { id: '1', name: 'Test' } as any;
+    (storageService.getUserById as jest.Mock).mockReturnValue(mockUser);
+    component.openUserModal('1');
+    expect(component['selectedUser']()).toBe(mockUser);
+    expect(component['isUserEditorOpen']()).toBe(true);
+  });
+
+  it('should not open user modal for unknown user', () => {
+    component.openUserModal('unknown');
+    expect(component['isUserEditorOpen']()).toBe(false);
+  });
+
+  it('should not open user modal if user not found', () => {
+    (storageService.getUserById as jest.Mock).mockReturnValue(null);
+    component.openUserModal('non-existent');
+    expect(component['isUserEditorOpen']()).toBe(false);
+  });
+
+  it('should update user and close modal on save', () => {
+    const mockUser = { id: '1' } as any;
+    component.onSaveUser(mockUser);
+    expect(storageService.updateUser).toHaveBeenCalledWith(mockUser);
+    expect(component['isUserEditorOpen']()).toBe(false);
+  });
 });

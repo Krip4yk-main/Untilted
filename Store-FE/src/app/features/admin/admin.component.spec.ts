@@ -41,6 +41,11 @@ describe('AdminComponent', () => {
     expect(component['tabs']()).toEqual(['Goods', 'Management', 'Statistics', 'History']);
   });
 
+  it('should change active tab', () => {
+    component.setTab('Management');
+    expect(component['activeTab']()).toBe('Management');
+  });
+
   it('should have 1 tab for manager', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (authService.user as any).set({
@@ -50,7 +55,24 @@ describe('AdminComponent', () => {
       email: '',
       isBlocked: false,
     });
-    fixture.detectChanges();
     expect(component['tabs']()).toEqual(['Goods']);
+  });
+
+  it('should show no tabs for other roles', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (authService.user as any).set({
+      id: '3',
+      role: 'client',
+      name: 'Client',
+      email: '',
+      isBlocked: false,
+    });
+    expect(component['tabs']()).toEqual([]);
+  });
+
+  it('should show no tabs if no user', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (authService.user as any).set(null);
+    expect(component['tabs']()).toEqual([]);
   });
 });

@@ -48,4 +48,17 @@ describe('StoreItemDetailsComponent', () => {
     component.addToBucket();
     expect(storageService.addToBucket).toHaveBeenCalled();
   });
+
+  it('should NOT call storageService.addToBucket if good is null', () => {
+    component['good'].set(null);
+    component.addToBucket();
+    expect(storageService.addToBucket).not.toHaveBeenCalled();
+  });
+
+  it('should load good from storage if it exists', () => {
+    const mockGood = { id: 1, name: 'FromStorage' } as any;
+    (storageService.getGoodById as jest.Mock).mockReturnValue(mockGood);
+    component.ngOnInit();
+    expect(component['good']()).toBe(mockGood);
+  });
 });

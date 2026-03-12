@@ -99,4 +99,10 @@ describe('ApplyFormComponent', () => {
     component.onCancel();
     expect(localStorageMock.removeItem).toHaveBeenCalledWith('apply-form-data');
   });
+
+  it('should mark all as touched on invalid submit', () => {
+    jest.spyOn(component.form, 'markAllAsTouched');
+    component.onSubmit();
+    expect(component.form.markAllAsTouched).toHaveBeenCalled();
+  });
 });

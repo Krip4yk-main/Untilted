@@ -64,4 +64,49 @@ describe('LocalStorageService', () => {
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
+
+  it('should handle errors in setItem', () => {
+    jest.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('Storage full');
+    });
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    service.setItem('test', 'value');
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+    (localStorage.setItem as jest.Mock).mockRestore();
+  });
+
+  it('should handle errors in getItem', () => {
+    jest.spyOn(localStorage, 'getItem').mockImplementation(() => {
+      throw new Error('Read error');
+    });
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const result = service.getItem('test');
+    expect(result).toBeNull();
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+    (localStorage.getItem as jest.Mock).mockRestore();
+  });
+
+  it('should handle errors in removeItem', () => {
+    jest.spyOn(localStorage, 'removeItem').mockImplementation(() => {
+      throw new Error('Remove error');
+    });
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    service.removeItem('test');
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+    (localStorage.removeItem as jest.Mock).mockRestore();
+  });
+
+  it('should handle errors in clear', () => {
+    jest.spyOn(localStorage, 'clear').mockImplementation(() => {
+      throw new Error('Clear error');
+    });
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    service.clear();
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+    (localStorage.clear as jest.Mock).mockRestore();
+  });
 });
