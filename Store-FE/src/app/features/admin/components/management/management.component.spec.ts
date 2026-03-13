@@ -4,52 +4,49 @@ import { StorageService } from '../../../../core/services/storage.service';
 import { signal } from '@angular/core';
 
 describe('ManagementTabComponent', () => {
-  let component: ManagementTabComponent;
-  let fixture: ComponentFixture<ManagementTabComponent>;
-  let storageService: Partial<StorageService>;
+    let component: ManagementTabComponent;
+    let fixture: ComponentFixture<ManagementTabComponent>;
+    let storageService: Partial<StorageService>;
 
-  beforeEach(async () => {
-    storageService = {
-      users: signal([]),
-      updateUser: jest.fn(),
-      sales: signal([]),
-    };
+    beforeEach(async() => {
+        storageService = {
+            users: signal([]),
+            updateUser: jest.fn(),
+            sales: signal([]),
+        };
 
-    await TestBed.configureTestingModule({
-      imports: [ManagementTabComponent],
-      providers: [{ provide: StorageService, useValue: storageService }],
-    }).compileComponents();
+        await TestBed.configureTestingModule({
+            imports: [ManagementTabComponent],
+            providers: [{ provide: StorageService, useValue: storageService }],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(ManagementTabComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(ManagementTabComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 
-  it('should open view', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user = { id: '1' } as any;
-    component.openView(user);
-    expect(component['isEditorOpen']()).toBe(true);
-    expect(component['editorMode']()).toBe('view');
-  });
+    it('should open view', () => {
+        const user = { id: '1' } as any;
+        component.openView(user);
+        expect(component['isEditorOpen']()).toBe(true);
+        expect(component['editorMode']()).toBe('view');
+    });
 
-  it('should open modify', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user = { id: '1' } as any;
-    component.openModify(user);
-    expect(component['isEditorOpen']()).toBe(true);
-    expect(component['editorMode']()).toBe('modify');
-  });
+    it('should open modify', () => {
+        const user = { id: '1' } as any;
+        component.openModify(user);
+        expect(component['isEditorOpen']()).toBe(true);
+        expect(component['editorMode']()).toBe('modify');
+    });
 
-  it('should call storageService.updateUser on save', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const user = { id: '1' } as any;
-    component.onSave(user);
-    expect(storageService.updateUser).toHaveBeenCalledWith(user);
-    expect(component['isEditorOpen']()).toBe(false);
-  });
+    it('should call storageService.updateUser on save', () => {
+        const user = { id: '1' } as any;
+        component.onSave(user);
+        expect(storageService.updateUser).toHaveBeenCalledWith(user);
+        expect(component['isEditorOpen']()).toBe(false);
+    });
 });

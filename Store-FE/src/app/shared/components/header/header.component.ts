@@ -5,12 +5,14 @@ import { StorageService } from '../../../core/services/storage.service';
 import { Button } from 'primeng/button';
 
 @Component({
-  selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, Button],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.less',
+    selector: 'app-header',
+    imports: [RouterLink, RouterLinkActive, Button],
+    templateUrl: './header.component.html',
+    styleUrl: './header.component.less',
 })
 export class HeaderComponent {
-  protected readonly authService = inject(CoreAuthService);
-  protected readonly storageService = inject(StorageService);
+
+    protected readonly authService: CoreAuthService = inject(CoreAuthService);
+    protected readonly storageService: StorageService = inject(StorageService);
+
 }

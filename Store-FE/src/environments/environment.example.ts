@@ -1,7 +1,5 @@
 export const environment = {
-  production: false,
-  apiUrl: 'string',
-  tgBotToken: 'string',
-  tgBotClientId: 'string',
-  tgBotClientSecret: 'string',
+    production: false,
+    apiUrl: 'string',
+    title: 'string',
 };

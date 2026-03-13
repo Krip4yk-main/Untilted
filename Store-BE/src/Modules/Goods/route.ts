@@ -1,8 +1,8 @@
-import { Router } from 'express';
+import { type Request, type Response, Router } from 'express';
 import { goodsController } from './controller.js';
 
 const router = Router();
 
-router.get('/', (req, res) => goodsController.getGoods(req, res));
+router.get('/', (req: Request, res: Response) => goodsController.getGoods(req, res));
 
 export default router;

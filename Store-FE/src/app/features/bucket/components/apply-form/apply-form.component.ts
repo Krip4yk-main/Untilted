@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OrderDetails } from '../../../../core/models/order-details.model';
-import { LocalStorageService } from '../../../../core/services/local-storage.service';
+import { LocalStorageBuckets, LocalStorageService } from '../../../../core/services/local-storage.service';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 
@@ -18,7 +18,7 @@ export class ApplyFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly STORAGE_KEY = 'apply-form-data';
+  private readonly STORAGE_KEY = LocalStorageBuckets.APPLY;
 
   cancelForm = output<void>();
   submitOrder = output<OrderDetails>();

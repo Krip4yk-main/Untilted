@@ -1,54 +1,58 @@
-import { Component, inject, signal } from '@angular/core';
-import { CurrencyPipe, CommonModule } from '@angular/common';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { StorageService } from '../../core/services/storage.service';
 import { ApplyFormComponent } from './components/apply-form/apply-form.component';
 import { OrderDetails } from '../../core/models/order-details.model';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
+import { BucketItem } from '../../core/models/bucket-item.model';
 
 @Component({
-  selector: 'app-bucket',
-  standalone: true,
-  imports: [CommonModule, CurrencyPipe, ApplyFormComponent, Button, Card],
-  templateUrl: './bucket.component.html',
-  styleUrl: './bucket.component.less',
+    selector: 'app-bucket',
+    standalone: true,
+    imports: [CommonModule, CurrencyPipe, ApplyFormComponent, Button, Card],
+    templateUrl: './bucket.component.html',
+    styleUrl: './bucket.component.less',
 })
 export class BucketComponent {
-  protected readonly storageService = inject(StorageService);
-  protected readonly isApplying = signal(false);
 
-  getTotal() {
-    return this.storageService.bucket().reduce((sum, item) => sum + item.good.price * item.count, 0);
-  }
+    protected readonly storageService: StorageService = inject(StorageService);
 
-  onRemove(id: number) {
-    this.storageService.removeFromBucket(id);
-  }
+    protected readonly isApplying: WritableSignal<boolean> = signal(false);
 
-  onIncrement(id: number) {
-    this.storageService.incrementFromBucket(id);
-  }
+    getTotal() {
+        return this.storageService.bucket().reduce((sum: number, item: BucketItem) => sum + (item.good.price * item.count), 0);
+    }
 
-  onDecrement(id: number) {
-    this.storageService.decrementFromBucket(id);
-  }
+    onRemove(id: number) {
+        this.storageService.removeFromBucket(id);
+    }
 
-  onClear() {
-    this.storageService.clearBucket();
-  }
+    onIncrement(id: number) {
+        this.storageService.incrementFromBucket(id);
+    }
 
-  onApply() {
-    this.isApplying.set(true);
-  }
+    onDecrement(id: number) {
+        this.storageService.decrementFromBucket(id);
+    }
 
-  onCancelApply() {
-    this.isApplying.set(false);
-  }
+    onClear() {
+        this.storageService.clearBucket();
+    }
 
-  onSubmitOrder(orderDetails: OrderDetails) {
-    console.log('Order submitted:', orderDetails, 'Items:', this.storageService.bucket());
-    alert('Order successfully submitted!');
-    this.storageService.clearBucket();
-    this.isApplying.set(false);
-  }
+    onApply() {
+        this.isApplying.set(true);
+    }
+
+    onCancelApply() {
+        this.isApplying.set(false);
+    }
+
+    onSubmitOrder(orderDetails: OrderDetails) {
+        console.info('Order submitted:', orderDetails, 'Items:', this.storageService.bucket());
+        alert('Order successfully submitted!');
+        this.storageService.clearBucket();
+        this.isApplying.set(false);
+    }
+
 }

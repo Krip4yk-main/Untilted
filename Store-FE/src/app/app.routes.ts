@@ -8,18 +8,51 @@ import { BucketComponent } from './features/bucket/bucket.component';
 import { AdminComponent } from './features/admin/admin.component';
 import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import { environment } from '../environments/environment';
+
+const appTitle: string = environment.title;
 
 export const routes: Routes = [
-  { path: '', component: MainComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'user', component: UserComponent, canActivate: [authGuard] },
-  { path: 'bucket', component: BucketComponent },
-  { path: 'store-item/:id', component: StoreItemDetailsComponent },
-  {
-    path: 'admin',
-    component: AdminComponent,
-    canActivate: [authGuard, roleGuard(['admin', 'manager'])],
-  },
-  { path: 'not-found', component: NotFoundComponent },
-  { path: '**', component: NotFoundComponent },
+    {
+        path: '',
+        component: MainComponent,
+        title: `${appTitle}`,
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+        title: `Login | ${appTitle}`,
+    },
+    {
+        path: 'user',
+        component: UserComponent,
+        title: `User | ${appTitle}`,
+        canActivate: [authGuard],
+    },
+    {
+        path: 'bucket',
+        component: BucketComponent,
+        title: `Bucket | ${appTitle}`,
+    },
+    {
+        path: 'store-item/:id',
+        component: StoreItemDetailsComponent,
+        title: `Good | ${appTitle}`,
+    },
+    {
+        path: 'admin',
+        component: AdminComponent,
+        title: `Administation | ${appTitle}`,
+        canActivate: [authGuard, roleGuard(['admin', 'manager'])],
+    },
+    {
+        path: 'not-found',
+        component: NotFoundComponent,
+        title: `Not Found | ${appTitle}`,
+    },
+    {
+        path: '**',
+        component: NotFoundComponent,
+        title: `Not Found | ${appTitle}`,
+    },
 ];

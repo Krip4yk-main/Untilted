@@ -5,38 +5,36 @@ import { authGuard } from './auth.guard';
 import { signal } from '@angular/core';
 
 describe('authGuard', () => {
-  let authService: Partial<CoreAuthService>;
-  let router: Partial<Router>;
-  const isLoggedInSignal = signal(false);
+    let authService: Partial<CoreAuthService>;
+    let router: Partial<Router>;
+    const isLoggedInSignal = signal(false);
 
-  beforeEach(() => {
-    authService = {
-      isLoggedIn: isLoggedInSignal,
-    };
-    router = {
-      createUrlTree: jest.fn().mockReturnValue({} as UrlTree),
-    };
+    beforeEach(() => {
+        authService = {
+            isLoggedIn: isLoggedInSignal,
+        };
+        router = {
+            createUrlTree: jest.fn().mockReturnValue({} as UrlTree),
+        };
 
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: CoreAuthService, useValue: authService },
-        { provide: Router, useValue: router },
-      ],
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: CoreAuthService, useValue: authService },
+                { provide: Router, useValue: router },
+            ],
+        });
     });
-  });
 
-  it('should allow activation if logged in', () => {
-    isLoggedInSignal.set(true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
-    expect(result).toBe(true);
-  });
+    it('should allow activation if logged in', () => {
+        isLoggedInSignal.set(true);
+        const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+        expect(result).toBe(true);
+    });
 
-  it('should redirect if not logged in', () => {
-    isLoggedInSignal.set(false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
-    expect(router.createUrlTree).toHaveBeenCalledWith(['/not-found']);
-    expect(result).not.toBe(true);
-  });
+    it('should redirect if not logged in', () => {
+        isLoggedInSignal.set(false);
+        const result = TestBed.runInInjectionContext(() => authGuard({} as any, {} as any));
+        expect(router.createUrlTree).toHaveBeenCalledWith(['/not-found']);
+        expect(result).not.toBe(true);
+    });
 });

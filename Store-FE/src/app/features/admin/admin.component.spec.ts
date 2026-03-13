@@ -5,74 +5,71 @@ import { signal } from '@angular/core';
 import { StorageService } from '../../core/services/storage.service';
 
 describe('AdminComponent', () => {
-  let component: AdminComponent;
-  let fixture: ComponentFixture<AdminComponent>;
-  let authService: Partial<CoreAuthService>;
-  let storageService: Partial<StorageService>;
+    let component: AdminComponent;
+    let fixture: ComponentFixture<AdminComponent>;
+    let authService: Partial<CoreAuthService>;
+    let storageService: Partial<StorageService>;
 
-  beforeEach(async () => {
-    authService = {
-      user: signal({ id: '1', role: 'admin', name: 'Admin', email: '', isBlocked: false }),
-    };
-    storageService = {
-      goods: signal([]),
-      users: signal([]),
-      sales: signal([]),
-    };
+    beforeEach(async() => {
+        authService = {
+            user: signal({ id: '1', role: 'admin', name: 'Admin', email: '', isBlocked: false }),
+        };
+        storageService = {
+            goods: signal([]),
+            users: signal([]),
+            sales: signal([]),
+        };
 
-    await TestBed.configureTestingModule({
-      imports: [AdminComponent],
-      providers: [
-        { provide: CoreAuthService, useValue: authService },
-        { provide: StorageService, useValue: storageService },
-      ],
-    }).compileComponents();
+        await TestBed.configureTestingModule({
+            imports: [AdminComponent],
+            providers: [
+                { provide: CoreAuthService, useValue: authService },
+                { provide: StorageService, useValue: storageService },
+            ],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(AdminComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should have 4 tabs for admin', () => {
-    expect(component['tabs']()).toEqual(['Goods', 'Management', 'Statistics', 'History']);
-  });
-
-  it('should change active tab', () => {
-    component.setTab('Management');
-    expect(component['activeTab']()).toBe('Management');
-  });
-
-  it('should have 1 tab for manager', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (authService.user as any).set({
-      id: '2',
-      role: 'manager',
-      name: 'Manager',
-      email: '',
-      isBlocked: false,
+        fixture = TestBed.createComponent(AdminComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
-    expect(component['tabs']()).toEqual(['Goods']);
-  });
 
-  it('should show no tabs for other roles', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (authService.user as any).set({
-      id: '3',
-      role: 'client',
-      name: 'Client',
-      email: '',
-      isBlocked: false,
+    it('should create', () => {
+        expect(component).toBeTruthy();
     });
-    expect(component['tabs']()).toEqual([]);
-  });
 
-  it('should show no tabs if no user', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (authService.user as any).set(null);
-    expect(component['tabs']()).toEqual([]);
-  });
+    it('should have 4 tabs for admin', () => {
+        expect(component['tabs']()).toEqual(['Goods', 'Management', 'Statistics', 'History']);
+    });
+
+    it('should change active tab', () => {
+        component.setTab('Management');
+        expect(component['activeTab']()).toBe('Management');
+    });
+
+    it('should have 1 tab for manager', () => {
+        (authService.user as any).set({
+            id: '2',
+            role: 'manager',
+            name: 'Manager',
+            email: '',
+            isBlocked: false,
+        });
+        expect(component['tabs']()).toEqual(['Goods']);
+    });
+
+    it('should show no tabs for other roles', () => {
+        (authService.user as any).set({
+            id: '3',
+            role: 'client',
+            name: 'Client',
+            email: '',
+            isBlocked: false,
+        });
+        expect(component['tabs']()).toEqual([]);
+    });
+
+    it('should show no tabs if no user', () => {
+        (authService.user as any).set(null);
+        expect(component['tabs']()).toEqual([]);
+    });
 });

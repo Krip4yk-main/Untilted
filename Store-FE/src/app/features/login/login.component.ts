@@ -1,71 +1,38 @@
-import { AfterViewInit, Component, ElementRef, inject, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CoreAuthService } from '../../core/services/core-auth.service';
-import { environment } from '../../../environments/environment';
-import CryptoJS from 'crypto-js';
-import { HttpClient } from '@angular/common/http';
-import { from, lastValueFrom } from 'rxjs';
 import { TelegramUser } from '../../core/models/user.model';
-import { Button } from 'primeng/button';
 
 @Component({
-  selector: 'app-login',
-  imports: [Button],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.less',
+    selector: 'app-login',
+    imports: [],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.less',
 })
-export class LoginComponent implements OnInit, AfterViewInit {
-  private readonly authService = inject(CoreAuthService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
-  private readonly httpClient = inject(HttpClient);
-  private readonly renderer = inject(Renderer2);
+export class LoginComponent implements OnInit {
 
-  protected readonly tgBotToken = environment.tgBotToken;
-  protected readonly tgBotClientId = environment.tgBotClientId;
-  protected readonly tgBotClientSecret = environment.tgBotClientSecret;
-  protected readonly tgBotCallbackUrl = (environment as any).tgBotCallbackUrl;
+    private readonly authService: CoreAuthService = inject(CoreAuthService);
+    private readonly router: Router = inject(Router);
 
-  @ViewChild('script', { static: true }) script: ElementRef | undefined;
-
-  constructor() {
-    (window as any).loginViaTelegram = this.loginViaTelegram.bind(this);
-  }
-
-  ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/'])
-        .then();
-      return;
+    constructor() {
+        (window as any).loginViaTelegram = this.loginViaTelegram.bind(this); // eslint-disable-line
     }
-  }
 
-  ngAfterViewInit() {
-    this.convertToScript();
-  }
+    ngOnInit() {
+        if (this.authService.isLoggedIn()) {
+            this.router.navigate(['/'])
+                .then();
+            return;
+        }
+    }
 
-  login() {
-    this.router.navigate(['/'])
-      .then();
-  }
+    login() {
+        this.router.navigate(['/'])
+            .then();
+    }
 
-  convertToScript() {
-    if (!this.script) return;
-    const element = this.script.nativeElement;
-    const script = this.renderer.createElement('script');
+    loginViaTelegram(user: TelegramUser) {
+        this.authService.loginTg(user);
+    }
 
-    script.src = 'https://telegram.org/js/telegram-widget.js?23';
-    script.setAttribute('data-telegram-login', 'dndLvivStoreBot');
-    script.setAttribute('data-size', 'large');
-    script.setAttribute('data-onauth', 'loginViaTelegram(user)');
-    script.setAttribute('data-request-access', 'write');
-    script.setAttribute('data-userpic', 'true');
-
-    this.renderer.appendChild(element, script);
-  }
-
-  loginViaTelegram(user: TelegramUser) {
-    console.log('Logged in as', user.user.name);
-    this.authService.loginTg(user);
-  }
 }
