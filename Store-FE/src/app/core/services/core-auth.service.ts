@@ -29,6 +29,7 @@ export class CoreAuthService {
 
     constructor() {
         this.checkStoredUser();
+        this.checkStoredTgUser();
         window.addEventListener('storage', (event: StorageEvent) => {
             if (event.key === this.AUTH_USER_KEY || event.key === null) {
                 this.checkStoredUser();
