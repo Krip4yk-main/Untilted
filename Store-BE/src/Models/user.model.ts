@@ -1,12 +1,40 @@
-export type UserRole = 'client' | 'manager' | 'admin';
+export type TUserRole = 'Admin' | 'Dm' | 'User';
 
-export interface User {
-    id: string;
+export interface IUser {
+    id: number;
+    telegramId: `${number}`;
+    username: string;
+    displayName: string;
+    role: TUserRole;
+    registrationDate: Date;
+    avatar: string;
+    deleted: boolean;
+}
+
+export interface IUserRaw {
+    Id: number;
+    TelegramId: `${number}`;
+    Username: string;
+    DisplayName: string;
+    Role: TUserRole;
+    RegistrationDate: Date;
+    Avatar: string;
+    deleted: boolean;
+}
+
+export interface ITelegramUserNested {
+    aud: `${number}`;
+    exp: number;
+    iat: number;
+    id: `${number}`;
+    iss: string;
     name: string;
-    isBlocked: boolean;
-    role: UserRole;
-    adminNotes?: string;
-    email: string;
-    phone?: string;
-    token?: string;
+    picture: string;
+    preferred_username: string;
+    sub: `${number}`;
+}
+
+export interface ITelegramUser {
+    id_token: string;
+    user: ITelegramUserNested;
 }

@@ -1,38 +1,38 @@
 <div class="management-tab-container">
-  <table class="users-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (user of storageService.users(); track user.id) {
+    <table class="users-table">
+        <thead>
         <tr>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>{{ user.isBlocked ? 'Blocked' : 'Active' }}</td>
-          <td class="action-icons">
-            <button (click)="openView(user)" title="View">👁️</button>
-            <button (click)="openModify(user)" title="Modify">✏️</button>
-          </td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
-      }
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+            @for (user of storageService.users(); track user.id) {
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.displayName }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.deleted ? 'Blocked' : 'Active' }}</td>
+                    <td class="action-icons">
+                        <button (click)="openView(user)" title="View">👁️</button>
+                        <button (click)="openModify(user)" title="Modify">✏️</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-  @if (isEditorOpen() && selectedUser()) {
-    <app-user-editor
-      [mode]="editorMode()"
-      [user]="selectedUser()!"
-      (userSave)="onSave($event)"
-      (modalClose)="isEditorOpen.set(false)"
-    />
-  }
+    @if (isEditorOpen() && selectedUser()) {
+        <app-user-editor
+                [mode]="editorMode()"
+                [user]="selectedUser()!"
+                (userSave)="onSave($event)"
+                (modalClose)="isEditorOpen.set(false)"
+        />
+    }
 </div>

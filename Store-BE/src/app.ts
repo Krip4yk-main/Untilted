@@ -1,8 +1,7 @@
 import express, { type Express, type NextFunction, type Request, type Response } from 'express';
 import { createServer, Server } from 'http';
-import { DatabaseConfig } from './Configurations/database.js';
-import goodsRouter from './Modules/Goods/route.js';
-import usersRouter from './Modules/Users/route.js';
+import router from './router.js';
+import { AzureDB } from './Configurations/database.js';
 
 class App {
 
@@ -15,7 +14,6 @@ class App {
         this.app = express();
         this.port = process.env.PORT || 3000;
         this.server = createServer(this.app);
-        this.initialize();
     }
 
     public static getInstance(): App {
@@ -25,14 +23,14 @@ class App {
         return App.instance;
     }
 
-    private async initialize(): Promise<void> {
+    public async initialize(): Promise<void> {
         this.configureMiddleware();
         this.configureRoutes();
         try {
-            await DatabaseConfig.connect();
-            console.info('Database connection established successfully');
-        } catch (error) {
-            console.error('Failed to connect to the database:', error);
+            await AzureDB.connect();
+        } catch (error: unknown) {
+            console.error(error);
+            process.exit(1);
         }
     }
 
@@ -53,13 +51,7 @@ class App {
     }
 
     private configureRoutes(): void {
-        this.app.get('/', (req: Request, res: Response) => {
-            res.send('Store-BE is running with modular architecture');
-        });
-
-        // Register module routes
-        this.app.use('/api/goods', goodsRouter);
-        this.app.use('/api/users', usersRouter);
+        this.app.use('/api', router);
     }
 
     public listen(): void {

@@ -32,11 +32,8 @@ export class AdminComponent {
         if (!user) {
             return [];
         }
-        if (user.role === 'admin') {
+        if (user.role === 'Admin') {
             return ['Goods', 'Management', 'Statistics', 'History'];
-        }
-        if (user.role === 'manager') {
-            return ['Goods'];
         }
         return [];
     });

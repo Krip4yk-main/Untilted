@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../../core/models/user.model';
+import { IUser, IUserExt } from '../../../../core/models/user.model';
 import { StorageService } from '../../../../core/services/storage.service';
 import { LocalStorageBuckets, LocalStorageService } from '../../../../core/services/local-storage.service';
 import { Sale } from '../../../../core/models/sale.model';
@@ -34,18 +34,18 @@ export class UserEditorComponent implements OnInit {
     private readonly STORAGE_KEY: LocalStorageBuckets = LocalStorageBuckets.USER_EDITOR;
 
     mode: InputSignal<UserEditorMode> = input.required();
-    user: InputSignal<User> = input.required();
-    userSave: OutputEmitterRef<User> = output();
+    user: InputSignal<IUser> = input.required();
+    userSave: OutputEmitterRef<IUser> = output();
     modalClose: OutputEmitterRef<void> = output();
 
     protected currentMode: WritableSignal<UserEditorMode> = signal('view');
-    protected formData: WritableSignal<Partial<User>> = signal({});
+    protected formData: WritableSignal<Partial<IUserExt>> = signal({});
 
-    protected userSales: Signal<Sale[]> = computed(() => this.storageService.sales().filter((s: Sale) => s.userId === this.user().id));
+    protected userSales: Signal<Sale[]> = computed(() => this.storageService.sales().filter((s: Sale) => s.id === this.user().id));
 
     ngOnInit() {
         this.currentMode.set(this.mode());
-        const savedData = this.localStorageService.getItem<Partial<User>>(this.STORAGE_KEY);
+        const savedData = this.localStorageService.getItem<Partial<IUser>>(this.STORAGE_KEY);
 
         if (savedData && savedData.id === this.user().id && this.currentMode() === 'modify') {
             this.formData.set({ ...this.user(), ...savedData });
@@ -65,7 +65,7 @@ export class UserEditorComponent implements OnInit {
     }
 
     onSave() {
-        this.userSave.emit({ ...this.user(), ...this.formData() } as User);
+        this.userSave.emit({ ...this.user(), ...this.formData() } as IUser);
         this.localStorageService.removeItem(this.STORAGE_KEY);
     }
 

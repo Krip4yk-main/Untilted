@@ -1,6 +1,6 @@
 import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Good } from '../models/good.model';
-import { User } from '../models/user.model';
+import { IUser } from '../models/user.model';
 import { Sale } from '../models/sale.model';
 import { BucketItem } from '../models/bucket-item.model';
 import { LocalStorageBuckets, LocalStorageService } from './local-storage.service';
@@ -16,14 +16,14 @@ export class StorageService {
     private readonly BUCKET_KEY: LocalStorageBuckets = LocalStorageBuckets.USER;
 
     private readonly _goods: WritableSignal<Good[]> = signal([]);
-    private readonly _users: WritableSignal<User[]> = signal([]);
+    private readonly _users: WritableSignal<IUser[]> = signal([]);
 
     private readonly _sales: WritableSignal<Sale[]> = signal([]);
 
     private readonly _bucket: WritableSignal<BucketItem[]> = signal([]);
 
     readonly goods: Signal<Good[]> = this._goods.asReadonly();
-    readonly users: Signal<User[]> = this._users.asReadonly();
+    readonly users: Signal<IUser[]> = this._users.asReadonly();
     readonly sales: Signal<Sale[]> = this._sales.asReadonly();
     readonly bucket: Signal<BucketItem[]> = this._bucket.asReadonly();
     readonly bucketCount: Signal<number> = computed(() => this._bucket()
@@ -95,8 +95,8 @@ export class StorageService {
         return this._goods().find((g: Good) => g.id === id);
     }
 
-    getUserById(id: string): User | undefined {
-        return this._users().find((u: User) => u.id === id);
+    getUserById(id: number): IUser | undefined {
+        return this._users().find((u: IUser) => u.id === id);
     }
 
     updateGood(updatedGood: Good) {
@@ -140,9 +140,9 @@ export class StorageService {
         }));
     }
 
-    updateUser(updatedUser: User) {
-        this._users.update((users: User[]) => {
-            const index = users.findIndex((u: User) => u.id === updatedUser.id);
+    updateUser(updatedUser: IUser) {
+        this._users.update((users: IUser[]) => {
+            const index = users.findIndex((u: IUser) => u.id === updatedUser.id);
             if (index !== -1) {
                 const newUsers = [...users];
                 newUsers[index] = updatedUser;
@@ -177,7 +177,7 @@ export class StorageService {
 
     private fetchUsers() {
         this.apiService.getUsers()
-            .then((users: User[]) => {
+            .then((users: IUser[]) => {
                 this._users.set(users);
             })
             .catch(console.error);

@@ -1,109 +1,112 @@
 <div class="modal-backdrop">
-  <div class="modal-content">
-    <header>
-      <h2>
-        {{
-          currentMode() === 'add'
-            ? 'Add Item'
-            : currentMode() === 'edit'
-              ? 'Edit Item'
-              : 'View Item'
-        }}
-      </h2>
-      <p-button class="close-btn" (onClick)="onClose()" icon="pi pi-times" text></p-button>
-    </header>
+    <div class="modal-content">
+        <header>
+            <h2>
+                {{
+                    currentMode() === 'add'
+                        ? 'Add Item'
+                        : currentMode() === 'edit'
+                            ? 'Edit Item'
+                            : 'View Item'
+                }}
+            </h2>
+            <p-button class="close-btn" (onClick)="onClose()" icon="pi pi-times" text></p-button>
+        </header>
 
-    <div class="form-body">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" pInputText [(ngModel)]="formData().name" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-      </div>
-      <div class="form-group">
-        <label for="imageUrl">Image URL</label>
-        <input id="imageUrl" pInputText [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-      </div>
-      <div class="form-group">
-        <label for="description">Short Description</label>
-        <textarea
-          id="description"
-          pTextarea
-          [(ngModel)]="formData().description"
-          (ngModelChange)="onDataChange()"
-          [disabled]="currentMode() === 'view'"
-          [autoResize]="true"
-        ></textarea>
-      </div>
-      <div class="form-group">
-        <label for="fullDescription">Full Description</label>
-        <textarea
-          id="fullDescription"
-          pTextarea
-          [(ngModel)]="formData().fullDescription"
-          (ngModelChange)="onDataChange()"
-          [disabled]="currentMode() === 'view'"
-          [autoResize]="true"
-        ></textarea>
-      </div>
-      <div class="form-group">
-        <label for="price">Price</label>
-        <p-inputNumber
-          id="price"
-          [(ngModel)]="formData().price"
-          (onModelChange)="onDataChange()"
-          [disabled]="currentMode() === 'view'"
-          mode="currency"
-          currency="USD"
-          locale="en-US"
-        ></p-inputNumber>
-      </div>
-      <div class="form-group">
-        <label for="notes">Notes</label>
-        <textarea id="notes" pInputTextarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" [autoResize]="true"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="count">Count</label>
-        <p-inputNumber
-          id="count"
-          [(ngModel)]="formData().count"
-          (onModelChange)="onDataChange()"
-          [disabled]="currentMode() === 'view'"
-        ></p-inputNumber>
-      </div>
-      <div class="form-group">
-        <label for="externalId">Unique ID (Optional)</label>
-        <input id="externalId" pInputText [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()" [disabled]="currentMode() === 'view'" />
-      </div>
+        <div class="form-body">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" pInputText [(ngModel)]="formData().name" (ngModelChange)="onDataChange()"
+                       [disabled]="currentMode() === 'view'"/>
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">Image URL</label>
+                <input id="imageUrl" pInputText [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()"
+                       [disabled]="currentMode() === 'view'"/>
+            </div>
+            <div class="form-group">
+                <label for="description">Short Description</label>
+                <textarea
+                        id="description"
+                        pTextarea
+                        [(ngModel)]="formData().description"
+                        (ngModelChange)="onDataChange()"
+                        [disabled]="currentMode() === 'view'"
+                        [autoResize]="true"
+                ></textarea>
+            </div>
+            <div class="form-group">
+                <label for="fullDescription">Full Description</label>
+                <textarea
+                        id="fullDescription"
+                        pTextarea
+                        [(ngModel)]="formData().fullDescription"
+                        (ngModelChange)="onDataChange()"
+                        [disabled]="currentMode() === 'view'"
+                        [autoResize]="true"
+                ></textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <p-inputNumber
+                        id="price"
+                        [(ngModel)]="formData().price"
+                        (ngModelChange)="onDataChange()"
+                        [disabled]="currentMode() === 'view'"
+                        mode="currency"
+                        currency="USD"
+                        locale="en-US"
+                ></p-inputNumber>
+            </div>
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea id="notes" pInputTextarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()"
+                          [disabled]="currentMode() === 'view'" [autoResize]="true"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="count">Count</label>
+                <p-inputNumber
+                        id="count"
+                        [(ngModel)]="formData().count"
+                        (ngModelChange)="onDataChange()"
+                        [disabled]="currentMode() === 'view'"
+                ></p-inputNumber>
+            </div>
+            <div class="form-group">
+                <label for="externalId">Unique ID (Optional)</label>
+                <input id="externalId" pInputText [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()"
+                       [disabled]="currentMode() === 'view'"/>
+            </div>
 
-      @if (
-        currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0
-      ) {
-        <div class="price-history">
-          <h3>Price History</h3>
-          <p-table [value]="formData().priceHistory!" [tableStyle]="{ 'min-width': '20rem' }">
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Price</th>
-                <th>Date</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-record>
-              <tr>
-                <td>{{ record.price | currency }}</td>
-                <td>{{ record.date | date: 'short' }}</td>
-              </tr>
-            </ng-template>
-          </p-table>
+            @if (currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0) {
+                <div class="price-history">
+                    <h3>Price History</h3>
+                    <p-table [value]="formData().priceHistory!" [tableStyle]="{ 'min-width': '20rem' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Price</th>
+                                <th>Date</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-record>
+                            <tr>
+                                <td>{{ record.price | currency }}</td>
+                                <td>{{ record.date | date: 'short' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            }
         </div>
-      }
-    </div>
 
-    <footer>
-      @if (currentMode() === 'view') {
-        <p-button class="btn btn-primary" (onClick)="enableEdit()" label="Edit" icon="pi pi-pencil"></p-button>
-      } @else {
-        <p-button class="btn btn-primary" (onClick)="onSave()" label="Save" icon="pi pi-save"></p-button>
-      }
-      <p-button class="btn btn-secondary" (onClick)="onClose()" label="Cancel" icon="pi pi-times" severity="secondary"></p-button>
-    </footer>
-  </div>
+        <footer>
+            @if (currentMode() === 'view') {
+                <p-button class="btn btn-primary" (onClick)="enableEdit()" label="Edit" icon="pi pi-pencil"></p-button>
+            } @else {
+                <p-button class="btn btn-primary" (onClick)="onSave()" label="Save" icon="pi pi-save"></p-button>
+            }
+            <p-button class="btn btn-secondary" (onClick)="onClose()" label="Cancel" icon="pi pi-times"
+                      severity="secondary"></p-button>
+        </footer>
+    </div>
 </div>

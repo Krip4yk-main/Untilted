@@ -42,9 +42,6 @@ testem.log
 __screenshots__/
 coverage_*.txt
 .output.txt
-test_import.mjs
-eslint_output.txt
-eslint_report.json
 
 # System files
 .DS_Store

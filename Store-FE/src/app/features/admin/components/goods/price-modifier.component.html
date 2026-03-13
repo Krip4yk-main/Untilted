@@ -1,26 +1,31 @@
 <div class="modal-backdrop">
-  <div class="modal-content">
-    <header>
-      <h2>Price Modifier</h2>
-    </header>
-    <div class="form-body">
-      <p>Adjust the price of all items by a multiplier.</p>
-      <div class="form-group">
-        <label for="multiplier">Multiplier (e.g., 1.1 for +10%, 0.9 for -10%)</label>
-        <p-inputNumber id="multiplier" [(ngModel)]="multiplier" (onModelChange)="onMultiplierChange()" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2" [step]="0.01" [showButtons]="true" [disabled]="showConfirmation()"></p-inputNumber>
-      </div>
-      @if (showConfirmation()) {
-        <p class="warning">Are you sure you want to apply this modifier to ALL items?</p>
-      }
+    <div class="modal-content">
+        <header>
+            <h2>Price Modifier</h2>
+        </header>
+        <div class="form-body">
+            <p>Adjust the price of all items by a multiplier.</p>
+            <div class="form-group">
+                <label for="multiplier">Multiplier (e.g., 1.1 for +10%, 0.9 for -10%)</label>
+                <p-inputNumber id="multiplier" [(ngModel)]="multiplier" (ngModelChange)="onMultiplierChange()"
+                               mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2" [step]="0.01"
+                               [showButtons]="true" [disabled]="showConfirmation()"></p-inputNumber>
+            </div>
+            @if (showConfirmation()) {
+                <p class="warning">Are you sure you want to apply this modifier to ALL items?</p>
+            }
+        </div>
+        <footer>
+            @if (!showConfirmation()) {
+                <p-button class="btn btn-primary" (onClick)="confirm()" label="Apply" icon="pi pi-check"></p-button>
+            } @else {
+                <p-button class="btn btn-danger" (onClick)="apply()" label="Yes, Apply to All"
+                          icon="pi pi-exclamation-triangle" severity="danger"></p-button>
+                <p-button class="btn btn-secondary" (onClick)="showConfirmation.set(false)" label="Cancel"
+                          icon="pi pi-times" severity="secondary"></p-button>
+            }
+            <p-button class="btn btn-secondary" (onClick)="modalClose.emit()" [disabled]="showConfirmation()"
+                      label="Close" icon="pi pi-times" severity="secondary"></p-button>
+        </footer>
     </div>
-    <footer>
-      @if (!showConfirmation()) {
-        <p-button class="btn btn-primary" (onClick)="confirm()" label="Apply" icon="pi pi-check"></p-button>
-      } @else {
-        <p-button class="btn btn-danger" (onClick)="apply()" label="Yes, Apply to All" icon="pi pi-exclamation-triangle" severity="danger"></p-button>
-        <p-button class="btn btn-secondary" (onClick)="showConfirmation.set(false)" label="Cancel" icon="pi pi-times" severity="secondary"></p-button>
-      }
-      <p-button class="btn btn-secondary" (onClick)="modalClose.emit()" [disabled]="showConfirmation()" label="Close" icon="pi pi-times" severity="secondary"></p-button>
-    </footer>
-  </div>
 </div>

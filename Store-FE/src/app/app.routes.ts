@@ -43,7 +43,7 @@ export const routes: Routes = [
         path: 'admin',
         component: AdminComponent,
         title: `Administation | ${appTitle}`,
-        canActivate: [authGuard, roleGuard(['admin', 'manager'])],
+        canActivate: [authGuard, roleGuard(['Admin'])],
     },
     {
         path: 'not-found',

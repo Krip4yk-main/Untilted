@@ -1,28 +1,33 @@
 <header class="header">
-  <div class="logo">
-    <a routerLink="/">Store-FE</a>
-  </div>
+    <div class="logo">
+        <a routerLink="/">Store-FE</a>
+    </div>
 
-  <div class="store-nav">
-    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
-  </div>
+    <div class="store-nav">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
+    </div>
 
-  <nav>
-    <ul class="nav-list">
-      <li class="bucket-nav">
-        <p-button routerLink="/bucket" icon="pi pi-shopping-cart" text [badge]="storageService.bucketCount() > 0 ? storageService.bucketCount().toString() : undefined" badgeSeverity="danger"></p-button>
-      </li>
-      @if (authService.isLoggedIn()) {
-        @if (authService.user()?.role === 'admin' || authService.user()?.role === 'manager') {
-          <li><p-button routerLink="/admin" label="Admin" text></p-button></li>
-        }
-        <li>
-          <p-button (onClick)="authService.logout()" label="Logout" icon="pi pi-sign-out" text></p-button>
-        </li>
-      }
-      <li>
-        <p-button [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" icon="pi pi-user" text [title]="authService.isLoggedIn() ? 'User Info' : 'Login'"></p-button>
-      </li>
-    </ul>
-  </nav>
+    <nav>
+        <ul class="nav-list">
+            <li class="bucket-nav">
+                <p-button routerLink="/bucket" icon="pi pi-shopping-cart" text
+                          [badge]="storageService.bucketCount() > 0 ? storageService.bucketCount().toString() : undefined"
+                          badgeSeverity="danger"></p-button>
+            </li>
+            @if (authService.isLoggedIn()) {
+                @if (authService.user()?.role === 'Admin') {
+                    <li>
+                        <p-button routerLink="/admin" label="Admin" text></p-button>
+                    </li>
+                }
+                <li>
+                    <p-button (onClick)="authService.logout()" label="Logout" icon="pi pi-sign-out" text></p-button>
+                </li>
+            }
+            <li>
+                <p-button [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" icon="pi pi-user" text
+                          [title]="authService.isLoggedIn() ? 'User Info' : 'Login'"></p-button>
+            </li>
+        </ul>
+    </nav>
 </header>

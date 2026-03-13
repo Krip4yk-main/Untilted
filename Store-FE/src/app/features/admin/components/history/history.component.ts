@@ -1,7 +1,7 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service';
-import { User } from '../../../../core/models/user.model';
+import { IUser } from '../../../../core/models/user.model';
 import { UserEditorComponent } from '../user-editor/user-editor.component';
 
 @Component({
@@ -16,9 +16,9 @@ export class HistoryTabComponent {
     protected readonly storageService: StorageService = inject(StorageService);
 
     protected isUserEditorOpen: WritableSignal<boolean> = signal(false);
-    protected selectedUser: WritableSignal<User | null> = signal(null);
+    protected selectedUser: WritableSignal<IUser | null> = signal(null);
 
-    openUserModal(userId: string | 'unknown') {
+    openUserModal(userId: number | 'unknown') {
         if (userId === 'unknown') {
             return;
         }
@@ -29,7 +29,7 @@ export class HistoryTabComponent {
         }
     }
 
-    onSaveUser(user: User) {
+    onSaveUser(user: IUser) {
         this.storageService.updateUser(user);
         this.isUserEditorOpen.set(false);
     }

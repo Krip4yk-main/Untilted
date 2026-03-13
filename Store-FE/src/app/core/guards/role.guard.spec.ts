@@ -3,12 +3,12 @@ import { Router, UrlTree } from '@angular/router';
 import { CoreAuthService } from '../services/core-auth.service';
 import { roleGuard } from './role.guard';
 import { signal } from '@angular/core';
-import { User } from '../models/user.model';
+import { IUser } from '../models/user.model';
 
 describe('roleGuard', () => {
     let authService: Partial<CoreAuthService>;
     let router: Partial<Router>;
-    const userSignal = signal<User | null>(null);
+    const userSignal = signal<IUser | null>(null);
 
     beforeEach(() => {
         authService = {

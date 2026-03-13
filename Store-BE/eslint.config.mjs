@@ -6,7 +6,7 @@ import angular from 'angular-eslint';
 
 export default tseslint.config({
     files: ['**/*.ts'],
-    ignores: ["**/environment.ts", "**/environment.prod.ts", "node_modules/**/*",],
+    ignores: ["**/environment.ts", "**/environment.prod.ts", "node_modules/**/*", "dist/**/*"],
     extends: [eslint.configs.recommended, ...tseslint.configs.recommended, ...tseslint.configs.stylistic, ...angular.configs.tsRecommended],
     processor: angular.processInlineTemplates,
     plugins: {

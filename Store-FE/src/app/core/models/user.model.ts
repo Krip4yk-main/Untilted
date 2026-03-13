@@ -1,14 +1,19 @@
-export type UserRole = 'client' | 'manager' | 'admin';
+export type TUserRole = 'Admin' | 'Dm' | 'User';
 
-export interface User {
-    id: string;
-    name: string;
-    isBlocked: boolean;
-    role: UserRole;
-    adminNotes?: string;
+export interface IUser {
+    id: number;
+    telegramId: `${number}`;
+    username: string;
+    displayName: string;
+    role: TUserRole;
+    registrationDate: Date;
+    avatar: string;
+    deleted: boolean;
+}
+
+export interface IUserExt extends IUser {
     email: string;
-    phone?: string;
-    token?: string;
+    adminNotes: string[];
 }
 
 export interface TelegramUserNested {
@@ -21,14 +26,10 @@ export interface TelegramUserNested {
     picture: string;
     preferred_username: string;
     sub: `${number}`;
+    phone_number?: `${number}`;
 }
 
 export interface TelegramUser {
     id_token: number;
     user: TelegramUserNested;
-}
-
-export interface UserTg {
-    code: string;
-    state: string;
 }

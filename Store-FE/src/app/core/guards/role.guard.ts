@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
 import { type CanActivateFn, Router } from '@angular/router';
 import { CoreAuthService } from '../services/core-auth.service';
-import { UserRole } from '../models/user.model';
+import { TUserRole } from '../models/user.model';
 
-export const roleGuard = (allowedRoles: UserRole[]): CanActivateFn => () => {
+export const roleGuard = (allowedRoles: TUserRole[]): CanActivateFn => () => {
     const authService = inject(CoreAuthService);
     const router = inject(Router);
     const user = authService.user();
