@@ -6,7 +6,7 @@ export interface IUser {
     username: string;
     displayName: string;
     role: TUserRole;
-    registrationDate: Date;
+    registrationDate: string;
     avatar: string;
     deleted: boolean;
 }
@@ -17,7 +17,7 @@ export interface IUserRaw {
     Username: string;
     DisplayName: string;
     Role: TUserRole;
-    RegistrationDate: Date;
+    RegistrationDate: string;
     Avatar: string;
     deleted: boolean;
 }

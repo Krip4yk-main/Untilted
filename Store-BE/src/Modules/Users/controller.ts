@@ -16,6 +16,9 @@ export class UsersController {
     public async getUsers(req: Request, res: Response): Promise<void> {
         try {
             const users = await usersService.getUsers();
+            if (!users) {
+                throw new Error('Failed to get users');
+            }
             res.status(200)
                 .json(users);
         } catch (err: any) {
@@ -31,13 +34,13 @@ export class UsersController {
                 throw new Error('Invalid ID');
             }
             const user = await usersService.getUserById(id);
-            if (user) {
-                res.status(200)
-                    .json(user);
-            } else {
+            if (!user) {
                 res.status(404)
                     .json({ error: 'User not found' });
+                return;
             }
+            res.status(200)
+                .json(user);
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -50,15 +53,49 @@ export class UsersController {
             if (!tgUser?.id_token || !tgUser?.user?.id) {
                 throw new Error('Invalid User Data');
             }
-            const user = await usersService.getUserByTgId(tgUser.user.id);
-            if (user) {
-                res.status(200)
-                    .json(user);
+            let user: IUser | null = await usersService.getUserByTgId(tgUser.user.id);
+            if (!user) {
+                user = await usersService.createUser({
+                    username: tgUser.user.preferred_username,
+                    displayName: tgUser.user.name,
+                    avatar: tgUser.user.picture,
+                    telegramId: tgUser.user.id,
+                    role: 'User',
+                    registrationDate: new Date().toISOString(),
+                });
+                if (!user) {
+                    throw new Error('Failed to create user');
+                }
             } else {
-                res.status(404)
-                    .json({ error: 'User not found' });
+                const a: Partial<IUser> = {
+                    username: tgUser.user.preferred_username,
+                    displayName: tgUser.user.name,
+                    avatar: tgUser.user.picture,
+                    telegramId: tgUser.user.id,
+                };
+                const b: Partial<IUser> = {
+                    username: user.username,
+                    displayName: user.displayName,
+                    avatar: user.avatar,
+                    telegramId: user.telegramId,
+                };
+                if (JSON.stringify(a) !== JSON.stringify(b)) {
+                    const newUser = await usersService.updateUser(user.id, a);
+                    if (!newUser) {
+                        console.error('Failed to update user');
+                    } else {
+                        user = {
+                            ...user,
+                            ...a,
+                        };
+                    }
+                }
             }
+
+            res.status(200)
+                .json(user);
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }
@@ -72,6 +109,9 @@ export class UsersController {
             }
 
             const result = await usersService.createUser(user);
+            if (!result) {
+                throw new Error('Failed to create user');
+            }
             res.status(201)
                 .json(result);
         } catch (err: any) {
@@ -88,13 +128,14 @@ export class UsersController {
             }
 
             const result = await usersService.updateUser(user.id, user);
-            if (result) {
-                res.status(200)
-                    .json(result);
-            } else {
+            if (!result) {
                 res.status(404)
                     .json({ error: 'User not found' });
+                return;
             }
+
+            res.status(200)
+                .json(result);
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -108,13 +149,14 @@ export class UsersController {
                 throw new Error('Invalid ID');
             }
             const deleted = await usersService.deleteUser(id);
-            if (deleted) {
-                res.status(204)
-                    .json();
-            } else {
+            if (!deleted) {
                 res.status(404)
                     .json({ error: 'User not found' });
+                return;
             }
+
+            res.status(204)
+                .json(deleted);
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });

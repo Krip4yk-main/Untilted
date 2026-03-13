@@ -17,7 +17,7 @@ export const authGuard = async(req: Request, res: Response, next: NextFunction):
     }
 
     try {
-        const isValid = await authService.verify(token);
+        const isValid = await authService.verifyOwnToken(token);
         if (isValid) {
             next();
         } else {

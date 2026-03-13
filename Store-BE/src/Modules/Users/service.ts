@@ -6,19 +6,31 @@ export class UsersService {
 
     TABLE_NAME: TDBTable = 'Users';
 
-    public async getUsers(): Promise<IUser[]> {
-        return this.convertRawUsers((await AzureDB.readAll(this.TABLE_NAME)) as IUserRaw[]);
+    public async getUsers(): Promise<IUser[] | null> {
+        const res: unknown[] | null = await await AzureDB.readAll(this.TABLE_NAME);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawUsers(res as IUserRaw[]);
     }
 
-    public async getUserById(id: number): Promise<IUser> {
-        return this.convertRawUser((await AzureDB.readByKey(this.TABLE_NAME, id, 'Id'))[0] as IUserRaw);
+    public async getUserById(id: number): Promise<IUser | null> {
+        const res: unknown[] | null = await await AzureDB.readByKey(this.TABLE_NAME, id, 'Id');
+        if (!res) {
+            return res;
+        }
+        return this.convertRawUser(res[0] as IUserRaw);
     }
 
-    public async getUserByTgId(id: `${number}`): Promise<IUser> {
-        return this.convertRawUser((await AzureDB.readByKey(this.TABLE_NAME, id, 'TelegramId'))[0] as IUserRaw);
+    public async getUserByTgId(id: `${number}`): Promise<IUser | null> {
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, 'TelegramId');
+        if (!res) {
+            return res;
+        }
+        return this.convertRawUser(res[0] as IUserRaw);
     }
 
-    public async createUser(user: IUser): Promise<IUser | null> {
+    public async createUser(user: Partial<IUser>): Promise<IUser | null> {
         const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, user);
         if (!res) {
             return res;
@@ -26,7 +38,7 @@ export class UsersService {
         return this.convertRawUser(res[0] as IUserRaw);
     }
 
-    public async updateUser(id: number, user: Partial<IUser>): Promise<IUser | null> {
+    public async updateUser(id: number, user: Partial<IUser>): Promise<[] | null> {
         const existingUser = await this.getUserById(id);
         if (!existingUser) {
             return null;
@@ -35,7 +47,7 @@ export class UsersService {
         if (!res) {
             return res;
         }
-        return this.convertRawUser(res[0] as IUserRaw);
+        return [];
     }
 
     public async deleteUser(id: number): Promise<IUser | null> {

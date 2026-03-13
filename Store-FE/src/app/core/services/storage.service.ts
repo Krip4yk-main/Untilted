@@ -31,7 +31,6 @@ export class StorageService {
 
     constructor() {
         this.fetchGoods();
-        this.fetchUsers();
 
         const savedBucket = this.localStorageService.getItem<BucketItem[]>(this.BUCKET_KEY);
         if (savedBucket) {
@@ -167,7 +166,7 @@ export class StorageService {
         this._bucket.set([]);
     }
 
-    private fetchGoods() {
+    fetchGoods() {
         this.apiService.getGoods()
             .then((goods: Good[]) => {
                 this._goods.set(goods);
@@ -175,7 +174,7 @@ export class StorageService {
             .catch(console.error);
     }
 
-    private fetchUsers() {
+    fetchUsers() {
         this.apiService.getUsers()
             .then((users: IUser[]) => {
                 this._users.set(users);

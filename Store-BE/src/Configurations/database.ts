@@ -49,8 +49,15 @@ export class DatabaseConfig {
         return sql.NVarChar((value.length < 256) ? 255 : value.length);
     }
 
-    async executeQuery(request: sql.Request, query: string): Promise<unknown[]> {
-        return (await request.query(query)).recordset;
+    async executeQuery(request: sql.Request, query: string): Promise<unknown[] | null> {
+        const result = (await request.query(query));
+        if (!result.recordset.length) {
+            if (result.rowsAffected[0] === 1) {
+                return [];
+            }
+            return null;
+        }
+        return result.recordset;
     }
 
     async insert<T extends object>(table: TDBTable, data: T) {
@@ -147,8 +154,9 @@ export class DatabaseConfig {
             }
 
             request.input(key, type, data[rKey]);
-            insertionKeys += `${key}=@${key}, `;
+            insertionKeys += `${key} = @${key}, `;
         }
+        insertionKeys = insertionKeys.slice(0, -2);
 
         return this.executeQuery(request, `UPDATE ${table}
                                            SET ${insertionKeys}

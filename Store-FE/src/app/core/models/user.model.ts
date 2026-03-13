@@ -16,7 +16,7 @@ export interface IUserExt extends IUser {
     adminNotes: string[];
 }
 
-export interface TelegramUserNested {
+export interface ITelegramUserNested {
     aud: `${number}`;
     exp: number;
     iat: number;
@@ -29,7 +29,7 @@ export interface TelegramUserNested {
     phone_number?: `${number}`;
 }
 
-export interface TelegramUser {
-    id_token: number;
-    user: TelegramUserNested;
+export interface ITelegramUser {
+    id_token: string;
+    user: ITelegramUserNested;
 }

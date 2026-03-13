@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 export enum LocalStorageBuckets {
     AUTH = 'auth_user',
-    TGAUTH = 'tg_auth_user',
+    TG_AUTH = 'tg_auth_user',
     USER = 'user-bucket',
     GOOD_EDITOR = 'good-editor-data',
     USER_EDITOR = 'user-editor-data',

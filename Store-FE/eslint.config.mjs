@@ -45,7 +45,7 @@ export default tseslint.config({
         "no-confusing-arrow": "error",
 
         "no-console": ["error", {
-            allow: ["warn", "error", "info"],
+            allow: ["warn", "error", "info", "trace"],
         }],
 
         "no-else-return": ["error", {

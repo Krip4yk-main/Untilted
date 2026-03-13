@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CoreAuthService } from '../../core/services/core-auth.service';
-import { TelegramUser } from '../../core/models/user.model';
+import { ITelegramUser } from '../../core/models/user.model';
 
 @Component({
     selector: 'app-login',
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
             .then();
     }
 
-    loginViaTelegram(user: TelegramUser) {
+    loginViaTelegram(user: ITelegramUser) {
         this.authService.loginTg(user);
     }
 

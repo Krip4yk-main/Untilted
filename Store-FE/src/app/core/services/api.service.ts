@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { Good } from '../models/good.model';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { IUser, TelegramUser } from '../models/user.model';
+import { ITelegramUser, IUser } from '../models/user.model';
 
 @Injectable({
     providedIn: 'root',
@@ -12,6 +12,10 @@ export class ApiService {
 
     private readonly http: HttpClient = inject(HttpClient);
     private readonly apiUrl: string = environment.apiUrl;
+
+    getToken(user: ITelegramUser): Promise<string> {
+        return lastValueFrom(this.http.post<string>(`${this.apiUrl}/token`, user));
+    }
 
     /*
     * goods
@@ -27,7 +31,7 @@ export class ApiService {
         return lastValueFrom(this.http.get<IUser[]>(`${this.apiUrl}/users`));
     }
 
-    getUserFromTelegramData(user: TelegramUser) {
+    getUserFromTelegramData(user: ITelegramUser) {
         return lastValueFrom(this.http.post<IUser>(`${this.apiUrl}/users/tg`, user));
     }
 
