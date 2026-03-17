@@ -25,6 +25,7 @@ export class UsersController {
             }
             res.status(200)
                 .json(users);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -45,6 +46,7 @@ export class UsersController {
             }
             res.status(200)
                 .json(user);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -98,6 +100,7 @@ export class UsersController {
 
             res.status(200)
                 .json(user);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.trace(err);
             res.status(500)
@@ -118,6 +121,7 @@ export class UsersController {
             }
             res.status(201)
                 .json(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -140,6 +144,7 @@ export class UsersController {
 
             res.status(200)
                 .json(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });
@@ -161,6 +166,7 @@ export class UsersController {
 
             res.status(204)
                 .json(deleted);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
                 .json({ error: err.message });

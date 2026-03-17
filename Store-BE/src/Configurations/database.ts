@@ -8,6 +8,7 @@ export class DatabaseConfig {
     poolConnection: sql.ConnectionPool | undefined;
 
     private constructor() {
+        // intentionally empty
     }
 
     public static getInstance(): DatabaseConfig {

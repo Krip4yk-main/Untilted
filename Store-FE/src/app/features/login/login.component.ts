@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
     private readonly router: Router = inject(Router);
 
     constructor() {
-        (window as any).loginViaTelegram = this.loginViaTelegram.bind(this); // eslint-disable-line
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).loginViaTelegram = this.loginViaTelegram.bind(this);
     }
 
     ngOnInit() {

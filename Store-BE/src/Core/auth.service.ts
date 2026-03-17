@@ -27,7 +27,9 @@ export class AuthService {
         return AuthService.instance;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getKey = (header: any, callback: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         this.client.getSigningKey(header.kid, (err: (Error | null), key?: any) => {
             if (key === undefined) {
                 throw new Error('Key not found');
