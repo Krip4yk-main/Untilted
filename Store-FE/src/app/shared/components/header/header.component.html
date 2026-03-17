@@ -30,8 +30,11 @@
                 </li>
             } @else {
                 <li>
-                    <p-button [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" icon="pi pi-user" text
-                              [title]="authService.isLoggedIn() ? 'User Info' : 'Login'"></p-button>
+                    <img [src]="authService.user()!.avatar"
+                         alt="User Info"
+                         class="user-avatar"
+                         (mouseup)="navigateToUser()"
+                    >
                 </li>
             }
         </ul>

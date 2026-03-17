@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { MainComponent } from './features/main/main.component';
-import { LoginComponent } from './features/login/login.component';
 import { UserComponent } from './features/user/user.component';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 import { StoreItemDetailsComponent } from './features/store-item-details/store-item-details.component';
@@ -17,11 +16,6 @@ export const routes: Routes = [
         path: '',
         component: MainComponent,
         title: `${appTitle}`,
-    },
-    {
-        path: 'login',
-        component: LoginComponent,
-        title: `Login | ${appTitle}`,
     },
     {
         path: 'user',
