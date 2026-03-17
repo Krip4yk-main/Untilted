@@ -1,10 +1,13 @@
-import { computed, effect, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { Good } from '../models/good.model';
+import { computed, DestroyRef, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { IGood } from '../models/good.model';
 import { IUser } from '../models/user.model';
 import { Sale } from '../models/sale.model';
 import { BucketItem } from '../models/bucket-item.model';
 import { LocalStorageBuckets, LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
+import { CoreAuthService } from './core-auth.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -13,16 +16,17 @@ export class StorageService {
 
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
     private readonly apiService: ApiService = inject(ApiService);
+    private readonly coreAuthService: CoreAuthService = inject(CoreAuthService);
+    private readonly destroyRef: DestroyRef = inject(DestroyRef);
     private readonly BUCKET_KEY: LocalStorageBuckets = LocalStorageBuckets.USER;
 
-    private readonly _goods: WritableSignal<Good[]> = signal([]);
+    private readonly _goods: WritableSignal<IGood[]> = signal([]);
     private readonly _users: WritableSignal<IUser[]> = signal([]);
-
     private readonly _sales: WritableSignal<Sale[]> = signal([]);
-
     private readonly _bucket: WritableSignal<BucketItem[]> = signal([]);
+    private readonly loginSubs$: Observable<IUser | null> = toObservable(this.coreAuthService.user);
 
-    readonly goods: Signal<Good[]> = this._goods.asReadonly();
+    readonly goods: Signal<IGood[]> = this._goods.asReadonly();
     readonly users: Signal<IUser[]> = this._users.asReadonly();
     readonly sales: Signal<Sale[]> = this._sales.asReadonly();
     readonly bucket: Signal<BucketItem[]> = this._bucket.asReadonly();
@@ -37,17 +41,20 @@ export class StorageService {
             this._bucket.set(savedBucket);
         }
 
-        effect(() => {
-            const currentBucket = this._bucket();
-            if (currentBucket.length > 0) {
-                this.localStorageService.setItem(this.BUCKET_KEY, currentBucket);
+        const sub = this.loginSubs$.subscribe((user: IUser | null) => {
+            if (user) {
+                if (this._users()?.length > 0) {
+                    return;
+                }
+                this.fetchUsers();
             } else {
-                this.localStorageService.removeItem(this.BUCKET_KEY);
+                this._users.set([]);
             }
         });
+        this.destroyRef.onDestroy(() => sub.unsubscribe());
     }
 
-    addToBucket(good: Good) {
+    addToBucket(good: IGood) {
         this._bucket.update((current: BucketItem[]) => {
             const index = current.findIndex((bi: BucketItem) => bi.good.id === good.id);
             if (index !== -1) {
@@ -90,24 +97,31 @@ export class StorageService {
         });
     }
 
-    getGoodById(id: number): Good | undefined {
-        return this._goods().find((g: Good) => g.id === id);
+    getGoodById(id: number): IGood | undefined {
+        return this._goods().find((g: IGood) => g.id === id);
     }
 
     getUserById(id: number): IUser | undefined {
         return this._users().find((u: IUser) => u.id === id);
     }
 
-    updateGood(updatedGood: Good) {
-        this._goods.update((goods: Good[]) => {
-            const index = goods.findIndex((g: Good) => g.id === updatedGood.id);
+    updateGood(updatedGood: IGood) {
+        this._goods.update((goods: IGood[]) => {
+            const index = goods.findIndex((g: IGood) => g.id === updatedGood.id);
             if (index !== -1) {
                 const newGoods = [...goods];
                 const oldGood = goods[index];
-                if (oldGood.price !== updatedGood.price) {
+                if (oldGood.sellPrice !== updatedGood.sellPrice) {
                     updatedGood.priceHistory = [
-                        { price: updatedGood.price, date: new Date().toISOString() },
                         ...oldGood.priceHistory,
+                        {
+                            id: -1,
+                            goodId: updatedGood.id,
+                            price: updatedGood.sellPrice,
+                            createdAt: new Date().toISOString(),
+                            createdBy: this.coreAuthService.user()!.username,
+                            deleted: false,
+                        },
                     ];
                 }
                 newGoods[index] = updatedGood;
@@ -117,24 +131,33 @@ export class StorageService {
         });
     }
 
-    addGood(good: Good) {
-        this._goods.update((goods: Good[]) => [
+    addGood(good: IGood) {
+        this._goods.update((goods: IGood[]) => [
             ...goods,
-            { ...good, id: Math.max(0, ...goods.map((g: Good) => g.id)) + 1 },
+            { ...good, id: Math.max(0, ...goods.map((g: IGood) => g.id)) + 1 },
         ]);
     }
 
     deleteGood(id: number) {
-        this._goods.update((goods: Good[]) => goods.filter((g: Good) => g.id !== id));
+        this._goods.update((goods: IGood[]) => goods.filter((g: IGood) => g.id !== id));
     }
 
     applyPriceModifier(multiplier: number) {
-        this._goods.update((goods: Good[]) => goods.map((g: Good) => {
-            const newPrice = Number((g.price * multiplier).toFixed(2));
+        this._goods.update((goods: IGood[]) => goods.map((g: IGood) => {
+            const newPrice = Number((g.sellPrice * multiplier).toFixed(2));
             return {
                 ...g,
                 price: newPrice,
-                priceHistory: [{ price: newPrice, date: new Date().toISOString() }, ...g.priceHistory],
+                priceHistory: [{
+                    id: -1,
+                    goodId: g.id,
+                    price: newPrice,
+                    createdAt: new Date().toISOString(),
+                    createdBy: this.coreAuthService.user()!.username,
+                    deleted: false,
+                },
+                ...g.priceHistory,
+                ],
             };
         }));
     }
@@ -168,7 +191,7 @@ export class StorageService {
 
     fetchGoods() {
         this.apiService.getGoods()
-            .then((goods: Good[]) => {
+            .then((goods: IGood[]) => {
                 this._goods.set(goods);
             })
             .catch(console.error);

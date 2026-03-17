@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { Good } from '../models/good.model';
+import { IGood } from '../models/good.model';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { ITelegramUser, IUser } from '../models/user.model';
@@ -21,7 +21,7 @@ export class ApiService {
     * goods
     */
     getGoods() {
-        return lastValueFrom(this.http.get<Good[]>(`${this.apiUrl}/goods`));
+        return lastValueFrom(this.http.get<IGood[]>(`${this.apiUrl}/goods`));
     }
 
     /*

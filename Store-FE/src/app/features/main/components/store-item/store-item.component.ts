@@ -1,7 +1,7 @@
 import { Component, inject, input, InputSignal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Good } from '../../../../core/models/good.model';
+import { IGood } from '../../../../core/models/good.model';
 import { StorageService } from '../../../../core/services/storage.service';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
@@ -16,7 +16,7 @@ export class StoreItemComponent {
 
     protected readonly storageService: StorageService = inject(StorageService);
 
-    good: InputSignal<Good> = input.required();
+    good: InputSignal<IGood> = input.required();
 
     addToBucket(event: Event) {
         event.stopPropagation();

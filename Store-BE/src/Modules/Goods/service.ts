@@ -98,6 +98,7 @@ export class GoodsService {
             uniqueCode: data.unique_code,
             name: data.name,
             type: data.type,
+            imageUrl: data.image_url,
             storage: data.storage,
             storageType: data.storage_type,
             nullPrice: data.null_price,

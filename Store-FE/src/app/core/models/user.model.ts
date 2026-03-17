@@ -1,14 +1,15 @@
 import { SafeResourceUrl } from '@angular/platform-browser';
+import { TNumString } from '../services/utils.types';
 
-export type TUserRole = 'Admin' | 'Dm' | 'User';
+export type TUserRole = 'Admin' | 'Manager' | 'Dm' | 'User';
 
 export interface IUser {
     id: number;
-    telegramId: `${number}`;
+    telegramId: TNumString;
     username: string;
     displayName: string;
     role: TUserRole;
-    registrationDate: Date;
+    registrationDate: string;
     avatar: string | SafeResourceUrl;
     deleted: boolean;
 }
@@ -19,16 +20,16 @@ export interface IUserExt extends IUser {
 }
 
 export interface ITelegramUserNested {
-    aud: `${number}`;
+    aud: TNumString;
     exp: number;
     iat: number;
-    id: `${number}`;
+    id: TNumString;
     iss: string;
     name: string;
     picture: string;
     preferred_username: string;
-    sub: `${number}`;
-    phone_number?: `${number}`;
+    sub: TNumString;
+    phone_number?: TNumString;
 }
 
 export interface ITelegramUser {

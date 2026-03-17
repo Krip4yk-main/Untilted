@@ -2,7 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service';
 import { CoreAuthService } from '../../../../core/services/core-auth.service';
-import { Good } from '../../../../core/models/good.model';
+import { IGood } from '../../../../core/models/good.model';
 import { EditorMode, GoodEditorComponent } from '../good-editor/good-editor.component';
 import { PriceModifierComponent } from './price-modifier.component';
 import { Button } from 'primeng/button';
@@ -22,7 +22,7 @@ export class GoodsTabComponent {
 
     protected isEditorOpen: WritableSignal<boolean> = signal(false);
     protected editorMode: WritableSignal<EditorMode> = signal('view');
-    protected selectedItem: WritableSignal<Good | null> = signal(null);
+    protected selectedItem: WritableSignal<IGood | null> = signal(null);
 
     protected isPriceModifierOpen: WritableSignal<boolean> = signal(false);
 
@@ -32,19 +32,19 @@ export class GoodsTabComponent {
         this.isEditorOpen.set(true);
     }
 
-    openView(item: Good) {
+    openView(item: IGood) {
         this.selectedItem.set(item);
         this.editorMode.set('view');
         this.isEditorOpen.set(true);
     }
 
-    openEdit(item: Good) {
+    openEdit(item: IGood) {
         this.selectedItem.set(item);
         this.editorMode.set('edit');
         this.isEditorOpen.set(true);
     }
 
-    onSave(item: Good) {
+    onSave(item: IGood) {
         if (this.editorMode() === 'add') {
             this.storageService.addGood(item);
         } else {

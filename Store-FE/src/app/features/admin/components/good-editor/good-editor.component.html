@@ -17,19 +17,21 @@
             <div class="form-group">
                 <label for="name">Name</label>
                 <input id="name" pInputText [(ngModel)]="formData().name" (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"/>
+                       [disabled]="currentMode() === 'view'"
+                />
             </div>
             <div class="form-group">
                 <label for="imageUrl">Image URL</label>
                 <input id="imageUrl" pInputText [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"/>
+                       [disabled]="currentMode() === 'view'"
+                />
             </div>
             <div class="form-group">
                 <label for="description">Short Description</label>
                 <textarea
                         id="description"
                         pTextarea
-                        [(ngModel)]="formData().description"
+                        [(ngModel)]="formData().shortDescription"
                         (ngModelChange)="onDataChange()"
                         [disabled]="currentMode() === 'view'"
                         [autoResize]="true"
@@ -40,7 +42,7 @@
                 <textarea
                         id="fullDescription"
                         pTextarea
-                        [(ngModel)]="formData().fullDescription"
+                        [(ngModel)]="formData().description"
                         (ngModelChange)="onDataChange()"
                         [disabled]="currentMode() === 'view'"
                         [autoResize]="true"
@@ -50,7 +52,7 @@
                 <label for="price">Price</label>
                 <p-inputNumber
                         id="price"
-                        [(ngModel)]="formData().price"
+                        [(ngModel)]="formData().sellPrice"
                         (ngModelChange)="onDataChange()"
                         [disabled]="currentMode() === 'view'"
                         mode="currency"
@@ -61,21 +63,23 @@
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea id="notes" pInputTextarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()"
-                          [disabled]="currentMode() === 'view'" [autoResize]="true"></textarea>
+                          [disabled]="currentMode() === 'view'" [autoResize]="true"
+                ></textarea>
             </div>
             <div class="form-group">
                 <label for="count">Count</label>
                 <p-inputNumber
                         id="count"
-                        [(ngModel)]="formData().count"
+                        [(ngModel)]="formData().storage"
                         (ngModelChange)="onDataChange()"
                         [disabled]="currentMode() === 'view'"
                 ></p-inputNumber>
             </div>
             <div class="form-group">
                 <label for="externalId">Unique ID (Optional)</label>
-                <input id="externalId" pInputText [(ngModel)]="formData().externalId" (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"/>
+                <input id="externalId" pInputText [(ngModel)]="formData().uniqueId" (ngModelChange)="onDataChange()"
+                       [disabled]="currentMode() === 'view'"
+                />
             </div>
 
             @if (currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0) {
@@ -106,7 +110,8 @@
                 <p-button class="btn btn-primary" (onClick)="onSave()" label="Save" icon="pi pi-save"></p-button>
             }
             <p-button class="btn btn-secondary" (onClick)="onClose()" label="Cancel" icon="pi pi-times"
-                      severity="secondary"></p-button>
+                      severity="secondary"
+            ></p-button>
         </footer>
     </div>
 </div>

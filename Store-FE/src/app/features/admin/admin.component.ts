@@ -5,6 +5,7 @@ import { GoodsTabComponent } from './components/goods/goods.component';
 import { ManagementTabComponent } from './components/management/management.component';
 import { HistoryTabComponent } from './components/history/history.component';
 import { StatisticsTabComponent } from './components/statistics/statistics.component';
+import { Button } from 'primeng/button';
 
 type AdminTab = 'Goods' | 'Management' | 'History' | 'Statistics';
 
@@ -17,6 +18,7 @@ type AdminTab = 'Goods' | 'Management' | 'History' | 'Statistics';
         ManagementTabComponent,
         HistoryTabComponent,
         StatisticsTabComponent,
+        Button,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.less',

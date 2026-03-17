@@ -1,10 +1,12 @@
 <div class="goods-tab-container">
     <div class="actions">
         <p-button class="btn btn-success" (onClick)="openAdd()" label="Add Item" icon="pi pi-plus"
-                  severity="success"></p-button>
+                  severity="success"
+        ></p-button>
         @if (authService.user()?.role === 'Admin') {
             <p-button class="btn btn-warning" (onClick)="isPriceModifierOpen.set(true)" label="Price Modifier"
-                      icon="pi pi-percentage" severity="warn"></p-button>
+                      icon="pi pi-percentage" severity="warn"
+            ></p-button>
         }
     </div>
 
@@ -30,25 +32,24 @@
                     <p-button (onClick)="openView(item)" title="View" icon="pi pi-eye" text></p-button>
                     <p-button (onClick)="openEdit(item)" title="Edit" icon="pi pi-pencil" text></p-button>
                     <p-button (onClick)="deleteItem(item.id)" title="Delete" icon="pi pi-trash" severity="danger"
-                              text></p-button>
+                              text
+                    ></p-button>
                 </td>
             </tr>
         </ng-template>
     </p-table>
 
     @if (isEditorOpen()) {
-        <app-good-editor
-                [mode]="editorMode()"
-                [item]="selectedItem()"
-                (itemSave)="onSave($event)"
-                (modalClose)="isEditorOpen.set(false)"
+        <app-good-editor [mode]="editorMode()"
+                         [item]="selectedItem()"
+                         (itemSave)="onSave($event)"
+                         (modalClose)="isEditorOpen.set(false)"
         />
     }
 
     @if (isPriceModifierOpen()) {
-        <app-price-modifier
-                (applyModifier)="applyModifier($event)"
-                (modalClose)="isPriceModifierOpen.set(false)"
+        <app-price-modifier (applyModifier)="applyModifier($event)"
+                            (modalClose)="isPriceModifierOpen.set(false)"
         />
     }
 </div>

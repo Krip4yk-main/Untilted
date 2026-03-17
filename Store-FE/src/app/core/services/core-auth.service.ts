@@ -1,7 +1,6 @@
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { ITelegramUser, IUser } from '../models/user.model';
 import { LocalStorageBuckets, LocalStorageService } from './local-storage.service';
-import { StorageService } from './storage.service';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -12,7 +11,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class CoreAuthService {
 
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
-    private readonly storageService: StorageService = inject(StorageService);
     private readonly apiService: ApiService = inject(ApiService);
     private readonly router: Router = inject(Router);
     private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
@@ -62,9 +60,6 @@ export class CoreAuthService {
         }
         this._user.set(userData);
         this.localStorageService.setItem(this.AUTH_USER_KEY, userData);
-        if (userData.role === 'Admin') {
-            this.storageService.fetchUsers();
-        }
     }
 
     async loginTg(userData: ITelegramUser | null, isNewToken?: boolean) {
@@ -107,7 +102,6 @@ export class CoreAuthService {
 
     logout() {
         this._user.set(null);
-        this.storageService.clearBucket();
         this.localStorageService.clear();
     }
 

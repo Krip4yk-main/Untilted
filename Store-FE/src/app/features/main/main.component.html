@@ -1,55 +1,10 @@
-<div class="main-page">
-    <app-filters/>
-    <main class="content">
-        <h2>Store Goods</h2>
+<main>
+    <app-filters class="filters"/>
+    <div class="content">
         <div class="goods-grid">
             @for (item of goods(); track item.id) {
                 <app-store-item [good]="item"/>
             }
         </div>
-    </main>
-</div>
-<div class="main-page">
-    <app-filters/>
-    <main class="content">
-        <h2>Store Goods</h2>
-        <div class="goods-grid">
-            @for (item of goods(); track item.id) {
-                <app-store-item [good]="item"/>
-            }
-        </div>
-    </main>
-</div>
-<div class="main-page">
-    <app-filters/>
-    <main class="content">
-        <h2>Store Goods</h2>
-        <div class="goods-grid">
-            @for (item of goods(); track item.id) {
-                <app-store-item [good]="item"/>
-            }
-        </div>
-    </main>
-</div>
-<div class="main-page">
-    <app-filters/>
-    <main class="content">
-        <h2>Store Goods</h2>
-        <div class="goods-grid">
-            @for (item of goods(); track item.id) {
-                <app-store-item [good]="item"/>
-            }
-        </div>
-    </main>
-</div>
-<div class="main-page">
-    <app-filters/>
-    <main class="content">
-        <h2>Store Goods</h2>
-        <div class="goods-grid">
-            @for (item of goods(); track item.id) {
-                <app-store-item [good]="item"/>
-            }
-        </div>
-    </main>
-</div>
+    </div>
+</main>

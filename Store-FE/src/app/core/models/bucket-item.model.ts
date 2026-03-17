@@ -1,6 +1,6 @@
-import { Good } from './good.model';
+import { IGood } from './good.model';
 
 export interface BucketItem {
-    good: Good;
+    good: IGood;
     count: number;
 }

@@ -1,42 +1,62 @@
 <header class="header">
     <div class="logo">
-        <a routerLink="/">Store-FE</a>
+        <a routerLink="/">MIAR store</a>
     </div>
 
     <div class="store-nav">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Store</a>
+        <a routerLink="/"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }"
+        >
+            <span>Магазин</span>
+            <div class="underline"></div>
+        </a>
+        @if (authService.isLoggedIn() && authService.user()?.role === 'Admin') {
+            <a routerLink="/admin"
+               routerLinkActive="active"
+               [routerLinkActiveOptions]="{ exact: true }"
+            >
+                <span>Адмін</span>
+                <div class="underline"></div>
+            </a>
+        }
     </div>
 
-    <nav>
-        <ul class="nav-list">
-            <li class="bucket-nav">
-                <p-button routerLink="/bucket" icon="pi pi-shopping-cart" text
-                          [badge]="storageService.bucketCount() > 0 ? storageService.bucketCount().toString() : undefined"
-                          badgeSeverity="danger"></p-button>
-            </li>
-            @if (authService.isLoggedIn()) {
-                @if (authService.user()?.role === 'Admin') {
-                    <li>
-                        <p-button routerLink="/admin" label="Admin" text></p-button>
-                    </li>
-                }
-                <li>
-                    <p-button (onClick)="authService.logout()" label="Logout" icon="pi pi-sign-out" text></p-button>
-                </li>
-            }
-            @if (!authService.isLoggedIn()) {
-                <li>
-                    <button class="tg-auth-button" data-style="icon">Sign In with Telegram</button>
-                </li>
-            } @else {
-                <li>
-                    <img [src]="authService.user()!.avatar"
-                         alt="User Info"
-                         class="user-avatar"
-                         (mouseup)="navigateToUser()"
-                    >
-                </li>
-            }
-        </ul>
-    </nav>
+    <div class="nav-list">
+        <div class="bucket-nav">
+            <p-button routerLink="/bucket"
+                      icon="pi pi-shopping-cart"
+                      text
+                      [badge]="storageService.bucketCount() > 0 ? storageService.bucketCount().toString() : undefined"
+                      badgeSeverity="danger"
+            ></p-button>
+        </div>
+        @if (authService.isLoggedIn()) {
+            <div>
+                <p-button (onClick)="authService.logout()"
+                          label="Logout"
+                          icon="pi pi-sign-out"
+                          text
+                ></p-button>
+            </div>
+        }
+        @if (!authService.isLoggedIn()) {
+            <div>
+                <button class="tg-auth-button"
+                        data-style="icon"
+                >
+                    Sign In with Telegram
+                </button>
+            </div>
+        } @else {
+            <div>
+                <img [ngSrc]="authService.user()!.avatar"
+                     alt="User Info"
+                     class="user-avatar"
+                     (mouseup)="navigateToUser()"
+                     width="32" height="32"
+                >
+            </div>
+        }
+    </div>
 </header>

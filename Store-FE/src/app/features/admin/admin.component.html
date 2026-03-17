@@ -1,27 +1,26 @@
 <div class="admin-container">
-  <h1>Admin Dashboard</h1>
-  <div class="tabs">
-    @for (tab of tabs(); track tab) {
-      <button class="tab-button" [class.active]="activeTab() === tab" (click)="setTab(tab)">
-        {{ tab }}
-      </button>
-    }
-  </div>
+    <div class="tabs">
+        @for (tab of tabs(); track tab) {
+            <p-button class="tab-button" [class.active]="activeTab() === tab" (click)="setTab(tab)">
+                {{ tab }}
+            </p-button>
+        }
+    </div>
 
-  <div class="tab-content">
-    @switch (activeTab()) {
-      @case ('Goods') {
-        <app-goods-tab />
-      }
-      @case ('Management') {
-        <app-management-tab />
-      }
-      @case ('History') {
-        <app-history-tab />
-      }
-      @case ('Statistics') {
-        <app-statistics-tab />
-      }
-    }
-  </div>
+    <div class="tab-content">
+        @switch (activeTab()) {
+            @case ('Goods') {
+                <app-goods-tab/>
+            }
+            @case ('Management') {
+                <app-management-tab/>
+            }
+            @case ('History') {
+                <app-history-tab/>
+            }
+            @case ('Statistics') {
+                <app-statistics-tab/>
+            }
+        }
+    </div>
 </div>

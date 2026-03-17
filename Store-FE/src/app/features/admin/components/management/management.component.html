@@ -28,11 +28,10 @@
     </table>
 
     @if (isEditorOpen() && selectedUser()) {
-        <app-user-editor
-                [mode]="editorMode()"
-                [user]="selectedUser()!"
-                (userSave)="onSave($event)"
-                (modalClose)="isEditorOpen.set(false)"
+        <app-user-editor [mode]="editorMode()"
+                         [user]="selectedUser()!"
+                         (userSave)="onSave($event)"
+                         (modalClose)="isEditorOpen.set(false)"
         />
     }
 </div>

@@ -21,7 +21,7 @@ export class BucketComponent {
     protected readonly isApplying: WritableSignal<boolean> = signal(false);
 
     getTotal() {
-        return this.storageService.bucket().reduce((sum: number, item: BucketItem) => sum + (item.good.price * item.count), 0);
+        return this.storageService.bucket().reduce((sum: number, item: BucketItem) => sum + (item.good.sellPrice * item.count), 0);
     }
 
     onRemove(id: number) {

@@ -4,11 +4,12 @@
             <div class="product-header">
                 <img [src]="item.imageUrl" [alt]="item.name" class="product-image"/>
                 <div class="product-summary">
-                    <p class="price">{{ item.price | currency }}</p>
-                    <p class="description">{{ item.description }}</p>
-                    <p class="full-description">{{ item.fullDescription }}</p>
+                    <p class="price">{{ item.sellPrice | currency: 'UAN' }}</p>
+                    <p class="description">{{ item.shortDescription }}</p>
+                    <p class="full-description">{{ item.description }}</p>
                     <p-button class="add-to-cart" (onClick)="addToBucket()" label="Add to bucket"
-                              icon="pi pi-shopping-cart"></p-button>
+                              icon="pi pi-shopping-cart"
+                    ></p-button>
 
                     @if (item.notes &&
                     (authService.user()?.role === 'Admin')) {
@@ -26,9 +27,9 @@
                     <li><strong>Brand:</strong> Demo Brand</li>
                     <li><strong>Warranty:</strong> 1 Year</li>
                     <li><strong>Shipping:</strong> Free</li>
-                    <li><strong>Available Count:</strong> {{ item.count }}</li>
-                    @if (item.externalId) {
-                        <li><strong>External ID:</strong> {{ item.externalId }}</li>
+                    <li><strong>Available Count:</strong> {{ item.storage }}</li>
+                    @if (item.uniqueId) {
+                        <li><strong>External ID:</strong> {{ item.uniqueId }}</li>
                     }
                 </ul>
                 <h2>More Information</h2>

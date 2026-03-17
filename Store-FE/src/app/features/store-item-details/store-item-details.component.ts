@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
-import { Good } from '../../core/models/good.model';
+import { IGood } from '../../core/models/good.model';
 import { StorageService } from '../../core/services/storage.service';
 import { CoreAuthService } from '../../core/services/core-auth.service';
 import { Button } from 'primeng/button';
@@ -19,26 +19,13 @@ export class StoreItemDetailsComponent implements OnInit {
     protected readonly storageService: StorageService = inject(StorageService);
     protected readonly authService: CoreAuthService = inject(CoreAuthService);
 
-    protected readonly good: WritableSignal<Good | null> = signal(null);
+    protected readonly good: WritableSignal<IGood | null> = signal(null);
 
     ngOnInit() {
         const id = Number(this.route.snapshot.paramMap.get('id'));
         const item = this.storageService.getGoodById(id);
         if (item) {
             this.good.set(item);
-        } else {
-            // Fallback for demo if not in storage
-            this.good.set({
-                id,
-                name: `Product ${id}`,
-                description: `Detailed description for Product ${id}.`,
-                fullDescription: `Full detailed description for Product ${id}. 
-                    This product is high quality and very useful for daily tasks.`,
-                price: (id * 50) + 49.99,
-                imageUrl: `https://via.placeholder.com/400x300?text=Product+${id}`,
-                count: 10,
-                priceHistory: [{ price: (id * 50) + 49.99, date: new Date().toISOString() }],
-            });
         }
     }
 

@@ -1,12 +1,16 @@
 <p-card [header]="good().name" [routerLink]="['/store-item', good().id]" class="good-card-component">
-  <ng-template pTemplate="header">
-    <img [src]="good().imageUrl" [alt]="good().name" class="good-image" />
-  </ng-template>
-  <p class="description">{{ good().description }}</p>
-  <ng-template pTemplate="footer">
-    <div class="good-footer">
-      <p class="price">{{ good().price | currency }}</p>
-      <p-button class="add-btn" (onClick)="addToBucket($event)" label="Add to bucket" icon="pi pi-shopping-cart"></p-button>
-    </div>
-  </ng-template>
+    <ng-template pTemplate="header">
+        <img [src]="good().imageUrl" [alt]="good().name" class="good-image"/>
+    </ng-template>
+    <p class="description">{{ good().description }}</p>
+    <ng-template pTemplate="footer">
+        <div class="good-footer">
+            <p class="price">{{ good().sellPrice | currency }}</p>
+            <p-button class="add-btn"
+                      (onClick)="addToBucket($event)"
+                      label="Add to bucket"
+                      icon="pi pi-shopping-cart"
+            ></p-button>
+        </div>
+    </ng-template>
 </p-card>

@@ -1,12 +1,19 @@
 import type { TNumString } from '../Core/utils.types.js';
 import type { IPriceHistoryRecord } from './goodsPriceHistory.model.js';
 
+export type TGoodType = 'poly' | 'poly_lam' | 'SLA' | 'FDM' | 'wood' | 'clothes';
+export type TStorageType = 'items' | 'meters';
+
 export interface IGood {
     id: number;
     uniqueId: string | null;
     uniqueCode: TNumString | null;
     name: string;
     type: TGoodType;
+    imageUrl: string;
+    description: string;
+    shortDescription: string;
+    notes: string;
     storage: number;
     storageType: TStorageType;
     nullPrice: number;
@@ -21,15 +28,16 @@ export interface IGood {
     priceHistory: IPriceHistoryRecord[];
 }
 
-export type TGoodType = 'poly' | 'poly_lam' | 'SLA' | 'FDM' | 'wood' | 'clothes';
-export type TStorageType = 'items' | 'meters';
-
 export interface IGoodRaw {
     id: number;
     unique_id: string | null;
     unique_code: TNumString | null;
     name: string;
     type: TGoodType;
+    image_url: string;
+    description: string;
+    short_description: string;
+    notes: string;
     storage: number;
     storage_type: TStorageType;
     null_price: number;

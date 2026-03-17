@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Good } from '../../../../core/models/good.model';
+import { IGood } from '../../../../core/models/good.model';
 import { LocalStorageBuckets, LocalStorageService } from '../../../../core/services/local-storage.service';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -34,17 +34,17 @@ export class GoodEditorComponent implements OnInit {
     private readonly STORAGE_KEY: LocalStorageBuckets = LocalStorageBuckets.GOOD_EDITOR;
 
     mode: InputSignal<EditorMode> = input.required();
-    item: InputSignal<Good | null> = input<Good | null>(null);
-    itemSave: OutputEmitterRef<Good> = output();
+    item: InputSignal<IGood | null> = input<IGood | null>(null);
+    itemSave: OutputEmitterRef<IGood> = output();
     modalClose: OutputEmitterRef<void> = output();
 
     protected currentMode: WritableSignal<EditorMode> = signal('view');
-    protected formData: WritableSignal<Partial<Good>> = signal({});
+    protected formData: WritableSignal<Partial<IGood>> = signal({});
 
     ngOnInit() {
         this.currentMode.set(this.mode());
 
-        const savedData = this.localStorageService.getItem<Partial<Good>>(this.STORAGE_KEY);
+        const savedData = this.localStorageService.getItem<Partial<IGood>>(this.STORAGE_KEY);
 
         if (this.item()) {
             const baseData = { ...this.item()! };
@@ -59,10 +59,10 @@ export class GoodEditorComponent implements OnInit {
             this.formData.set({
                 name: '',
                 description: '',
-                fullDescription: '',
-                price: 0,
+                shortDescription: '',
+                sellPrice: 0,
                 imageUrl: '',
-                count: 0,
+                storage: 0,
                 priceHistory: [],
             });
         }
@@ -79,7 +79,7 @@ export class GoodEditorComponent implements OnInit {
     }
 
     onSave() {
-        this.itemSave.emit(this.formData() as Good);
+        this.itemSave.emit(this.formData() as IGood);
         this.localStorageService.removeItem(this.STORAGE_KEY);
     }
 

@@ -1,46 +1,45 @@
 <div class="history-tab-container">
-  <table class="history-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User Name</th>
-        <th>Item</th>
-        <th>Price</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (sale of storageService.sales(); track sale.id) {
+    <table class="history-table">
+        <thead>
         <tr>
-          <td>{{ sale.id }}</td>
-          <td>
-            <a
-              href="javascript:void(0)"
-              (click)="openUserModal(sale.userId)"
-              [class.disabled]="sale.userId === 'unknown'"
-            >
-              {{ sale.userName }}
-            </a>
-          </td>
-          <td>{{ sale.goodName }}</td>
-          <td>{{ sale.price | currency }}</td>
-          <td>{{ sale.date | date: 'short' }}</td>
+            <th>ID</th>
+            <th>User Name</th>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Date</th>
         </tr>
-      }
-      @if (storageService.sales().length === 0) {
-        <tr>
-          <td colspan="5" style="text-align: center">No history found.</td>
-        </tr>
-      }
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+            @for (sale of storageService.sales(); track sale.id) {
+                <tr>
+                    <td>{{ sale.id }}</td>
+                    <td>
+                        <a
+                                href="javascript:void(0)"
+                                (click)="openUserModal(sale.userId)"
+                                [class.disabled]="sale.userId === 'unknown'"
+                        >
+                            {{ sale.userName }}
+                        </a>
+                    </td>
+                    <td>{{ sale.goodName }}</td>
+                    <td>{{ sale.price | currency }}</td>
+                    <td>{{ sale.date | date: 'short' }}</td>
+                </tr>
+            }
+            @if (storageService.sales().length === 0) {
+                <tr>
+                    <td colspan="5" style="text-align: center">No history found.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-  @if (isUserEditorOpen() && selectedUser()) {
-    <app-user-editor
-      mode="view"
-      [user]="selectedUser()!"
-      (userSave)="onSaveUser($event)"
-      (modalClose)="isUserEditorOpen.set(false)"
-    />
-  }
+    @if (isUserEditorOpen() && selectedUser()) {
+        <app-user-editor mode="view"
+                         [user]="selectedUser()!"
+                         (userSave)="onSaveUser($event)"
+                         (modalClose)="isUserEditorOpen.set(false)"
+        />
+    }
 </div>
