@@ -49,15 +49,8 @@ export class DatabaseConfig {
         return sql.NVarChar((value.length < 256) ? 255 : value.length);
     }
 
-    async executeQuery(request: sql.Request, query: string): Promise<unknown[] | null> {
-        const result = (await request.query(query));
-        if (!result.recordset?.length) {
-            if (result.rowsAffected[0] === 1) {
-                return [];
-            }
-            return null;
-        }
-        return result.recordset;
+    async executeQuery(request: sql.Request, query: string): Promise<sql.IResult<unknown>> {
+        return await request.query(query);
     }
 
     async insert<T extends object>(table: TDBTable, data: T) {
@@ -99,14 +92,16 @@ export class DatabaseConfig {
         insertionKeys = `(${insertionKeys})`;
         insertionValues = `(${insertionValues})`;
 
-        return this.executeQuery(request, `INSERT INTO ${table} ${insertionKeys} VALUES ${insertionValues}`);
+        const result = await this.executeQuery(request, `INSERT INTO ${table} ${insertionKeys} VALUES ${insertionValues}`);
+        return result.recordset;
     }
 
     async readAll(table: TDBTable) {
         const request = this.getRequest();
-        return this.executeQuery(request, `SELECT *
-                                           FROM ${table}
-                                           WHERE deleted = 0`);
+        const result = await this.executeQuery(request, `SELECT *
+                                                         FROM ${table}
+                                                         WHERE deleted = 0`);
+        return result.recordset;
     }
 
     async readByKey(table: TDBTable, value: number | string, key: string) {
@@ -118,10 +113,11 @@ export class DatabaseConfig {
             request.input(key, sql.Int, +value);
         }
 
-        return this.executeQuery(request, `SELECT *
-                                           FROM ${table}
-                                           WHERE ${key} = @${key}
-                                             AND deleted = 0`);
+        const result = await this.executeQuery(request, `SELECT *
+                                                         FROM ${table}
+                                                         WHERE ${key} = @${key}
+                                                           AND deleted = 0`);
+        return result.recordset;
     }
 
     async updateByID<T extends object>(table: TDBTable, id: number, data: T) {
@@ -158,10 +154,17 @@ export class DatabaseConfig {
         }
         insertionKeys = insertionKeys.slice(0, -2);
 
-        return this.executeQuery(request, `UPDATE ${table}
-                                           SET ${insertionKeys}
-                                           WHERE id = @id
-                                             AND deleted = 0`);
+        const result = await this.executeQuery(request, `UPDATE ${table}
+                                                         SET ${insertionKeys}
+                                                         WHERE id = @id
+                                                           AND deleted = 0`);
+        if (!result.recordset?.length) {
+            if (result.rowsAffected[0] === 1) {
+                return [];
+            }
+            return null;
+        }
+        return result.recordset;
     }
 
     async softDeleteByID(table: TDBTable, id: number) {

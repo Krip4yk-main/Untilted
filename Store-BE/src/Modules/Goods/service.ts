@@ -1,34 +1,117 @@
-import type { Good } from '../../Models/good.model.js';
-import type { TPromisableLikeFunc } from '../../Core/utils.types.js';
+import type { TDBTable } from '../../Configurations/database.types.js';
+import type { IGood, IGoodRaw } from '../../Models/good.model.js';
+import { AzureDB } from '../../Configurations/database.js';
+import type { TNumString } from '../../Core/utils.types.js';
+import type { IPriceHistoryRecord } from '../../Models/goodsPriceHistory.model.js';
+import { historyService } from './historyService.js';
 
 export class GoodsService {
 
-    public getGoods(): Promise<Good[]> {
-        const mockGoods: Good[] = [
-            {
-                id: 1,
-                name: 'Laptop',
-                description: 'High-performance laptop',
-                fullDescription: 'Detailed description of the high-performance laptop.',
-                price: 1200,
-                imageUrl: 'https://via.placeholder.com/150',
-                count: 10,
-                priceHistory: [{ price: 1200, date: new Date().toISOString() }],
-            },
-            {
-                id: 2,
-                name: 'Smartphone',
-                description: 'Latest model smartphone',
-                fullDescription: 'Detailed description of the latest model smartphone.',
-                price: 800,
-                imageUrl: 'https://via.placeholder.com/150',
-                count: 20,
-                priceHistory: [{ price: 800, date: new Date().toISOString() }],
-            },
-        ];
-        return new Promise((resolve: TPromisableLikeFunc<Good[]>) => {
-            setTimeout(() => resolve(mockGoods), 1000);
-        });
+    TABLE_NAME: TDBTable = 'Goods';
+
+    public async getGoods(): Promise<IGood[] | null> {
+        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGoods(res as IGoodRaw[]);
+    }
+
+    public async getGoodById(id: number): Promise<IGood | null> {
+        const column: keyof IGoodRaw = 'id'; // mandatory type check
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGood(res[0] as IGoodRaw);
+    }
+
+    public async getGoodByUniqueId(id: string): Promise<IGood | null> {
+        const column: keyof IGoodRaw = 'unique_id'; // mandatory type check
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGood(res[0] as IGoodRaw);
+    }
+
+    public async getGoodByUniqueCode(id: TNumString): Promise<IGood | null> {
+        const column: keyof IGoodRaw = 'unique_code'; // mandatory type check
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGood(res[0] as IGoodRaw);
+    }
+
+    public async createGood(good: Partial<IGood>): Promise<IGood | null> {
+        const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, good);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGood(res[0] as IGoodRaw);
+    }
+
+    public async updateGood(id: number, good: Partial<IGood>): Promise<[] | null> {
+        const existingGood = await this.getGoodById(id);
+        if (!existingGood) {
+            return null;
+        }
+        const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, good);
+        if (!res) {
+            return res;
+        }
+        return [];
+    }
+
+    public async deleteGood(id: number): Promise<IGood | null> {
+        const existingGood = await this.getGoodById(id);
+        if (!existingGood) {
+            return null;
+        }
+        const res: unknown[] | null = await AzureDB.softDeleteByID(this.TABLE_NAME, id);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawGood(res[0] as IGoodRaw);
+    }
+
+    async convertRawGood(data: IGoodRaw): Promise<IGood> {
+        const history: IPriceHistoryRecord[] | null =
+            await historyService.getHistoryByGoodId(data.id);
+        return {
+            id: data.id,
+            uniqueId: data.unique_id,
+            uniqueCode: data.unique_code,
+            name: data.name,
+            type: data.type,
+            storage: data.storage,
+            storageType: data.storage_type,
+            nullPrice: data.null_price,
+            sellPrice: data.sell_price,
+            wholePrice: data.whole_price,
+            wholeCount: data.whole_count,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+            createdBy: data.created_by,
+            updatedBy: data.updated_by,
+            deleted: data.deleted,
+            priceHistory: history || [],
+        };
+    }
+
+    async convertRawGoods(data: IGoodRaw[]): Promise<IGood[]> {
+        const results: IGood[] = [];
+        const promises = [];
+        for (const good of data) {
+            promises.push(this.convertRawGood(good)
+                .then((res: IGood) => {
+                    results.push(res);
+                })
+                .catch(console.error));
+        }
+        await Promise.all(promises);
+        return results;
     }
 
 }

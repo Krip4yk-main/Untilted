@@ -4,3 +4,7 @@ export type TPromisableFunc<T> = (value: TPromisable<T>) => void;
 export type TPromisableLikeFunc<T> = (value: TPromisableLike<T>) => void;
 export type TDefaultPromisableFunc = TPromisableFunc<void>;
 export type TDefaultPromisableLikeFunc = TPromisableLikeFunc<void>;
+export type TNumString = `${number}`;
+export type TAnyDefined = number | string | boolean | object;
+export type TAny = TAnyDefined | null | undefined;
+export type TAnyObject = Record<string, TAny>;

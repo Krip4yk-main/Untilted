@@ -1,13 +1,14 @@
 import type { IUser, IUserRaw } from '../../Models/user.model.js';
 import { AzureDB } from '../../Configurations/database.js';
 import type { TDBTable } from '../../Configurations/database.types.js';
+import type { TNumString } from '../../Core/utils.types.js';
 
 export class UsersService {
 
     TABLE_NAME: TDBTable = 'Users';
 
     public async getUsers(): Promise<IUser[] | null> {
-        const res: unknown[] | null = await await AzureDB.readAll(this.TABLE_NAME);
+        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
         if (!res) {
             return res;
         }
@@ -15,15 +16,17 @@ export class UsersService {
     }
 
     public async getUserById(id: number): Promise<IUser | null> {
-        const res: unknown[] | null = await await AzureDB.readByKey(this.TABLE_NAME, id, 'Id');
+        const column: keyof IUserRaw = 'Id'; // mandatory type check
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
         if (!res) {
             return res;
         }
         return this.convertRawUser(res[0] as IUserRaw);
     }
 
-    public async getUserByTgId(id: `${number}`): Promise<IUser | null> {
-        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, 'TelegramId');
+    public async getUserByTgId(id: TNumString): Promise<IUser | null> {
+        const column: keyof IUserRaw = 'TelegramId'; // mandatory type check
+        const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
         if (!res) {
             return res;
         }

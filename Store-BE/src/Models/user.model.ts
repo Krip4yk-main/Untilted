@@ -1,8 +1,10 @@
+import type { TNumString } from '../Core/utils.types.js';
+
 export type TUserRole = 'Admin' | 'Dm' | 'User';
 
 export interface IUser {
     id: number;
-    telegramId: `${number}`;
+    telegramId: TNumString;
     username: string;
     displayName: string;
     role: TUserRole;
@@ -13,7 +15,7 @@ export interface IUser {
 
 export interface IUserRaw {
     Id: number;
-    TelegramId: `${number}`;
+    TelegramId: TNumString;
     Username: string;
     DisplayName: string;
     Role: TUserRole;
@@ -23,15 +25,15 @@ export interface IUserRaw {
 }
 
 export interface ITelegramUserNested {
-    aud: `${number}`;
+    aud: TNumString;
     exp: number;
     iat: number;
-    id: `${number}`;
+    id: TNumString;
     iss: string;
     name: string;
     picture: string;
     preferred_username: string;
-    sub: `${number}`;
+    sub: TNumString;
 }
 
 export interface ITelegramUser {

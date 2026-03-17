@@ -4,15 +4,6 @@ import type { ITelegramUser, IUser } from '../../Models/user.model.js';
 
 export class UsersController {
 
-    private static instance: UsersController;
-
-    public static getInstance(): UsersController {
-        if (!UsersController.instance) {
-            UsersController.instance = new UsersController();
-        }
-        return UsersController.instance;
-    }
-
     public async getUsers(req: Request, res: Response): Promise<void> {
         try {
             const users = await usersService.getUsers();
@@ -165,4 +156,4 @@ export class UsersController {
 
 }
 
-export const usersController = UsersController.getInstance();
+export const usersController = new UsersController();
