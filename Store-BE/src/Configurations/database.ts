@@ -51,7 +51,7 @@ export class DatabaseConfig {
 
     async executeQuery(request: sql.Request, query: string): Promise<unknown[] | null> {
         const result = (await request.query(query));
-        if (!result.recordset.length) {
+        if (!result.recordset?.length) {
             if (result.rowsAffected[0] === 1) {
                 return [];
             }

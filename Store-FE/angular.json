@@ -82,7 +82,7 @@
           "defaultConfiguration": "development",
           "options": {
             "allowedHosts": [
-              "c1ba-194-44-70-160.ngrok-free.app",
+              "a914-194-44-70-160.ngrok-free.app",
               "*.loca.lt"
             ]
           }
