@@ -5,6 +5,19 @@ import type { TNumString } from '../../Core/utils.types.js';
 
 export class GoodsController {
 
+    private static instance: GoodsController;
+
+    private constructor() {
+        // intentionally empty
+    }
+
+    public static getInstance(): GoodsController {
+        if (!GoodsController.instance) {
+            GoodsController.instance = new GoodsController();
+        }
+        return GoodsController.instance;
+    }
+
     public async getGoods(req: Request, res: Response): Promise<void> {
         try {
             const users = await goodsService.getGoods();
@@ -137,4 +150,4 @@ export class GoodsController {
 
 }
 
-export const goodsController = new GoodsController();
+export const goodsController = GoodsController.getInstance();

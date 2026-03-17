@@ -7,7 +7,20 @@ import { historyService } from './historyService.js';
 
 export class GoodsService {
 
+    private static instance: GoodsService;
+
     TABLE_NAME: TDBTable = 'Goods';
+
+    private constructor() {
+        // intentionally empty
+    }
+
+    public static getInstance(): GoodsService {
+        if (!GoodsService.instance) {
+            GoodsService.instance = new GoodsService();
+        }
+        return GoodsService.instance;
+    }
 
     public async getGoods(): Promise<IGood[] | null> {
         const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
@@ -116,4 +129,4 @@ export class GoodsService {
 
 }
 
-export const goodsService = new GoodsService();
+export const goodsService = GoodsService.getInstance();

@@ -5,14 +5,22 @@ import { AzureDB } from './Configurations/database.js';
 
 class App {
 
+    private static instance: App;
     public app: Express;
     public server: Server;
     public port: number | string;
 
-    constructor() {
+    private constructor() {
         this.app = express();
         this.port = process.env.PORT || 3000;
         this.server = createServer(this.app);
+    }
+
+    public static getInstance(): App {
+        if (!App.instance) {
+            App.instance = new App();
+        }
+        return App.instance;
     }
 
     public async initialize(): Promise<void> {
@@ -54,4 +62,4 @@ class App {
 
 }
 
-export const appInstance = new App();
+export const appInstance = App.getInstance();

@@ -4,7 +4,9 @@ import type { TPromisableFunc } from './utils.types.js';
 import moment from 'moment';
 import type { ITelegramUser, ITelegramUserNested } from '../Models/user.model.js';
 
-class AuthService {
+export class AuthService {
+
+    private static instance: AuthService;
 
     tgBotId: string | undefined = process.env.TG_BOT_ID;
     expireIn: string | undefined = process.env.EXPIRE_IN;
@@ -13,6 +15,17 @@ class AuthService {
     client: jwksClient.JwksClient = jwksClient({
         jwksUri: 'https://oauth.telegram.org/.well-known/jwks.json',
     });
+
+    private constructor() {
+        // intentionally empty
+    }
+
+    public static getInstance(): AuthService {
+        if (!AuthService.instance) {
+            AuthService.instance = new AuthService();
+        }
+        return AuthService.instance;
+    }
 
     getKey = (header: any, callback: any) => {
         this.client.getSigningKey(header.kid, (err: (Error | null), key?: any) => {
@@ -98,4 +111,4 @@ class AuthService {
 
 }
 
-export const authService = new AuthService();
+export const authService = AuthService.getInstance();

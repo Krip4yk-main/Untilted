@@ -9,7 +9,20 @@ import type { TAnyObject } from '../../Core/utils.types.js';
 
 export class HistoryService {
 
+    private static instance: HistoryService;
+
     TABLE_NAME: TDBTable = 'Goods_price_history';
+
+    private constructor() {
+        // intentionally empty
+    }
+
+    public static getInstance(): HistoryService {
+        if (!HistoryService.instance) {
+            HistoryService.instance = new HistoryService();
+        }
+        return HistoryService.instance;
+    }
 
     public async getHistoryById(id: number): Promise<IPriceHistoryRecord | null> {
         const column: keyof IPriceHistoryRecordRaw = 'id'; // mandatory type check
@@ -110,4 +123,4 @@ export class HistoryService {
 
 }
 
-export const historyService = new HistoryService();
+export const historyService = HistoryService.getInstance();

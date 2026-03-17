@@ -5,7 +5,20 @@ import type { TNumString } from '../../Core/utils.types.js';
 
 export class UsersService {
 
+    private static instance: UsersService;
+
     TABLE_NAME: TDBTable = 'Users';
+
+    private constructor() {
+        // intentionally empty
+    }
+
+    public static getInstance(): UsersService {
+        if (!UsersService.instance) {
+            UsersService.instance = new UsersService();
+        }
+        return UsersService.instance;
+    }
 
     public async getUsers(): Promise<IUser[] | null> {
         const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
@@ -84,4 +97,4 @@ export class UsersService {
 
 }
 
-export const usersService = new UsersService();
+export const usersService = UsersService.getInstance();

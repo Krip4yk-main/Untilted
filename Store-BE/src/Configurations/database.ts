@@ -3,7 +3,19 @@ import type { TDBInputType, TDBTable } from './database.types.js';
 
 export class DatabaseConfig {
 
+    private static instance: DatabaseConfig;
+
     poolConnection: sql.ConnectionPool | undefined;
+
+    private constructor() {
+    }
+
+    public static getInstance(): DatabaseConfig {
+        if (!DatabaseConfig.instance) {
+            DatabaseConfig.instance = new DatabaseConfig();
+        }
+        return DatabaseConfig.instance;
+    }
 
     public async connect(): Promise<void> {
         console.info('Connecting to Azure Database...');
@@ -173,4 +185,4 @@ export class DatabaseConfig {
 
 }
 
-export const AzureDB = new DatabaseConfig();
+export const AzureDB = DatabaseConfig.getInstance();
