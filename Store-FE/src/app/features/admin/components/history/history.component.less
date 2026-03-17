@@ -14,18 +14,22 @@
       background: #f8f9fa;
     }
 
-    a {
-      color: #007bff;
-      text-decoration: none;
+    tr {
+      td {
+        a {
+          color: #007bff;
+          text-decoration: none;
 
-      &.disabled {
-        color: #333;
-        cursor: default;
-        pointer-events: none;
-      }
+          &.disabled {
+            color: #333;
+            cursor: default;
+            pointer-events: none;
+          }
 
-      &:hover:not(.disabled) {
-        text-decoration: underline;
+          &:hover:not(.disabled) {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }

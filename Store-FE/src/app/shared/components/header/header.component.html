@@ -24,10 +24,16 @@
                     <p-button (onClick)="authService.logout()" label="Logout" icon="pi pi-sign-out" text></p-button>
                 </li>
             }
-            <li>
-                <p-button [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" icon="pi pi-user" text
-                          [title]="authService.isLoggedIn() ? 'User Info' : 'Login'"></p-button>
-            </li>
+            @if (!authService.isLoggedIn()) {
+                <li>
+                    <button class="tg-auth-button" data-style="icon">Sign In with Telegram</button>
+                </li>
+            } @else {
+                <li>
+                    <p-button [routerLink]="authService.isLoggedIn() ? '/user' : '/login'" icon="pi pi-user" text
+                              [title]="authService.isLoggedIn() ? 'User Info' : 'Login'"></p-button>
+                </li>
+            }
         </ul>
     </nav>
 </header>
