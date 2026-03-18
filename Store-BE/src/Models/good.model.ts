@@ -6,7 +6,7 @@ export type TStorageType = 'items' | 'meters';
 
 export interface IGoodTemplate {
     uniqueId: string | null;
-    uniqueCode: TNumString | null;
+    uniqueCode: string | null;
     name: string;
     type: TGoodType;
     imageUrl: string;
@@ -33,7 +33,7 @@ export interface IGood extends IGoodTemplate {
 
 export interface IGoodRawTemplate {
     unique_id: string | null;
-    unique_code: TNumString | null;
+    unique_code: string | null;
     name: string;
     type: TGoodType;
     image_url: string;

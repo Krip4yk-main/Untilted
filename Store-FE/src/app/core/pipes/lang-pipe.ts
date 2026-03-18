@@ -10,6 +10,7 @@ export class LangPipe implements PipeTransform {
     transform(value: string, group: keyof ILanguage): string {
         const lan: ILanguage = lang();
         if (!lan[group]?.[value as keyof ILanguage[keyof ILanguage]]) {
+            console.error(`[LangPipe] ${value} not found in ${group}`);
             return '[ERROR]';
         }
 

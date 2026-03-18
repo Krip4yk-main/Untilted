@@ -14,7 +14,7 @@ export interface IPriceHistoryRecord {
 
 export interface IGoodTemplate {
     uniqueId: string | null;
-    uniqueCode: TNumString | null;
+    uniqueCode: string | null;
     name: string;
     type: TGoodType;
     imageUrl: string;

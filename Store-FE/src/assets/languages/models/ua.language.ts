@@ -47,5 +47,8 @@ export const uaLanguage: ILanguage = {
     misc: {
         logout: 'Вийти',
         profit: 'Прибуток',
+        actions: 'Дії',
+        addGood: 'Додати товар',
+        modifyPrices: 'Змінити ціни',
     },
 };

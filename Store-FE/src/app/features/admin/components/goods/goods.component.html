@@ -1,16 +1,18 @@
 <div class="goods-tab-container">
     <div class="actions">
         <p-button class="btn btn-success"
-                  label="Add Item"
                   icon="pi pi-plus"
+                  size="small"
                   [rounded]="true"
+                  [label]="'addGood' | lang: 'misc'"
                   (onClick)="openAdd()"
         ></p-button>
         @if (authService.user()?.role === 'Admin') {
             <p-button class="btn btn-warning"
-                      label="Price Modifier"
                       icon="pi pi-percentage"
+                      size="small"
                       [rounded]="true"
+                      [label]="'modifyPrices' | lang: 'misc'"
                       (onClick)="isPriceModifierOpen.set(true)"
             ></p-button>
         }
@@ -60,7 +62,7 @@
                     }
                 }
                 <th>
-                    {{ ('actions' | lang: 'misc') + ' %' }}
+                    {{ ('actions' | lang: 'misc') }}
                 </th>
             </tr>
         </ng-template>

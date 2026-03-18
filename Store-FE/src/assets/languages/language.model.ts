@@ -19,5 +19,8 @@ export interface ILanguage {
     misc: {
         logout: string;
         profit: string;
+        actions: string;
+        addGood: string;
+        modifyPrices: string;
     }
 }
