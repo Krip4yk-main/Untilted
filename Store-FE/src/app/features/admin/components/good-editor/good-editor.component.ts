@@ -10,21 +10,23 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IGood } from '../../../../core/models/good.model';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { emptyGoodTemplate, IGood, IGoodTemplate, IPriceHistoryRecord } from '../../../../core/models/good.model';
 import { LocalStorageBuckets, LocalStorageService } from '../../../../core/services/local-storage.service';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
 import { InputNumber } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
+import { COPY } from '../../../../core/services/utils.service';
 
 export type EditorMode = 'view' | 'edit' | 'add';
+type TPartialGood = IGoodTemplate & { priceHistory: IPriceHistoryRecord[] };
 
 @Component({
     selector: 'app-good-editor',
     standalone: true,
-    imports: [CommonModule, FormsModule, Button, InputText, Textarea, InputNumber, TableModule],
+    imports: [CommonModule, FormsModule, Button, InputText, Textarea, InputNumber, TableModule, ReactiveFormsModule],
     templateUrl: './good-editor.component.html',
     styleUrl: './good-editor.component.less',
 })
@@ -39,7 +41,7 @@ export class GoodEditorComponent implements OnInit {
     modalClose: OutputEmitterRef<void> = output();
 
     protected currentMode: WritableSignal<EditorMode> = signal('view');
-    protected formData: WritableSignal<Partial<IGood>> = signal({});
+    protected formData: WritableSignal<TPartialGood> = signal({ ...COPY(emptyGoodTemplate), priceHistory: [] });
 
     ngOnInit() {
         this.currentMode.set(this.mode());

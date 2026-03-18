@@ -1,7 +1,8 @@
-<div class="modal-backdrop">
+<div class="modal-backdrop"
+>
     <div class="modal-content">
-        <header>
-            <h2>
+        <div class="header">
+            <span class="k-big-header">
                 {{
                     currentMode() === 'add'
                         ? 'Add Item'
@@ -9,24 +10,30 @@
                             ? 'Edit Item'
                             : 'View Item'
                 }}
-            </h2>
+            </span>
             <p-button class="close-btn"
                       (onClick)="onClose()"
                       icon="pi pi-times"
                       text
             ></p-button>
-        </header>
+        </div>
 
         <div class="form-body">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input id="name" pInputText [(ngModel)]="formData().name" (ngModelChange)="onDataChange()"
+                <input id="name"
+                       pInputText
+                       [(ngModel)]="formData().name"
+                       (ngModelChange)="onDataChange()"
                        [disabled]="currentMode() === 'view'"
                 />
             </div>
             <div class="form-group">
                 <label for="imageUrl">Image URL</label>
-                <input id="imageUrl" pInputText [(ngModel)]="formData().imageUrl" (ngModelChange)="onDataChange()"
+                <input id="imageUrl"
+                       pInputText
+                       [(ngModel)]="formData().imageUrl"
+                       (ngModelChange)="onDataChange()"
                        [disabled]="currentMode() === 'view'"
                 />
             </div>
@@ -66,8 +73,12 @@
             </div>
             <div class="form-group">
                 <label for="notes">Notes</label>
-                <textarea id="notes" pInputTextarea [(ngModel)]="formData().notes" (ngModelChange)="onDataChange()"
-                          [disabled]="currentMode() === 'view'" [autoResize]="true"
+                <textarea id="notes"
+                          pInputTextarea
+                          [(ngModel)]="formData().notes"
+                          (ngModelChange)="onDataChange()"
+                          [disabled]="currentMode() === 'view'"
+                          [autoResize]="true"
                 ></textarea>
             </div>
             <div class="form-group">
@@ -81,7 +92,10 @@
             </div>
             <div class="form-group">
                 <label for="externalId">Unique ID (Optional)</label>
-                <input id="externalId" pInputText [(ngModel)]="formData().uniqueId" (ngModelChange)="onDataChange()"
+                <input id="externalId"
+                       pInputText
+                       [(ngModel)]="formData().uniqueId"
+                       (ngModelChange)="onDataChange()"
                        [disabled]="currentMode() === 'view'"
                 />
             </div>
@@ -89,14 +103,18 @@
             @if (currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0) {
                 <div class="price-history">
                     <h3>Price History</h3>
-                    <p-table [value]="formData().priceHistory!" [tableStyle]="{ 'min-width': '20rem' }">
+                    <p-table [value]="formData().priceHistory!"
+                             [tableStyle]="{ 'min-width': '20rem' }"
+                    >
                         <ng-template pTemplate="header">
                             <tr>
                                 <th>Price</th>
                                 <th>Date</th>
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="body" let-record>
+                        <ng-template pTemplate="body"
+                                     let-record
+                        >
                             <tr>
                                 <td>{{ record.price | currency }}</td>
                                 <td>{{ record.date | date: 'short' }}</td>
@@ -109,11 +127,22 @@
 
         <footer>
             @if (currentMode() === 'view') {
-                <p-button class="btn btn-primary" (onClick)="enableEdit()" label="Edit" icon="pi pi-pencil"></p-button>
+                <p-button class="btn btn-primary"
+                          (onClick)="enableEdit()"
+                          label="Edit"
+                          icon="pi pi-pencil"
+                ></p-button>
             } @else {
-                <p-button class="btn btn-primary" (onClick)="onSave()" label="Save" icon="pi pi-save"></p-button>
+                <p-button class="btn btn-primary"
+                          (onClick)="onSave()"
+                          label="Save"
+                          icon="pi pi-save"
+                ></p-button>
             }
-            <p-button class="btn btn-secondary" (onClick)="onClose()" label="Cancel" icon="pi pi-times"
+            <p-button class="btn btn-secondary"
+                      (onClick)="onClose()"
+                      label="Cancel"
+                      icon="pi pi-times"
                       severity="secondary"
             ></p-button>
         </footer>

@@ -50,5 +50,10 @@ export const uaLanguage: ILanguage = {
         actions: 'Дії',
         addGood: 'Додати товар',
         modifyPrices: 'Змінити ціни',
+        addItem: 'Додати товар',
+        editItem: 'Редагувати товар',
+        viewItem: 'Переглянути товар',
+        save: 'Зберегти',
+        cancel: 'Скасувати',
     },
 };

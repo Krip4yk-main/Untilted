@@ -21,7 +21,7 @@ export class GoodsTabComponent {
     protected readonly storageService: StorageService = inject(StorageService);
     protected readonly authService: CoreAuthService = inject(CoreAuthService);
 
-    protected isEditorOpen: WritableSignal<boolean> = signal(false);
+    protected isEditorOpen: WritableSignal<boolean> = signal(true);
     protected editorMode: WritableSignal<EditorMode> = signal('view');
     protected selectedItem: WritableSignal<IGood | null> = signal(null);
 

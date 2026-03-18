@@ -34,13 +34,7 @@ export interface IGoodTemplate {
     deleted: boolean;
 }
 
-export interface IGood extends IGoodTemplate {
-    id: number;
-    priceHistory: IPriceHistoryRecord[];
-}
-
-export const emptyGood: IGood = {
-    id: -1,
+export const emptyGoodTemplate: IGoodTemplate = {
     uniqueId: null,
     uniqueCode: null,
     name: '',
@@ -60,5 +54,15 @@ export const emptyGood: IGood = {
     createdBy: '',
     updatedBy: '',
     deleted: false,
+};
+
+export interface IGood extends IGoodTemplate {
+    id: number;
+    priceHistory: IPriceHistoryRecord[];
+}
+
+export const emptyGood: IGood = {
+    ...emptyGoodTemplate,
+    id: -1,
     priceHistory: [],
 };

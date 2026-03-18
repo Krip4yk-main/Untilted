@@ -22,5 +22,10 @@ export interface ILanguage {
         actions: string;
         addGood: string;
         modifyPrices: string;
+        addItem: string;
+        editItem: string;
+        viewItem: string;
+        save: string;
+        cancel: string;
     }
 }
