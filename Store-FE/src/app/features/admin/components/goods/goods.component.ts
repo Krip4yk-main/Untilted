@@ -8,11 +8,12 @@ import { PriceModifierComponent } from './price-modifier.component';
 import { Button } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { LangPipe } from '../../../../core/pipes/lang-pipe';
+import { SafeResourseUrlPipe } from '../../../../core/pipes/safe-resourse-url-pipe';
 
 @Component({
     selector: 'app-goods-tab',
     standalone: true,
-    imports: [CommonModule, GoodEditorComponent, PriceModifierComponent, Button, TableModule, NgOptimizedImage, LangPipe],
+    imports: [CommonModule, GoodEditorComponent, PriceModifierComponent, Button, TableModule, NgOptimizedImage, LangPipe, SafeResourseUrlPipe],
     templateUrl: './goods.component.html',
     styleUrl: './goods.component.less',
 })
@@ -21,7 +22,7 @@ export class GoodsTabComponent {
     protected readonly storageService: StorageService = inject(StorageService);
     protected readonly authService: CoreAuthService = inject(CoreAuthService);
 
-    protected isEditorOpen: WritableSignal<boolean> = signal(true);
+    protected isEditorOpen: WritableSignal<boolean> = signal(false);
     protected editorMode: WritableSignal<EditorMode> = signal('view');
     protected selectedItem: WritableSignal<IGood | null> = signal(null);
 

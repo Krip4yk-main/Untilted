@@ -1,10 +1,11 @@
 import type { TDBTable } from '../../Configurations/database.types.js';
 import { AzureDB } from '../../Configurations/database.js';
 import {
-    emptyPriceHistoryRecord,
+    emptyPriceHistoryRecordTemplate,
     type IPriceHistoryRecord,
     type IPriceHistoryRecordRaw,
     type IPriceHistoryRecordTemplate,
+    type IPriceHistoryRecordTemplateRaw,
 } from '../../Models/goodsPriceHistory.model.js';
 import type { TAnyObject } from '../../Core/utils.types.js';
 
@@ -92,10 +93,9 @@ export class HistoryService {
         return data.map(this.convertFromRaw);
     }
 
-    convertToRaw(data: IPriceHistoryRecord | Partial<IPriceHistoryRecord>): Partial<IPriceHistoryRecordRaw> {
+    convertToRaw(data: IPriceHistoryRecordTemplate | Partial<IPriceHistoryRecordTemplate>): Partial<IPriceHistoryRecordTemplateRaw> {
         const result: TAnyObject = {};
-        const keysPairs: [keyof IPriceHistoryRecord, keyof IPriceHistoryRecordRaw][] = [
-            ['id', 'id'],
+        const keysPairs: [keyof IPriceHistoryRecordTemplate, keyof IPriceHistoryRecordTemplateRaw][] = [
             ['goodId', 'good_id'],
             ['price', 'price'],
             ['createdAt', 'created_at'],
@@ -103,7 +103,7 @@ export class HistoryService {
             ['deleted', 'deleted'],
         ];
 
-        if (Object.keys(emptyPriceHistoryRecord).length !== keysPairs.length) {
+        if (Object.keys(emptyPriceHistoryRecordTemplate).length !== keysPairs.length) {
             throw new Error('Keys length mismatch. Update IPriceHistoryRecord model');
         }
 
@@ -118,7 +118,8 @@ export class HistoryService {
         return result as Partial<IPriceHistoryRecordRaw>;
     }
 
-    convertToRawArr(data: IPriceHistoryRecord[] | Partial<IPriceHistoryRecord>[]): Partial<IPriceHistoryRecordRaw>[] {
+    convertToRawArr(data: IPriceHistoryRecordTemplate[] | Partial<IPriceHistoryRecordTemplate>[])
+        : Partial<IPriceHistoryRecordTemplateRaw>[] {
         return data.map(this.convertToRaw);
     }
 

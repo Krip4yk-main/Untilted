@@ -43,6 +43,13 @@ const MIARPreset = definePreset(Aura, {
             },
         },
     },
+    components: {
+        datatable: {
+            bodyCell: {
+                padding: '0.25rem 0.5rem',
+            },
+        },
+    },
 });
 
 export const appConfig: ApplicationConfig = {

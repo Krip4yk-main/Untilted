@@ -74,10 +74,11 @@
                     @switch (key) {
                         @case ('imageUrl') {
                             <td>
-                                <img [ngSrc]="item[key]"
-                                     [alt]="item.name"
-                                     class="small-img"
-                                />
+                                <div class="small-img">
+                                    <img [src]="item[key]"
+                                         [alt]="item.name"
+                                    />
+                                </div>
                             </td>
                         }
                         @case ('nullPrice') {
@@ -120,23 +121,25 @@
                         }
                     }
                 }
-                <td class="action-icons">
-                    <p-button (onClick)="openView(item)"
-                              title="View"
-                              icon="pi pi-eye"
-                              text
-                    ></p-button>
-                    <p-button (onClick)="openEdit(item)"
-                              title="Edit"
-                              icon="pi pi-pencil"
-                              text
-                    ></p-button>
-                    <p-button (onClick)="deleteItem(item.id)"
-                              title="Delete"
-                              icon="pi pi-trash"
-                              severity="danger"
-                              text
-                    ></p-button>
+                <td>
+                    <div class="action-icons">
+                        <p-button (onClick)="openView(item)"
+                                  title="View"
+                                  icon="pi pi-eye"
+                                  text
+                        ></p-button>
+                        <p-button (onClick)="openEdit(item)"
+                                  title="Edit"
+                                  icon="pi pi-pencil"
+                                  text
+                        ></p-button>
+                        <p-button (onClick)="deleteItem(item.id)"
+                                  title="Delete"
+                                  icon="pi pi-trash"
+                                  severity="danger"
+                                  text
+                        ></p-button>
+                    </div>
                 </td>
             </tr>
         </ng-template>

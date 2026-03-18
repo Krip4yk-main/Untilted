@@ -1,9 +1,16 @@
 import type { TDBTable } from '../../Configurations/database.types.js';
-import type { IGood, IGoodRaw } from '../../Models/good.model.js';
+import {
+    emptyGoodTemplate,
+    type IGood,
+    type IGoodRaw,
+    type IGoodRawTemplate,
+    type IGoodTemplate,
+} from '../../Models/good.model.js';
 import { AzureDB } from '../../Configurations/database.js';
-import type { TNumString } from '../../Core/utils.types.js';
-import type { IPriceHistoryRecord } from '../../Models/goodsPriceHistory.model.js';
+import type { TAnyObject, TNumString } from '../../Core/utils.types.js';
+import { type IPriceHistoryRecord } from '../../Models/goodsPriceHistory.model.js';
 import { historyService } from './historyService.js';
+import moment from 'moment';
 
 export class GoodsService {
 
@@ -27,7 +34,7 @@ export class GoodsService {
         if (!res) {
             return res;
         }
-        return this.convertRawGoods(res as IGoodRaw[]);
+        return this.convertFromRawArr(res as IGoodRaw[]);
     }
 
     public async getGoodById(id: number): Promise<IGood | null> {
@@ -36,7 +43,7 @@ export class GoodsService {
         if (!res) {
             return res;
         }
-        return this.convertRawGood(res[0] as IGoodRaw);
+        return this.convertFromRaw(res[0] as IGoodRaw);
     }
 
     public async getGoodByUniqueId(id: string): Promise<IGood | null> {
@@ -45,7 +52,7 @@ export class GoodsService {
         if (!res) {
             return res;
         }
-        return this.convertRawGood(res[0] as IGoodRaw);
+        return this.convertFromRaw(res[0] as IGoodRaw);
     }
 
     public async getGoodByUniqueCode(id: TNumString): Promise<IGood | null> {
@@ -54,23 +61,33 @@ export class GoodsService {
         if (!res) {
             return res;
         }
-        return this.convertRawGood(res[0] as IGoodRaw);
+        return this.convertFromRaw(res[0] as IGoodRaw);
     }
 
-    public async createGood(good: Partial<IGood>): Promise<IGood | null> {
-        const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, good);
+    public async createGood(data: Partial<IGood>): Promise<IGood | null> {
+        const dataRaw = {
+            ...this.convertToRaw(data),
+            created_at: `${moment().unix() * 1000}`,
+            updated_at: `${moment().unix() * 1000}`,
+        };
+        console.log('dataRaw', dataRaw);
+        const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, dataRaw);
         if (!res) {
             return res;
         }
-        return this.convertRawGood(res[0] as IGoodRaw);
+        return this.convertFromRaw(res[0] as IGoodRaw);
     }
 
-    public async updateGood(id: number, good: Partial<IGood>): Promise<[] | null> {
+    public async updateGood(id: number, data: Partial<IGood>): Promise<[] | null> {
         const existingGood = await this.getGoodById(id);
         if (!existingGood) {
             return null;
         }
-        const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, good);
+        const dataRaw = {
+            ...this.convertToRaw(data),
+            updated_at: `${moment().unix() * 1000}`,
+        };
+        const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, dataRaw);
         if (!res) {
             return null;
         }
@@ -89,7 +106,7 @@ export class GoodsService {
         return [];
     }
 
-    async convertRawGood(data: IGoodRaw): Promise<IGood> {
+    async convertFromRaw(data: IGoodRaw): Promise<IGood> {
         const history: IPriceHistoryRecord[] | null =
             await historyService.getHistoryByGoodId(data.id);
         return {
@@ -117,11 +134,11 @@ export class GoodsService {
         };
     }
 
-    async convertRawGoods(data: IGoodRaw[]): Promise<IGood[]> {
+    async convertFromRawArr(data: IGoodRaw[]): Promise<IGood[]> {
         const results: IGood[] = [];
         const promises = [];
         for (const good of data) {
-            promises.push(this.convertRawGood(good)
+            promises.push(this.convertFromRaw(good)
                 .then((res: IGood) => {
                     results.push(res);
                 })
@@ -129,6 +146,49 @@ export class GoodsService {
         }
         await Promise.all(promises);
         return results;
+    }
+
+    convertToRaw(data: IGoodTemplate | Partial<IGoodTemplate>): Partial<IGoodRawTemplate> {
+        const result: TAnyObject = {};
+        const keysPairs: [keyof IGoodTemplate, keyof IGoodRawTemplate][] = [
+            ['uniqueId', 'unique_id'],
+            ['uniqueCode', 'unique_code'],
+            ['name', 'name'],
+            ['type', 'type'],
+            ['imageUrl', 'image_url'],
+            ['description', 'description'],
+            ['shortDescription', 'short_description'],
+            ['notes', 'notes'],
+            ['storage', 'storage'],
+            ['storageType', 'storage_type'],
+            ['nullPrice', 'null_price'],
+            ['sellPrice', 'sell_price'],
+            ['wholePrice', 'whole_price'],
+            ['wholeCount', 'whole_count'],
+            ['createdAt', 'created_at'],
+            ['updatedAt', 'updated_at'],
+            ['createdBy', 'created_by'],
+            ['updatedBy', 'updated_by'],
+            ['deleted', 'deleted'],
+        ];
+
+        if (Object.keys(emptyGoodTemplate).length !== keysPairs.length) {
+            throw new Error('Keys length mismatch. Update IPriceHistoryRecord model');
+        }
+
+        for (const pair of keysPairs) {
+            if (data[pair[0]] === undefined) {
+                continue;
+            }
+
+            result[pair[1]] = data[pair[0]];
+        }
+
+        return result as Partial<IGoodRawTemplate>;
+    }
+
+    convertToRawArr(data: IGoodTemplate[] | Partial<IGood>[]): Partial<IGoodRawTemplate>[] {
+        return data.map(this.convertToRaw);
     }
 
 }

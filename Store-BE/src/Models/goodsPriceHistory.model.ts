@@ -10,8 +10,7 @@ export interface IPriceHistoryRecord extends IPriceHistoryRecordTemplate {
     id: number;
 }
 
-export const emptyPriceHistoryRecord: IPriceHistoryRecord = {
-    id: 0,
+export const emptyPriceHistoryRecordTemplate: IPriceHistoryRecordTemplate = {
     goodId: 0,
     price: 0,
     createdAt: '',
@@ -19,11 +18,14 @@ export const emptyPriceHistoryRecord: IPriceHistoryRecord = {
     deleted: false,
 };
 
-export interface IPriceHistoryRecordRaw {
-    id: number;
+export interface IPriceHistoryRecordTemplateRaw {
     good_id: number;
     price: number;
     created_at: string;
     created_by: string;
     deleted: boolean;
+}
+
+export interface IPriceHistoryRecordRaw extends IPriceHistoryRecordTemplateRaw {
+    id: number;
 }

@@ -31,6 +31,28 @@ export interface IGood extends IGoodTemplate {
     priceHistory: IPriceHistoryRecord[];
 }
 
+export const emptyGoodTemplate: IGoodTemplate = {
+    uniqueId: null,
+    uniqueCode: null,
+    name: '',
+    type: 'FDM',
+    imageUrl: '',
+    description: '',
+    shortDescription: '',
+    notes: '',
+    storage: 0,
+    storageType: 'items',
+    nullPrice: 0,
+    sellPrice: 0,
+    wholePrice: 0,
+    wholeCount: 0,
+    createdAt: '-1',
+    updatedAt: '-1',
+    createdBy: '',
+    updatedBy: '',
+    deleted: false,
+};
+
 export interface IGoodRawTemplate {
     unique_id: string | null;
     unique_code: string | null;
@@ -56,7 +78,7 @@ export interface IGoodRawTemplate {
 export interface IGoodRaw {
     id: number;
     unique_id: string | null;
-    unique_code: TNumString | null;
+    unique_code: string | null;
     name: string;
     type: TGoodType;
     image_url: string;

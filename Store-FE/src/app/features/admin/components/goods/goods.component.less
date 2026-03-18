@@ -22,7 +22,6 @@
 
       .p-datatable-table {
         width: 100%;
-        height: 100%;
 
         .p-datatable-thead {
           tr {
@@ -36,8 +35,30 @@
         }
 
         .p-datatable-tbody {
-          height: 100%;
           backdrop-filter: blur(3px);
+
+          tr {
+            td {
+              align-items: center;
+              text-align: center;
+
+              .small-img {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                  height: 3rem;
+                }
+              }
+
+              .action-icons {
+                display: flex;
+                flex-direction: row;
+                gap: 0.5rem;
+              }
+            }
+          }
         }
       }
     }

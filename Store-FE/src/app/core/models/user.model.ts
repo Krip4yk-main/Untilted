@@ -1,4 +1,3 @@
-import { SafeResourceUrl } from '@angular/platform-browser';
 import { TNumString } from '../services/utils.types';
 
 export type TUserRole = 'Admin' | 'Manager' | 'Dm' | 'User';
@@ -10,7 +9,7 @@ export interface IUser {
     displayName: string;
     role: TUserRole;
     registrationDate: string;
-    avatar: string | SafeResourceUrl;
+    avatar: string;
     deleted: boolean;
 }
 

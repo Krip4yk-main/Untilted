@@ -4,6 +4,7 @@ import { ILanguage } from '../../../assets/languages/language.model';
 
 @Pipe({
     name: 'lang',
+    standalone: true,
 })
 export class LangPipe implements PipeTransform {
 

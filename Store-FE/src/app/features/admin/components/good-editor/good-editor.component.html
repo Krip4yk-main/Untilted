@@ -1,123 +1,211 @@
-<div class="modal-backdrop"
->
-    <div class="modal-content">
+<div class="modal-backdrop">
+    <div class="modal-content" [formGroup]="form">
         <div class="header">
             <span class="k-big-header">
                 {{
                     currentMode() === 'add'
-                        ? 'Add Item'
+                        ? ('addItem' | lang: 'misc')
                         : currentMode() === 'edit'
-                            ? 'Edit Item'
-                            : 'View Item'
+                            ? ('editItem' | lang: 'misc')
+                            : ('viewItem' | lang: 'misc')
                 }}
             </span>
             <p-button class="close-btn"
                       (onClick)="onClose()"
                       icon="pi pi-times"
-                      text
+                      [text]="true"
             ></p-button>
         </div>
 
         <div class="form-body">
             <div class="form-group">
-                <label for="name">Name</label>
-                <input id="name"
-                       pInputText
-                       [(ngModel)]="formData().name"
-                       (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"
-                />
+                <label for="name">
+                    {{ ('name' | lang: 'good') }}
+                    {{ (form.controls.name.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <input id="name" pInputText formControlName="name"/>
             </div>
+
             <div class="form-group">
-                <label for="imageUrl">Image URL</label>
-                <input id="imageUrl"
-                       pInputText
-                       [(ngModel)]="formData().imageUrl"
-                       (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"
-                />
+                <label for="type">
+                    {{ 'type' | lang: 'good' }}
+                    {{ (form.controls.type.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <select id="type"
+                        class="p-inputtext p-component"
+                        formControlName="type"
+                >
+                    @for (opt of goodTypes; track opt.value) {
+                        <option [value]="opt.value">{{ opt.label | lang: 'goodType' }}</option>
+                    }
+                </select>
             </div>
+
             <div class="form-group">
-                <label for="description">Short Description</label>
-                <textarea
-                        id="description"
-                        pTextarea
-                        [(ngModel)]="formData().shortDescription"
-                        (ngModelChange)="onDataChange()"
-                        [disabled]="currentMode() === 'view'"
-                        [autoResize]="true"
-                ></textarea>
+                <label for="imageUrl">
+                    {{ 'imageUrl' | lang: 'good' }}
+                    {{ (form.controls.imageUrl.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <input id="imageUrl" pInputText formControlName="imageUrl"/>
             </div>
+
             <div class="form-group">
-                <label for="fullDescription">Full Description</label>
-                <textarea
-                        id="fullDescription"
-                        pTextarea
-                        [(ngModel)]="formData().description"
-                        (ngModelChange)="onDataChange()"
-                        [disabled]="currentMode() === 'view'"
-                        [autoResize]="true"
-                ></textarea>
+                <label for="description">
+                    {{ 'shortDescription' | lang: 'good' }}
+                    {{ (form.controls.shortDescription.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <textarea id="description" pTextarea formControlName="shortDescription" [autoResize]="true"></textarea>
             </div>
+
             <div class="form-group">
-                <label for="price">Price</label>
-                <p-inputNumber
-                        id="price"
-                        [(ngModel)]="formData().sellPrice"
-                        (ngModelChange)="onDataChange()"
-                        [disabled]="currentMode() === 'view'"
-                        mode="currency"
-                        currency="USD"
-                        locale="en-US"
+                <label for="fullDescription">
+                    {{ 'description' | lang: 'good' }}
+                    {{ (form.controls.description.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <textarea id="fullDescription" pTextarea formControlName="description" [autoResize]="true"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="price">
+                    {{ 'sellPrice' | lang: 'good' }}
+                    {{ (form.controls.sellPrice.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <p-inputNumber id="price"
+                               formControlName="sellPrice"
+                               mode="currency"
+                               currency="UAH"
+                               locale="uk-UA"
                 ></p-inputNumber>
             </div>
+
             <div class="form-group">
-                <label for="notes">Notes</label>
-                <textarea id="notes"
-                          pInputTextarea
-                          [(ngModel)]="formData().notes"
-                          (ngModelChange)="onDataChange()"
-                          [disabled]="currentMode() === 'view'"
-                          [autoResize]="true"
-                ></textarea>
-            </div>
-            <div class="form-group">
-                <label for="count">Count</label>
-                <p-inputNumber
-                        id="count"
-                        [(ngModel)]="formData().storage"
-                        (ngModelChange)="onDataChange()"
-                        [disabled]="currentMode() === 'view'"
+                <label for="nullPrice">
+                    {{ 'nullPrice' | lang: 'good' }}
+                    {{ (form.controls.nullPrice.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <p-inputNumber id="nullPrice"
+                               formControlName="nullPrice"
+                               mode="currency"
+                               currency="UAH"
+                               locale="uk-UA"
                 ></p-inputNumber>
             </div>
+
             <div class="form-group">
-                <label for="externalId">Unique ID (Optional)</label>
-                <input id="externalId"
+                <label for="wholePrice">
+                    {{ 'wholePrice' | lang: 'good' }}
+                    {{ (form.controls.wholePrice.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <p-inputNumber id="wholePrice"
+                               formControlName="wholePrice"
+                               mode="currency"
+                               currency="UAH"
+                               locale="uk-UA"
+                ></p-inputNumber>
+            </div>
+
+            <div class="form-group">
+                <label for="wholeCount">
+                    {{ 'wholeCount' | lang: 'good' }}
+                    {{ (form.controls.wholeCount.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <p-inputNumber id="wholeCount" formControlName="wholeCount"></p-inputNumber>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">
+                    {{ 'notes' | lang: 'good' }}
+                    {{ (form.controls.notes.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <textarea id="notes" pInputTextarea formControlName="notes" [autoResize]="true"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="count">
+                    {{ 'storage' | lang: 'good' }}
+                    {{ (form.controls.storage.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <p-inputNumber id="count" formControlName="storage"></p-inputNumber>
+            </div>
+
+            <div class="form-group">
+                <label for="storageType">
+                    {{ 'storageType' | lang: 'good' }}
+                    {{ (form.controls.storageType.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <select id="storageType" class="p-inputtext p-component" formControlName="storageType">
+                    @for (opt of storageTypes; track opt.value) {
+                        <option [value]="opt.value">{{ opt.label | lang: 'storageType' }}</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="externalId">
+                    {{ 'uniqueId' | lang: 'good' }}
+                    {{ (form.controls.uniqueId.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <input id="externalId" pInputText formControlName="uniqueId"/>
+            </div>
+
+            <div class="form-group">
+                <label for="uniqueCode">
+                    {{ 'uniqueCode' | lang: 'good' }}
+                    {{ (form.controls.uniqueCode.hasValidator(Validators.required) ? '*' : '') }}
+                </label>
+                <input id="uniqueCode" pInputText formControlName="uniqueCode"/>
+            </div>
+
+            <div class="form-group">
+                <label for="createdAt">{{ 'createdAt' | lang: 'good' }}</label>
+                <input id="createdAt"
                        pInputText
-                       [(ngModel)]="formData().uniqueId"
-                       (ngModelChange)="onDataChange()"
-                       [disabled]="currentMode() === 'view'"
+                       [disabled]="true"
+                       [value]="form.controls.createdAt.value | date:'dd.MM.yyyy, HH:mm:ss'"
                 />
             </div>
 
-            @if (currentMode() !== 'add' && formData().priceHistory && formData().priceHistory!.length > 0) {
+            <div class="form-group">
+                <label for="updatedAt">{{ 'updatedAt' | lang: 'good' }}</label>
+                <input id="updatedAt"
+                       pInputText
+                       [disabled]="true"
+                       [value]="form.controls.updatedAt.value | date:'dd.MM.yyyy, HH:mm:ss'"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="createdBy">{{ 'createdBy' | lang: 'good' }}</label>
+                <input id="createdBy"
+                       pInputText
+                       [disabled]="true"
+                       [value]="form.controls.createdBy.value"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="updatedBy">{{ 'updatedBy' | lang: 'good' }}</label>
+                <input id="updatedBy"
+                       pInputText
+                       [disabled]="true"
+                       [value]="form.controls.updatedBy.value"
+                />
+            </div>
+
+            @if (currentMode() !== 'add' && form.controls.priceHistory.value && form.controls.priceHistory.value.length > 0) {
                 <div class="price-history">
-                    <h3>Price History</h3>
-                    <p-table [value]="formData().priceHistory!"
-                             [tableStyle]="{ 'min-width': '20rem' }"
-                    >
+                    <h3>{{ 'priceHistory' | lang: 'good' }}</h3>
+                    <p-table [value]="form.controls.priceHistory.value" [tableStyle]="{ 'min-width': '20rem' }">
                         <ng-template pTemplate="header">
                             <tr>
-                                <th>Price</th>
-                                <th>Date</th>
+                                <th>{{ 'sellPrice' | lang: 'good' }}</th>
+                                <th>{{ 'createdAt' | lang: 'good' }}</th>
                             </tr>
                         </ng-template>
-                        <ng-template pTemplate="body"
-                                     let-record
-                        >
+                        <ng-template pTemplate="body" let-record>
                             <tr>
                                 <td>{{ record.price | currency }}</td>
-                                <td>{{ record.date | date: 'short' }}</td>
+                                <td>{{ record.createdAt | date: 'short' }}</td>
                             </tr>
                         </ng-template>
                     </p-table>
@@ -129,19 +217,20 @@
             @if (currentMode() === 'view') {
                 <p-button class="btn btn-primary"
                           (onClick)="enableEdit()"
-                          label="Edit"
+                          [label]="('editItem' | lang: 'misc')"
                           icon="pi pi-pencil"
                 ></p-button>
             } @else {
                 <p-button class="btn btn-primary"
-                          (onClick)="onSave()"
-                          label="Save"
                           icon="pi pi-save"
+                          [disabled]="form.invalid"
+                          [label]="('save' | lang: 'misc')"
+                          (onClick)="onSave()"
                 ></p-button>
             }
             <p-button class="btn btn-secondary"
                       (onClick)="onClose()"
-                      label="Cancel"
+                      [label]="('cancel' | lang: 'misc')"
                       icon="pi pi-times"
                       severity="secondary"
             ></p-button>

@@ -30,6 +30,7 @@ export class GoodsController {
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }
@@ -51,6 +52,7 @@ export class GoodsController {
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }
@@ -106,7 +108,7 @@ export class GoodsController {
             const history = await historyService.createHistory({
                 goodId: result.id,
                 price: result.sellPrice,
-                createdAt: `${moment().unix()}`,
+                createdAt: `${moment().unix() * 1000}`,
                 createdBy: data.createdBy,
                 deleted: false,
             });
@@ -121,6 +123,7 @@ export class GoodsController {
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }
@@ -148,6 +151,7 @@ export class GoodsController {
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }
@@ -170,6 +174,7 @@ export class GoodsController {
                 .json(deleted);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
+            console.trace(err);
             res.status(500)
                 .json({ error: err.message });
         }

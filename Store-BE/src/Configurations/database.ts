@@ -79,7 +79,7 @@ export class DatabaseConfig {
         for (const key of keys) {
             // validate type
             const rKey = key as keyof T;
-            let type: TDBInputType;
+            let type: TDBInputType | null;
             switch (typeof data[rKey]) {
             case 'string': {
                 if (key.toLowerCase().includes('date')) {
@@ -93,11 +93,22 @@ export class DatabaseConfig {
                 type = sql.Int;
                 break;
             }
+            case 'boolean': {
+                type = sql.Bit;
+                break;
+            }
             default: {
+                if (data[rKey] === null) {
+                    type = null;
+                    break;
+                }
                 throw new Error(`Unsupported data type for key '${key}': ${typeof data[rKey]}`);
             }
             }
 
+            if (type === null) {
+                continue;
+            }
             request.input(key, type, data[rKey]);
             insertionKeys += `${key}, `;
             insertionValues += `@${key}, `;

@@ -3,7 +3,6 @@ import { ITelegramUser, IUser } from '../models/user.model';
 import { LocalStorageBuckets, LocalStorageService } from './local-storage.service';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +12,6 @@ export class CoreAuthService {
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
     private readonly apiService: ApiService = inject(ApiService);
     private readonly router: Router = inject(Router);
-    private readonly sanitizer: DomSanitizer = inject(DomSanitizer);
 
     private readonly AUTH_USER_KEY: LocalStorageBuckets = LocalStorageBuckets.AUTH;
     private readonly TG_AUTH_USER_KEY: LocalStorageBuckets = LocalStorageBuckets.TG_AUTH;
@@ -52,12 +50,6 @@ export class CoreAuthService {
     }
 
     login(userData: IUser) {
-        if (typeof userData.avatar === 'string') {
-            userData = {
-                ...userData,
-                avatar: this.sanitizer.bypassSecurityTrustResourceUrl(userData.avatar),
-            };
-        }
         this._user.set(userData);
         this.localStorageService.setItem(this.AUTH_USER_KEY, userData);
     }

@@ -6,12 +6,13 @@ import { Button } from 'primeng/button';
 import { ITelegramUser } from '../../../core/models/user.model';
 import { NgOptimizedImage } from '@angular/common';
 import { LangPipe } from '../../../core/pipes/lang-pipe';
+import { SafeResourseUrlPipe } from '../../../core/pipes/safe-resourse-url-pipe';
 
 export type TTab = 'store' | 'admin';
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, RouterLinkActive, Button, NgOptimizedImage, LangPipe],
+    imports: [RouterLink, RouterLinkActive, Button, NgOptimizedImage, LangPipe, SafeResourseUrlPipe],
     templateUrl: './header.component.html',
     styleUrl: './header.component.less',
 })

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { ILanguage } from '../language.model';
 
 export const uaLanguage: ILanguage = {
@@ -26,8 +27,28 @@ export const uaLanguage: ILanguage = {
         wholeCount: 'Оптова к-сть',
         createdAt: 'Створено',
         updatedAt: 'Оновлено',
-        createdBy: 'Створено',
-        updatedBy: 'Оновлено',
+        createdBy: 'Створено (ким)',
+        updatedBy: 'Оновлено (ким)',
+        deleted: 'Видалено',
+    },
+    goodType: {
+        FDM: 'FDM',
+        SLA: 'SLA',
+        wood: 'Дерево',
+        clothes: 'Одяг',
+        poly: 'Поліграфія',
+        poly_lam: 'Поліграфія ламінована',
+    },
+    storageType: {
+        items: 'шт.',
+        meters: 'м',
+    },
+    priceHistory: {
+        id: 'ID',
+        goodId: 'ID товару',
+        price: 'Ціна',
+        createdAt: 'Створено',
+        createdBy: 'Створено (ким)',
         deleted: 'Видалено',
     },
     adminTab: {
@@ -35,10 +56,6 @@ export const uaLanguage: ILanguage = {
         management: 'Менеджмент',
         statistics: 'Статистика',
         history: 'Історія',
-    },
-    storageType: {
-        items: 'шт.',
-        meters: 'м',
     },
     headerTab: {
         admin: 'Адміністрування',
