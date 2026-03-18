@@ -39,3 +39,26 @@ export interface IGood extends IGoodTemplate {
     priceHistory: IPriceHistoryRecord[];
 }
 
+export const emptyGood: IGood = {
+    id: -1,
+    uniqueId: null,
+    uniqueCode: null,
+    name: '',
+    type: 'FDM',
+    imageUrl: '',
+    description: '',
+    shortDescription: '',
+    notes: '',
+    storage: 0,
+    storageType: 'items',
+    nullPrice: 0,
+    sellPrice: 0,
+    wholePrice: 0,
+    wholeCount: 0,
+    createdAt: '-1',
+    updatedAt: '-1',
+    createdBy: '',
+    updatedBy: '',
+    deleted: false,
+    priceHistory: [],
+};

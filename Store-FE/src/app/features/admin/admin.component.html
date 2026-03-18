@@ -1,25 +1,32 @@
 <div class="admin-container">
     <div class="tabs">
-        @for (tab of tabs(); track tab) {
-            <p-button class="tab-button" [class.active]="activeTab() === tab" (click)="setTab(tab)">
-                {{ tab }}
-            </p-button>
-        }
+        <p-button-group>
+            @for (tab of tabs(); track tab) {
+                <p-button class="tab-button"
+                          [outlined]="activeTab() !== tab"
+                          [size]="'small'"
+                          (click)="setTab(tab)"
+
+                >
+                    {{ tab | lang: 'adminTab' }}
+                </p-button>
+            }
+        </p-button-group>
     </div>
 
     <div class="tab-content">
         @switch (activeTab()) {
-            @case ('Goods') {
-                <app-goods-tab/>
+            @case ('goods') {
+                <app-goods-tab class="active-tab"/>
             }
-            @case ('Management') {
-                <app-management-tab/>
+            @case ('management') {
+                <app-management-tab class="active-tab"/>
             }
-            @case ('History') {
-                <app-history-tab/>
+            @case ('history') {
+                <app-history-tab class="active-tab"/>
             }
-            @case ('Statistics') {
-                <app-statistics-tab/>
+            @case ('statistics') {
+                <app-statistics-tab class="active-tab"/>
             }
         }
     </div>

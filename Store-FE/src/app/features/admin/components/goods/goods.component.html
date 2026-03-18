@@ -1,37 +1,138 @@
 <div class="goods-tab-container">
     <div class="actions">
-        <p-button class="btn btn-success" (onClick)="openAdd()" label="Add Item" icon="pi pi-plus"
-                  severity="success"
+        <p-button class="btn btn-success"
+                  label="Add Item"
+                  icon="pi pi-plus"
+                  [rounded]="true"
+                  (onClick)="openAdd()"
         ></p-button>
         @if (authService.user()?.role === 'Admin') {
-            <p-button class="btn btn-warning" (onClick)="isPriceModifierOpen.set(true)" label="Price Modifier"
-                      icon="pi pi-percentage" severity="warn"
+            <p-button class="btn btn-warning"
+                      label="Price Modifier"
+                      icon="pi pi-percentage"
+                      [rounded]="true"
+                      (onClick)="isPriceModifierOpen.set(true)"
             ></p-button>
         }
     </div>
 
-    <p-table [value]="storageService.goods()" [tableStyle]="{ 'min-width': '50rem' }" class="goods-table">
+    <p-table [value]="storageService.goods()"
+             [tableStyle]="{ 'min-width': '50rem' }"
+             class="goods-table"
+    >
         <ng-template pTemplate="header">
             <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Short Description</th>
-                <th>Price</th>
-                <th>Actions</th>
+                @for (key of goodKeys; track key) {
+                    @switch (key) {
+                        @case ('deleted') {
+                            <th>
+                                {{ ('profit' | lang: 'misc') + ' %' }}
+                            </th>
+                        }
+                        @case ('nullPrice') {
+                            <th>
+                                {{ (key | lang: 'good') + ' ₴' }}
+                            </th>
+                        }
+                        @case ('sellPrice') {
+                            <th>
+                                {{ (key | lang: 'good') + ' ₴' }}
+                            </th>
+                        }
+                        @case ('wholePrice') {
+                            <th>
+                                {{ (key | lang: 'good') + ' ₴' }}
+                            </th>
+                        }
+                        @case ('priceHistory') {
+                        }
+                        @case ('description') {
+                        }
+                        @case ('notes') {
+                        }
+                        @case ('storageType') {
+                        }
+                        @default {
+                            <th>
+                                {{ key | lang: 'good' }}
+                            </th>
+                        }
+                    }
+                }
+                <th>
+                    {{ ('actions' | lang: 'misc') + ' %' }}
+                </th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-item>
+        <ng-template pTemplate="body"
+                     let-item
+        >
             <tr>
-                <td>{{ item.id }}</td>
-                <td><img [src]="item.imageUrl" [alt]="item.name" class="small-img"/></td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.price | currency }}</td>
+                @for (key of goodKeys; track key) {
+                    @switch (key) {
+                        @case ('imageUrl') {
+                            <td>
+                                <img [ngSrc]="item[key]"
+                                     [alt]="item.name"
+                                     class="small-img"
+                                />
+                            </td>
+                        }
+                        @case ('nullPrice') {
+                            <td>
+                                {{ item[key] | currency: 'UAH' }}
+                            </td>
+                        }
+                        @case ('sellPrice') {
+                            <td>
+                                {{ item[key] | currency: 'UAH' }}
+                            </td>
+                        }
+                        @case ('wholePrice') {
+                            <td>
+                                {{ item[key] | currency: 'UAH' }}
+                            </td>
+                        }
+                        @case ('deleted') {
+                            <td>
+                                {{ ((item.sellPrice - item.nullPrice) / item.nullPrice) | currency: 'UAH' }}
+                            </td>
+                        }
+                        @case ('storage') {
+                            <td>
+                                {{ item[key] + ' ' + (item['storageType'] | lang: 'storageType') }}
+                            </td>
+                        }
+                        @case ('priceHistory') {
+                        }
+                        @case ('description') {
+                        }
+                        @case ('notes') {
+                        }
+                        @case ('storageType') {
+                        }
+                        @default {
+                            <td>
+                                {{ item[key] }}
+                            </td>
+                        }
+                    }
+                }
                 <td class="action-icons">
-                    <p-button (onClick)="openView(item)" title="View" icon="pi pi-eye" text></p-button>
-                    <p-button (onClick)="openEdit(item)" title="Edit" icon="pi pi-pencil" text></p-button>
-                    <p-button (onClick)="deleteItem(item.id)" title="Delete" icon="pi pi-trash" severity="danger"
+                    <p-button (onClick)="openView(item)"
+                              title="View"
+                              icon="pi pi-eye"
+                              text
+                    ></p-button>
+                    <p-button (onClick)="openEdit(item)"
+                              title="Edit"
+                              icon="pi pi-pencil"
+                              text
+                    ></p-button>
+                    <p-button (onClick)="deleteItem(item.id)"
+                              title="Delete"
+                              icon="pi pi-trash"
+                              severity="danger"
                               text
                     ></p-button>
                 </td>

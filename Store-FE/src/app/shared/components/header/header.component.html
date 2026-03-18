@@ -4,21 +4,32 @@
     </div>
 
     <div class="store-nav">
-        <a routerLink="/"
-           routerLinkActive="active"
-           [routerLinkActiveOptions]="{ exact: true }"
-        >
-            <span>Магазин</span>
-            <div class="underline"></div>
-        </a>
-        @if (authService.isLoggedIn() && authService.user()?.role === 'Admin') {
-            <a routerLink="/admin"
-               routerLinkActive="active"
-               [routerLinkActiveOptions]="{ exact: true }"
-            >
-                <span>Адмін</span>
-                <div class="underline"></div>
-            </a>
+        @for (tab of tabs; track tab) {
+            @switch (tab) {
+                @case ('store') {
+                    <a routerLink="/"
+                       routerLinkActive="active"
+                       [routerLinkActiveOptions]="{ exact: true }"
+                    >
+                        <span>{{ tab | lang: 'headerTab' }}</span>
+                        <div class="underline"></div>
+                    </a>
+                }
+                @case ('admin') {
+                    @if (authService.isLoggedIn() && authService.user()?.role === 'Admin') {
+                        <a routerLink="/admin"
+                           routerLinkActive="active"
+                           [routerLinkActiveOptions]="{ exact: true }"
+                        >
+                            <span>{{ tab | lang: 'headerTab' }}</span>
+                            <div class="underline"></div>
+                        </a>
+                    }
+                }
+                @default {
+                    <!--will be added with more pages-->
+                }
+            }
         }
     </div>
 
@@ -34,7 +45,7 @@
         @if (authService.isLoggedIn()) {
             <div>
                 <p-button (onClick)="authService.logout()"
-                          label="Logout"
+                          [label]="'logout' | lang: 'misc'"
                           icon="pi pi-sign-out"
                           text
                 ></p-button>

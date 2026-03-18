@@ -6,8 +6,10 @@ import { ManagementTabComponent } from './components/management/management.compo
 import { HistoryTabComponent } from './components/history/history.component';
 import { StatisticsTabComponent } from './components/statistics/statistics.component';
 import { Button } from 'primeng/button';
+import { ButtonGroup } from 'primeng/buttongroup';
+import { LangPipe } from '../../core/pipes/lang-pipe';
 
-type AdminTab = 'Goods' | 'Management' | 'History' | 'Statistics';
+export type TAdminTab = 'goods' | 'management' | 'statistics' | 'history';
 
 @Component({
     selector: 'app-admin',
@@ -19,6 +21,8 @@ type AdminTab = 'Goods' | 'Management' | 'History' | 'Statistics';
         HistoryTabComponent,
         StatisticsTabComponent,
         Button,
+        ButtonGroup,
+        LangPipe,
     ],
     templateUrl: './admin.component.html',
     styleUrl: './admin.component.less',
@@ -27,20 +31,20 @@ export class AdminComponent {
 
     protected readonly authService: CoreAuthService = inject(CoreAuthService);
 
-    protected readonly activeTab: WritableSignal<AdminTab> = signal('Goods');
+    protected readonly activeTab: WritableSignal<TAdminTab> = signal('goods');
 
-    protected readonly tabs: Signal<AdminTab[]> = computed(() => {
+    protected readonly tabs: Signal<TAdminTab[]> = computed(() => {
         const user = this.authService.user();
         if (!user) {
             return [];
         }
         if (user.role === 'Admin') {
-            return ['Goods', 'Management', 'Statistics', 'History'];
+            return ['goods', 'management', 'statistics', 'history'];
         }
         return [];
     });
 
-    setTab(tab: AdminTab) {
+    setTab(tab: TAdminTab) {
         this.activeTab.set(tab);
     }
 
