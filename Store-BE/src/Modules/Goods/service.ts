@@ -72,21 +72,21 @@ export class GoodsService {
         }
         const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, good);
         if (!res) {
-            return res;
+            return null;
         }
         return [];
     }
 
-    public async deleteGood(id: number): Promise<IGood | null> {
+    public async deleteGood(id: number): Promise<[] | null> {
         const existingGood = await this.getGoodById(id);
         if (!existingGood) {
             return null;
         }
         const res: unknown[] | null = await AzureDB.softDeleteByID(this.TABLE_NAME, id);
         if (!res) {
-            return res;
+            return null;
         }
-        return this.convertRawGood(res[0] as IGoodRaw);
+        return [];
     }
 
     async convertRawGood(data: IGoodRaw): Promise<IGood> {
@@ -99,6 +99,9 @@ export class GoodsService {
             name: data.name,
             type: data.type,
             imageUrl: data.image_url,
+            description: data.description,
+            shortDescription: data.short_description,
+            notes: data.notes,
             storage: data.storage,
             storageType: data.storage_type,
             nullPrice: data.null_price,

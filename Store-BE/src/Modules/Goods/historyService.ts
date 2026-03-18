@@ -4,6 +4,7 @@ import {
     emptyPriceHistoryRecord,
     type IPriceHistoryRecord,
     type IPriceHistoryRecordRaw,
+    type IPriceHistoryRecordTemplate,
 } from '../../Models/goodsPriceHistory.model.js';
 import type { TAnyObject } from '../../Core/utils.types.js';
 
@@ -42,7 +43,7 @@ export class HistoryService {
         return this.convertFromRawArr(res as IPriceHistoryRecordRaw[]);
     }
 
-    public async createHistory(data: Partial<IPriceHistoryRecord>): Promise<IPriceHistoryRecord | null> {
+    public async createHistory(data: IPriceHistoryRecordTemplate): Promise<IPriceHistoryRecord | null> {
         const rawData = this.convertToRaw(data);
         const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, rawData);
         if (!res) {

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { IGood } from '../models/good.model';
+import { IGood, IGoodTemplate } from '../models/good.model';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { ITelegramUser, IUser } from '../models/user.model';
@@ -22,6 +22,30 @@ export class ApiService {
     */
     getGoods() {
         return lastValueFrom(this.http.get<IGood[]>(`${this.apiUrl}/goods`));
+    }
+
+    getGoodById(id: number) {
+        return lastValueFrom(this.http.get(`${this.apiUrl}/goods/${id}`));
+    }
+
+    getGoodByUniqueId(uniqueId: string) {
+        return lastValueFrom(this.http.post<IGood>(`${this.apiUrl}/goods/id`, { uniqueId }));
+    }
+
+    getGoodByUniqueCode(uniqueCode: string) {
+        return lastValueFrom(this.http.post<IGood>(`${this.apiUrl}/goods/code`, { uniqueCode }));
+    }
+
+    createGood(data: IGoodTemplate) {
+        return lastValueFrom(this.http.post<IGood>(`${this.apiUrl}/goods/`, data));
+    }
+
+    updateGood(id: number, data: IGoodTemplate) {
+        return lastValueFrom(this.http.put<[]>(`${this.apiUrl}/goods/${id}`, data));
+    }
+
+    deleteGood(id: number) {
+        return lastValueFrom(this.http.delete<[]>(`${this.apiUrl}/goods/${id}`));
     }
 
     /*

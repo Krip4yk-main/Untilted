@@ -132,10 +132,13 @@ export class StorageService {
     }
 
     addGood(good: IGood) {
-        this._goods.update((goods: IGood[]) => [
-            ...goods,
-            { ...good, id: Math.max(0, ...goods.map((g: IGood) => g.id)) + 1 },
-        ]);
+        this.apiService.createGood(good)
+            .then((createdGood: IGood) => {
+                this._goods.update((goods: IGood[]) => [
+                    ...goods,
+                    createdGood,
+                ]);
+            });
     }
 
     deleteGood(id: number) {

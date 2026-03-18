@@ -2,6 +2,8 @@ import { type Request, type Response } from 'express';
 import { goodsService } from './service.js';
 import type { IGood } from '../../Models/good.model.js';
 import type { TNumString } from '../../Core/utils.types.js';
+import { historyService } from './historyService.js';
+import moment from 'moment';
 
 export class GoodsController {
 
@@ -20,12 +22,12 @@ export class GoodsController {
 
     public async getGoods(req: Request, res: Response): Promise<void> {
         try {
-            const users = await goodsService.getGoods();
-            if (!users) {
-                throw new Error('Failed to get users');
+            const result = await goodsService.getGoods();
+            if (!result) {
+                throw new Error('Failed to get goods');
             }
             res.status(200)
-                .json(users);
+                .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
@@ -39,14 +41,14 @@ export class GoodsController {
             if (!id) {
                 throw new Error('Invalid ID');
             }
-            const user = await goodsService.getGoodById(id);
-            if (!user) {
+            const result = await goodsService.getGoodById(id);
+            if (!result) {
                 res.status(404)
                     .json({ error: 'User not found' });
                 return;
             }
             res.status(200)
-                .json(user);
+                .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             res.status(500)
@@ -60,10 +62,10 @@ export class GoodsController {
             if (!uniqueId) {
                 throw new Error('Invalid Unique ID');
             }
-            const user: IGood | null = await goodsService.getGoodByUniqueId(uniqueId);
+            const result: IGood | null = await goodsService.getGoodByUniqueId(uniqueId);
 
             res.status(200)
-                .json(user);
+                .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.trace(err);
@@ -78,10 +80,10 @@ export class GoodsController {
             if (!uniqueCode) {
                 throw new Error('Invalid Unique Code');
             }
-            const user: IGood | null = await goodsService.getGoodByUniqueCode(uniqueCode);
+            const result: IGood | null = await goodsService.getGoodByUniqueCode(uniqueCode);
 
             res.status(200)
-                .json(user);
+                .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             console.trace(err);
@@ -92,15 +94,29 @@ export class GoodsController {
 
     public async createGood(req: Request, res: Response): Promise<void> {
         try {
-            const user: IGood = req.body;
-            if (!user?.id) {
+            const data: IGood = req.body;
+            if (!data?.id) {
                 throw new Error('User is required');
             }
 
-            const result = await goodsService.createGood(user);
+            const result = await goodsService.createGood(data);
             if (!result) {
-                throw new Error('Failed to create user');
+                throw new Error('Failed to create good');
             }
+            const history = await historyService.createHistory({
+                goodId: result.id,
+                price: result.sellPrice,
+                createdAt: `${moment().unix()}`,
+                createdBy: data.createdBy,
+                deleted: false,
+            });
+
+            if (!history) {
+                console.error('Failed to create history');
+            } else {
+                result.priceHistory = [history];
+            }
+
             res.status(201)
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,12 +128,16 @@ export class GoodsController {
 
     public async updateGood(req: Request, res: Response): Promise<void> {
         try {
-            const user: IGood = req.body;
-            if (!user?.id) {
+            const data: IGood = req.body;
+            const id: number = Number(req.query.id);
+            if (!id) {
+                throw new Error('User ID is required');
+            }
+            if (!data) {
                 throw new Error('User is required');
             }
 
-            const result = await goodsService.updateGood(user.id, user);
+            const result = await goodsService.updateGood(id, data);
             if (!result) {
                 res.status(404)
                     .json({ error: 'User not found' });

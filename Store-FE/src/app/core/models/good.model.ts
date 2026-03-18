@@ -12,8 +12,7 @@ export interface IPriceHistoryRecord {
     deleted: boolean;
 }
 
-export interface IGood {
-    id: number;
+export interface IGoodTemplate {
     uniqueId: string | null;
     uniqueCode: TNumString | null;
     name: string;
@@ -33,6 +32,10 @@ export interface IGood {
     createdBy: string;
     updatedBy: string;
     deleted: boolean;
+}
+
+export interface IGood extends IGoodTemplate {
+    id: number;
     priceHistory: IPriceHistoryRecord[];
 }
 

@@ -40,8 +40,8 @@ export class AuthService {
     };
 
     async verify(user: ITelegramUser): Promise<string | null> {
-        const result: boolean =
-            await new Promise((resolve: TPromisableFunc<boolean>) => {
+        const result: jwt.JwtPayload | null =
+            await new Promise((resolve: TPromisableFunc<jwt.JwtPayload | null>) => {
                 jwt.verify(
                     user.id_token,
                     this.getKey,
@@ -70,45 +70,49 @@ export class AuthService {
         if (!this.secretJWT) {
             throw new Error('Secret JWT is not defined');
         }
-        return new Promise((resolve: TPromisableFunc<boolean>) => {
+        return new Promise((resolve: TPromisableFunc<jwt.JwtPayload | null>) => {
             jwt.verify(token, this.secretJWT!, (err: jwt.VerifyErrors | null, decoded?: string | jwt.JwtPayload) => {
                 this.verificationConditions(resolve, err, decoded);
             });
         });
     }
 
-    verificationConditions(resolve: TPromisableFunc<boolean>, err: jwt.VerifyErrors | null, decoded?: string | jwt.JwtPayload) {
+    verificationConditions(
+        resolve: TPromisableFunc<jwt.JwtPayload | null>,
+        err: jwt.VerifyErrors | null,
+        decoded?: string | jwt.JwtPayload,
+    ) {
         if (err) {
             console.error('JWT verification failed:', err);
-            resolve(false);
+            resolve(null);
             return;
         }
         if (!decoded) {
             console.error('Invalid JWT: Empty');
-            resolve(false);
+            resolve(null);
             return;
         }
         if (typeof decoded === 'string') {
             console.error('Invalid JWT: String');
-            resolve(false);
+            resolve(null);
             return;
         }
         if (decoded.iss !== 'https://oauth.telegram.org') {
             console.error('Invalid JWT: Issuer mismatch');
-            resolve(false);
+            resolve(null);
             return;
         }
         if (!decoded?.aud || decoded.aud !== this.tgBotId) {
             console.error('Invalid JWT: ID mismatch');
-            resolve(false);
+            resolve(null);
             return;
         }
         if (moment(decoded.exp).isAfter(moment(Date.now()))) {
             console.error('Invalid JWT: Expired');
-            resolve(false);
+            resolve(null);
             return;
         }
-        resolve(true);
+        resolve(decoded);
     }
 
 }
