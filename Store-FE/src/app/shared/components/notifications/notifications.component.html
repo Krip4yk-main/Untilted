@@ -1,0 +1,22 @@
+<div class="notifications-container" role="status" aria-live="polite">
+    @for (notification of notificationService.notifications(); track notification.id) {
+        <div class="notification-item"
+             [class.success]="notification.severity === 'success'"
+             [class.error]="notification.severity === 'error'"
+             [class.normal]="notification.severity === 'normal'"
+        >
+            <div class="header k-sub-header">
+                {{ notification.severity | lang: 'notifSeverity' }}
+            </div>
+            <div class="message">{{ '&nbsp;' + notification.message }}</div>
+            <p-button type="icon"
+                      class="close-btn"
+                      icon="pi pi-times"
+                      size="small"
+                      aria-label="Close notification"
+                      (onClick)="close(notification.id)"
+                      text
+            ></p-button>
+        </div>
+    }
+</div>

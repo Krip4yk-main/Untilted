@@ -1,0 +1,74 @@
+.notifications-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 300px;
+  width: 100%;
+  pointer-events: none;
+
+  .notification-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    min-height: 3rem;
+    max-height: 9rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    font-family: sans-serif;
+    animation: slide-in 0.3s ease-out;
+    pointer-events: auto;
+
+    &.normal {
+      background-color: color-mix(in srgb, var(--p-slate-700), transparent 15%)
+    }
+
+    &.success {
+      background-color: color-mix(in srgb, var(--p-green-700), transparent 15%)
+    }
+
+    &.error {
+      background-color: color-mix(in srgb, var(--p-red-700), transparent 15%)
+    }
+
+    .header {
+      margin-left: 1rem;
+    }
+
+    .message {
+      flex-grow: 1;
+      font-size: 14px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
