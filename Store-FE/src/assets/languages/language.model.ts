@@ -25,6 +25,7 @@ export interface ILanguage {
         profit: string;
         actions: string;
         addGood: string;
+        importGoods: string;
         modifyPrices: string;
         addItem: string;
         editItem: string;
@@ -36,8 +37,9 @@ export interface ILanguage {
     errors: Record<TError, string>;
 }
 
-export type TSuccessError = 'GOOD001' | 'GOOD002' | 'GOOD003';
+export type TSuccessError = 'good_1' | 'good_2' | 'good_3' | 'good_file_1';
 
 export type TSuccess = TSuccessError;
 
-export type TError = TSuccessError;
+export type TError = TSuccessError |
+    'good_file_2' | 'good_file_3' | 'good_file_4' | 'good_file_5';

@@ -1,15 +1,28 @@
 <div class="goods-tab-container">
     <div class="actions">
-        <p-button class="btn btn-success"
-                  icon="pi pi-plus"
+        <p-button icon="pi pi-plus"
                   size="small"
                   [rounded]="true"
                   [label]="'addGood' | lang: 'misc'"
                   (onClick)="openAdd()"
         ></p-button>
+        <p-fileupload mode="basic"
+                      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                      maxFileSize="1000000"
+                      chooseIcon="pi pi-upload"
+                      [chooseLabel]="'importGoods' | lang: 'misc'"
+                      styleClass="file-upload"
+                      [pTooltip]=""
+                      [chooseButtonProps]="{
+                          icon: 'pi pi-upload',
+                          label: 'importGoods' | lang: 'misc',
+                          rounded: true,
+                          size: 'small'
+                      }"
+                      (onSelect)="onFileSelected($event)"
+        />
         @if (authService.user()?.role === 'Admin') {
-            <p-button class="btn btn-warning"
-                      icon="pi pi-percentage"
+            <p-button icon="pi pi-percentage"
                       size="small"
                       [rounded]="true"
                       [label]="'modifyPrices' | lang: 'misc'"

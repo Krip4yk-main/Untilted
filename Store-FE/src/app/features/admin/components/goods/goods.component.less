@@ -13,6 +13,18 @@
     width: 100%;
     height: fit-content;
     flex-shrink: 0;
+
+    ::ng-deep .file-upload {
+      .p-fileupload-basic-content {
+        & > span {
+          display: none;
+        }
+      }
+
+      .p-message {
+        display: none;
+      }
+    }
   }
 
   .tables {

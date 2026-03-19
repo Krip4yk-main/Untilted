@@ -127,25 +127,25 @@ export class GoodEditorComponent implements OnInit {
             this.storageService.addGood(result)
                 .then(() => {
                     this.notificationService.show(languagesService
-                        .transform('success', 'GOOD001'), 'success');
+                        .transform('success', 'good_1'), 'success');
                     this.modalClose.emit();
                     this.localStorageService.removeItem(this.STORAGE_KEY);
                 })
                 .catch(() => {
                     this.notificationService.show(languagesService
-                        .transform('errors', 'GOOD001'), 'error');
+                        .transform('errors', 'good_1'), 'error');
                 });
         } else {
             this.storageService.updateGood(result)
                 .then(() => {
                     this.notificationService.show(languagesService
-                        .transform('success', 'GOOD002'), 'success');
+                        .transform('success', 'good_2'), 'success');
                     this.modalClose.emit();
                     this.localStorageService.removeItem(this.STORAGE_KEY);
                 })
                 .catch(() => {
                     this.notificationService.show(languagesService
-                        .transform('errors', 'GOOD002'), 'error');
+                        .transform('errors', 'good_2'), 'error');
                 });
         }
     }

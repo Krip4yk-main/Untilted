@@ -1,36 +1,53 @@
-export type TGoodType = 'poly' | 'poly_lam' | 'SLA' | 'FDM' | 'wood' | 'clothes';
-export type TStorageType = 'items' | 'meters';
+import { z } from 'zod';
 
-export interface IPriceHistoryRecord {
-    id: number;
-    goodId: number;
-    price: number;
-    createdAt: string;
-    createdBy: string;
-    deleted: boolean;
-}
+export const ZTGoodType = z.union([
+    z.literal('poly'),
+    z.literal('poly_lam'),
+    z.literal('SLA'),
+    z.literal('FDM'),
+    z.literal('wood'),
+    z.literal('clothes'),
+]);
+export const ZTStorageType = z.union([z.literal('items'), z.literal('meters')]);
+export const ZIGoodTemplate = z.object({
+    uniqueId: z.string().nullable(),
+    uniqueCode: z.string().nullable(),
+    name: z.string(),
+    type: ZTGoodType,
+    imageUrl: z.string(),
+    description: z.string(),
+    shortDescription: z.string(),
+    notes: z.string(),
+    storage: z.number(),
+    storageType: ZTStorageType,
+    nullPrice: z.number(),
+    sellPrice: z.number(),
+    wholePrice: z.number(),
+    wholeCount: z.number(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    createdBy: z.string(),
+    updatedBy: z.string(),
+    deleted: z.boolean(),
+});
+export const ZIPriceHistoryRecord = z.object({
+    id: z.number(),
+    goodId: z.number(),
+    price: z.number(),
+    createdAt: z.string(),
+    createdBy: z.string(),
+    deleted: z.boolean(),
+});
+export const ZIGood = ZIGoodTemplate.extend({
+    id: z.number(),
+    priceHistory: z.array(ZIPriceHistoryRecord),
+});
 
-export interface IGoodTemplate {
-    uniqueId: string | null;
-    uniqueCode: string | null;
-    name: string;
-    type: TGoodType;
-    imageUrl: string;
-    description: string;
-    shortDescription: string;
-    notes: string;
-    storage: number;
-    storageType: TStorageType;
-    nullPrice: number;
-    sellPrice: number;
-    wholePrice: number;
-    wholeCount: number;
-    createdAt: string;
-    updatedAt: string;
-    createdBy: string;
-    updatedBy: string;
-    deleted: boolean;
-}
+export type TGoodType = z.infer<typeof ZTGoodType>;
+export type TStorageType = z.infer<typeof ZTStorageType>;
+export type IGoodTemplate = z.infer<typeof ZIGoodTemplate>;
+export type IPriceHistoryRecord = z.infer<typeof ZIPriceHistoryRecord>;
+export type IGood = z.infer<typeof ZIGood>;
 
 export const emptyGoodTemplate: IGoodTemplate = {
     uniqueId: null,
@@ -53,12 +70,6 @@ export const emptyGoodTemplate: IGoodTemplate = {
     updatedBy: '',
     deleted: false,
 };
-
-export interface IGood extends IGoodTemplate {
-    id: number;
-    priceHistory: IPriceHistoryRecord[];
-}
-
 export const emptyGood: IGood = {
     ...emptyGoodTemplate,
     id: -1,

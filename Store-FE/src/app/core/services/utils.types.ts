@@ -4,3 +4,4 @@ export type TNumString = `${number}`;
 export type TInterfaceRecord<T> = {
     [K in keyof T]: T[K];
 };
+export type TAnyObject = Record<string, TAny>;
