@@ -20,7 +20,14 @@ class LanguagesService {
         this._selectedLang.set(lang);
     }
 
+    transform<K1 extends keyof ILanguage, K2 extends keyof ILanguage[K1]>(
+        group: K1,
+        value: K2,
+    ): string {
+        return this.lang()[group][value as keyof ILanguage[keyof ILanguage]];
+    }
+
 }
 
-export const langServiceInstance = LanguagesService.getInstance();
-export const lang = langServiceInstance.lang;
+export const languagesService = LanguagesService.getInstance();
+export const sLang = languagesService.lang;

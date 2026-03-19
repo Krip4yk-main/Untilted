@@ -1,4 +1,3 @@
-import type { TNumString } from '../Core/utils.types.js';
 import type { IPriceHistoryRecord } from './goodsPriceHistory.model.js';
 
 export type TGoodType = 'poly' | 'poly_lam' | 'SLA' | 'FDM' | 'wood' | 'clothes';
@@ -19,8 +18,8 @@ export interface IGoodTemplate {
     sellPrice: number;
     wholePrice: number;
     wholeCount: number;
-    createdAt: TNumString; // timestamp
-    updatedAt: TNumString; // timestamp
+    createdAt: string; // timestamp
+    updatedAt: string; // timestamp
     createdBy: string;
     updatedBy: string;
     deleted: boolean;
@@ -68,8 +67,8 @@ export interface IGoodRawTemplate {
     sell_price: number;
     whole_price: number;
     whole_count: number;
-    created_at: TNumString; // timestamp
-    updated_at: TNumString; // timestamp
+    created_at: string; // timestamp
+    updated_at: string; // timestamp
     created_by: string;
     updated_by: string;
     deleted: boolean;
@@ -91,8 +90,8 @@ export interface IGoodRaw {
     sell_price: number;
     whole_price: number;
     whole_count: number;
-    created_at: TNumString;
-    updated_at: TNumString;
+    created_at: string;
+    updated_at: string;
     created_by: string;
     updated_by: string;
     deleted: boolean;

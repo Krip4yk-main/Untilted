@@ -1,14 +1,4 @@
-import {
-    Component,
-    inject,
-    input,
-    InputSignal,
-    OnInit,
-    output,
-    OutputEmitterRef,
-    signal,
-    WritableSignal,
-} from '@angular/core';
+import { Component, inject, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { emptyGoodTemplate, IGood, IGoodTemplate, IPriceHistoryRecord } from '../../../../core/models/good.model';
@@ -22,6 +12,10 @@ import { COPY } from '../../../../core/services/utils.service';
 import { LangPipe } from '../../../../core/pipes/lang-pipe';
 import moment from 'moment';
 import { CoreAuthService } from '../../../../core/services/core-auth.service';
+import { HasRequiredValidatorPipe } from '../../../../core/pipes/has-required-validator-pipe';
+import { StorageService } from '../../../../core/services/storage.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { languagesService } from '../../../../../assets/languages/languages.service';
 
 export type EditorMode = 'view' | 'edit' | 'add';
 type TPartialGood = IGoodTemplate & { priceHistory: IPriceHistoryRecord[] };
@@ -29,7 +23,7 @@ type TPartialGood = IGoodTemplate & { priceHistory: IPriceHistoryRecord[] };
 @Component({
     selector: 'app-good-editor',
     standalone: true,
-    imports: [CommonModule, Button, InputText, Textarea, InputNumber, TableModule, ReactiveFormsModule, LangPipe],
+    imports: [CommonModule, Button, InputText, Textarea, InputNumber, TableModule, ReactiveFormsModule, LangPipe, HasRequiredValidatorPipe],
     templateUrl: './good-editor.component.html',
     styleUrl: './good-editor.component.less',
 })
@@ -37,12 +31,14 @@ export class GoodEditorComponent implements OnInit {
 
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
     private readonly coreAuthService: CoreAuthService = inject(CoreAuthService);
+    private readonly storageService: StorageService = inject(StorageService);
+    private readonly notificationService: NotificationService = inject(NotificationService);
     private readonly STORAGE_KEY: LocalStorageBuckets = LocalStorageBuckets.GOOD_EDITOR;
     private readonly fb: FormBuilder = inject(FormBuilder);
 
     mode: InputSignal<EditorMode> = input.required();
+    modeChange: OutputEmitterRef<EditorMode> = output();
     item: InputSignal<IGood | null> = input<IGood | null>(null);
-    itemSave: OutputEmitterRef<IGood> = output();
     modalClose: OutputEmitterRef<void> = output();
 
     protected readonly goodTypes: { label: string, value: IGoodTemplate['type'] }[] = [
@@ -59,7 +55,6 @@ export class GoodEditorComponent implements OnInit {
         { label: 'meters', value: 'meters' },
     ];
 
-    protected currentMode: WritableSignal<EditorMode> = signal('view');
     protected form!: FormGroup<{
         uniqueId: FormControl<string | null>;
         uniqueCode: FormControl<string | null>;
@@ -75,8 +70,8 @@ export class GoodEditorComponent implements OnInit {
         sellPrice: FormControl<number>;
         wholePrice: FormControl<number>;
         wholeCount: FormControl<number>;
-        createdAt: FormControl<`${number}`>;
-        updatedAt: FormControl<`${number}`>;
+        createdAt: FormControl<string>;
+        updatedAt: FormControl<string>;
         createdBy: FormControl<string>;
         updatedBy: FormControl<string>;
         deleted: FormControl<boolean>;
@@ -84,18 +79,83 @@ export class GoodEditorComponent implements OnInit {
     }>;
 
     ngOnInit() {
-        this.currentMode.set(this.mode());
-
         const savedData = this.localStorageService.getItem<Partial<IGood>>(this.STORAGE_KEY);
 
         const base: TPartialGood = this.item() ?
             { ...(this.item() as IGood) } :
             { ...COPY(emptyGoodTemplate), priceHistory: [] };
 
-        const initial: Partial<TPartialGood> = (this.currentMode() === 'edit' && savedData && savedData.id === (base as IGood).id) ?
+        const initial: Partial<TPartialGood> = (this.mode() === 'edit' && savedData && savedData.id === (base as IGood).id) ?
             { ...base, ...savedData } :
-            (this.currentMode() === 'add' && savedData && !savedData.id) ? { ...base, ...savedData } : base;
+            (this.mode() === 'add' && savedData && !savedData.id) ? { ...base, ...savedData } : base;
 
+        this.initForm(initial);
+
+        // Disable form in view mode
+        if (this.mode() === 'view') {
+            this.form.disable({ emitEvent: false });
+        }
+
+        this.form.valueChanges.subscribe(() => {
+            if (this.mode() === 'edit' || this.mode() === 'add') {
+                const value = this.form.getRawValue();
+                this.localStorageService.setItem(this.STORAGE_KEY, value as unknown as IGood);
+            }
+        });
+    }
+
+    enableEdit() {
+        this.modeChange.emit('edit');
+    }
+
+    onSave() {
+        if (this.form.invalid) {
+            this.form.markAllAsTouched();
+            this.notificationService.show('Please fill all required fields', 'error');
+            return;
+        }
+        const raw = this.form.getRawValue();
+        const baseId = this.item()?.id ?? -1;
+        const result: IGood = {
+            ...(COPY(emptyGoodTemplate)),
+            ...(raw as IGoodTemplate),
+            id: baseId,
+            priceHistory: raw.priceHistory ?? [],
+        };
+
+        if (this.mode() === 'add') {
+            this.storageService.addGood(result)
+                .then(() => {
+                    this.notificationService.show(languagesService
+                        .transform('success', 'GOOD001'), 'success');
+                    this.modalClose.emit();
+                    this.localStorageService.removeItem(this.STORAGE_KEY);
+                })
+                .catch(() => {
+                    this.notificationService.show(languagesService
+                        .transform('errors', 'GOOD001'), 'error');
+                });
+        } else {
+            this.storageService.updateGood(result)
+                .then(() => {
+                    this.notificationService.show(languagesService
+                        .transform('success', 'GOOD002'), 'success');
+                    this.modalClose.emit();
+                    this.localStorageService.removeItem(this.STORAGE_KEY);
+                })
+                .catch(() => {
+                    this.notificationService.show(languagesService
+                        .transform('errors', 'GOOD002'), 'error');
+                });
+        }
+    }
+
+    onClose() {
+        this.modalClose.emit();
+        this.localStorageService.removeItem(this.STORAGE_KEY);
+    }
+
+    initForm(initial: Partial<TPartialGood>) {
         this.form = this.fb.nonNullable.group({
             uniqueId: new FormControl(initial.uniqueId ?? null, {
                 validators: [
@@ -190,13 +250,13 @@ export class GoodEditorComponent implements OnInit {
                     Validators.min(0),
                 ],
             }),
-            createdAt: new FormControl(String(moment().unix() * 1000) as `${number}`, {
+            createdAt: new FormControl(moment().toISOString(), {
                 nonNullable: true,
                 validators: [
                     Validators.required,
                 ],
             }),
-            updatedAt: new FormControl(String(moment().unix() * 1000) as `${number}`, {
+            updatedAt: new FormControl(moment().toISOString(), {
                 nonNullable: true,
                 validators: [
                     Validators.required,
@@ -221,48 +281,6 @@ export class GoodEditorComponent implements OnInit {
                 nonNullable: true,
             }),
         });
-
-        this.currentMode.set(this.mode());
-
-        // Disable form in view mode
-        if (this.currentMode() === 'view') {
-            this.form.disable({ emitEvent: false });
-        }
-
-        this.form.valueChanges.subscribe(() => {
-            if (this.currentMode() === 'edit' || this.currentMode() === 'add') {
-                const value = this.form.getRawValue();
-                this.localStorageService.setItem(this.STORAGE_KEY, value as unknown as IGood);
-            }
-        });
     }
-
-    enableEdit() {
-        this.currentMode.set('edit');
-    }
-
-    onSave() {
-        if (this.form.invalid) {
-            this.form.markAllAsTouched();
-            return;
-        }
-        const raw = this.form.getRawValue();
-        const baseId = this.item()?.id ?? -1;
-        const result: IGood = {
-            ...(COPY(emptyGoodTemplate)),
-            ...(raw as IGoodTemplate),
-            id: baseId,
-            priceHistory: raw.priceHistory ?? [],
-        };
-        this.itemSave.emit(result);
-        this.localStorageService.removeItem(this.STORAGE_KEY);
-    }
-
-    onClose() {
-        this.modalClose.emit();
-        this.localStorageService.removeItem(this.STORAGE_KEY);
-    }
-
-    protected readonly Validators = Validators;
 
 }

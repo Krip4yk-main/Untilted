@@ -11,7 +11,7 @@
   .modal-content {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     background-color: color-mix(in srgb, var(--p-datatable-header-cell-background), transparent 15%);
     border: 1px solid var(--p-primary-900);
     padding: 1.5rem 2.5rem;
@@ -45,6 +45,27 @@
         align-content: center;
         gap: 0.5rem;
       }
+    }
+
+    .price-history {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .price-history-table {
+        ::ng-deep .p-datatable-table-container {
+          border-radius: 0.5rem;
+          border: 1px solid var(--p-primary-900);
+        }
+      }
+    }
+
+    .footer {
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      justify-content: flex-end;
+      gap: 1rem;
     }
   }
 }

@@ -26,6 +26,14 @@ export class HistoryService {
         return HistoryService.instance;
     }
 
+    public async getLastHistory(): Promise<IPriceHistoryRecord | null> {
+        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+        if (!res) {
+            return res;
+        }
+        return this.convertFromRaw(res[0] as IPriceHistoryRecordRaw);
+    }
+
     public async getHistoryById(id: number): Promise<IPriceHistoryRecord | null> {
         const column: keyof IPriceHistoryRecordRaw = 'id'; // mandatory type check
         const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
@@ -50,7 +58,7 @@ export class HistoryService {
         if (!res) {
             return res;
         }
-        return this.convertFromRaw(res[0] as IPriceHistoryRecordRaw);
+        return this.getLastHistory();
     }
 
     public async updateHistory(id: number, data: Partial<IPriceHistoryRecord>): Promise<[] | null> {

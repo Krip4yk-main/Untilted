@@ -1,5 +1,5 @@
 import { Component, inject, signal, WritableSignal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service';
 import { CoreAuthService } from '../../../../core/services/core-auth.service';
 import { emptyGood, IGood } from '../../../../core/models/good.model';
@@ -8,12 +8,11 @@ import { PriceModifierComponent } from './price-modifier.component';
 import { Button } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { LangPipe } from '../../../../core/pipes/lang-pipe';
-import { SafeResourseUrlPipe } from '../../../../core/pipes/safe-resourse-url-pipe';
 
 @Component({
     selector: 'app-goods-tab',
     standalone: true,
-    imports: [CommonModule, GoodEditorComponent, PriceModifierComponent, Button, TableModule, NgOptimizedImage, LangPipe, SafeResourseUrlPipe],
+    imports: [CommonModule, GoodEditorComponent, PriceModifierComponent, Button, TableModule, LangPipe],
     templateUrl: './goods.component.html',
     styleUrl: './goods.component.less',
 })
@@ -46,15 +45,6 @@ export class GoodsTabComponent {
         this.selectedItem.set(item);
         this.editorMode.set('edit');
         this.isEditorOpen.set(true);
-    }
-
-    onSave(item: IGood) {
-        if (this.editorMode() === 'add') {
-            this.storageService.addGood(item);
-        } else {
-            this.storageService.updateGood(item);
-        }
-        this.isEditorOpen.set(false);
     }
 
     deleteItem(id: number) {

@@ -37,6 +37,14 @@ export class GoodsService {
         return this.convertFromRawArr(res as IGoodRaw[]);
     }
 
+    public async getLastGood(): Promise<IGood | null> {
+        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+        if (!res) {
+            return res;
+        }
+        return this.convertFromRaw(res[0] as IGoodRaw);
+    }
+
     public async getGoodById(id: number): Promise<IGood | null> {
         const column: keyof IGoodRaw = 'id'; // mandatory type check
         const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
@@ -67,15 +75,16 @@ export class GoodsService {
     public async createGood(data: Partial<IGood>): Promise<IGood | null> {
         const dataRaw = {
             ...this.convertToRaw(data),
-            created_at: `${moment().unix() * 1000}`,
-            updated_at: `${moment().unix() * 1000}`,
+            // eslint-disable-next-line camelcase
+            created_at: moment().toISOString(),
+            // eslint-disable-next-line camelcase
+            updated_at: moment().toISOString(),
         };
-        console.log('dataRaw', dataRaw);
         const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, dataRaw);
         if (!res) {
             return res;
         }
-        return this.convertFromRaw(res[0] as IGoodRaw);
+        return this.getLastGood();
     }
 
     public async updateGood(id: number, data: Partial<IGood>): Promise<[] | null> {
@@ -85,6 +94,7 @@ export class GoodsService {
         }
         const dataRaw = {
             ...this.convertToRaw(data),
+            // eslint-disable-next-line camelcase
             updated_at: `${moment().unix() * 1000}`,
         };
         const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, dataRaw);

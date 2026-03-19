@@ -3,17 +3,17 @@
         <div class="header">
             <span class="k-big-header">
                 {{
-                    currentMode() === 'add'
+                    mode() === 'add'
                         ? ('addItem' | lang: 'misc')
-                        : currentMode() === 'edit'
+                        : mode() === 'edit'
                             ? ('editItem' | lang: 'misc')
                             : ('viewItem' | lang: 'misc')
                 }}
             </span>
             <p-button class="close-btn"
-                      (onClick)="onClose()"
                       icon="pi pi-times"
                       [text]="true"
+                      (onClick)="onClose()"
             ></p-button>
         </div>
 
@@ -21,7 +21,7 @@
             <div class="form-group">
                 <label for="name">
                     {{ ('name' | lang: 'good') }}
-                    {{ (form.controls.name.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.type | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <input id="name" pInputText formControlName="name"/>
             </div>
@@ -29,7 +29,7 @@
             <div class="form-group">
                 <label for="type">
                     {{ 'type' | lang: 'good' }}
-                    {{ (form.controls.type.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.type | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <select id="type"
                         class="p-inputtext p-component"
@@ -44,7 +44,7 @@
             <div class="form-group">
                 <label for="imageUrl">
                     {{ 'imageUrl' | lang: 'good' }}
-                    {{ (form.controls.imageUrl.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.imageUrl | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <input id="imageUrl" pInputText formControlName="imageUrl"/>
             </div>
@@ -52,7 +52,7 @@
             <div class="form-group">
                 <label for="description">
                     {{ 'shortDescription' | lang: 'good' }}
-                    {{ (form.controls.shortDescription.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.shortDescription | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <textarea id="description" pTextarea formControlName="shortDescription" [autoResize]="true"></textarea>
             </div>
@@ -60,7 +60,7 @@
             <div class="form-group">
                 <label for="fullDescription">
                     {{ 'description' | lang: 'good' }}
-                    {{ (form.controls.description.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.description | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <textarea id="fullDescription" pTextarea formControlName="description" [autoResize]="true"></textarea>
             </div>
@@ -68,7 +68,7 @@
             <div class="form-group">
                 <label for="price">
                     {{ 'sellPrice' | lang: 'good' }}
-                    {{ (form.controls.sellPrice.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.sellPrice | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <p-inputNumber id="price"
                                formControlName="sellPrice"
@@ -81,7 +81,7 @@
             <div class="form-group">
                 <label for="nullPrice">
                     {{ 'nullPrice' | lang: 'good' }}
-                    {{ (form.controls.nullPrice.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.nullPrice | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <p-inputNumber id="nullPrice"
                                formControlName="nullPrice"
@@ -94,7 +94,7 @@
             <div class="form-group">
                 <label for="wholePrice">
                     {{ 'wholePrice' | lang: 'good' }}
-                    {{ (form.controls.wholePrice.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.wholePrice | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <p-inputNumber id="wholePrice"
                                formControlName="wholePrice"
@@ -107,23 +107,15 @@
             <div class="form-group">
                 <label for="wholeCount">
                     {{ 'wholeCount' | lang: 'good' }}
-                    {{ (form.controls.wholeCount.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.wholeCount | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <p-inputNumber id="wholeCount" formControlName="wholeCount"></p-inputNumber>
             </div>
 
             <div class="form-group">
-                <label for="notes">
-                    {{ 'notes' | lang: 'good' }}
-                    {{ (form.controls.notes.hasValidator(Validators.required) ? '*' : '') }}
-                </label>
-                <textarea id="notes" pInputTextarea formControlName="notes" [autoResize]="true"></textarea>
-            </div>
-
-            <div class="form-group">
                 <label for="count">
                     {{ 'storage' | lang: 'good' }}
-                    {{ (form.controls.storage.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.storage | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <p-inputNumber id="count" formControlName="storage"></p-inputNumber>
             </div>
@@ -131,7 +123,7 @@
             <div class="form-group">
                 <label for="storageType">
                     {{ 'storageType' | lang: 'good' }}
-                    {{ (form.controls.storageType.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.storageType | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <select id="storageType" class="p-inputtext p-component" formControlName="storageType">
                     @for (opt of storageTypes; track opt.value) {
@@ -141,9 +133,17 @@
             </div>
 
             <div class="form-group">
+                <label for="notes">
+                    {{ 'notes' | lang: 'good' }}
+                    {{ ((form.controls.notes | hasRequiredValidator) ? '*' : '') }}
+                </label>
+                <textarea id="notes" pInputTextarea formControlName="notes" [autoResize]="true"></textarea>
+            </div>
+
+            <div class="form-group">
                 <label for="externalId">
                     {{ 'uniqueId' | lang: 'good' }}
-                    {{ (form.controls.uniqueId.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.uniqueId | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <input id="externalId" pInputText formControlName="uniqueId"/>
             </div>
@@ -151,7 +151,7 @@
             <div class="form-group">
                 <label for="uniqueCode">
                     {{ 'uniqueCode' | lang: 'good' }}
-                    {{ (form.controls.uniqueCode.hasValidator(Validators.required) ? '*' : '') }}
+                    {{ ((form.controls.uniqueCode | hasRequiredValidator) ? '*' : '') }}
                 </label>
                 <input id="uniqueCode" pInputText formControlName="uniqueCode"/>
             </div>
@@ -191,30 +191,37 @@
                        [value]="form.controls.updatedBy.value"
                 />
             </div>
-
-            @if (currentMode() !== 'add' && form.controls.priceHistory.value && form.controls.priceHistory.value.length > 0) {
-                <div class="price-history">
-                    <h3>{{ 'priceHistory' | lang: 'good' }}</h3>
-                    <p-table [value]="form.controls.priceHistory.value" [tableStyle]="{ 'min-width': '20rem' }">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>{{ 'sellPrice' | lang: 'good' }}</th>
-                                <th>{{ 'createdAt' | lang: 'good' }}</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-record>
-                            <tr>
-                                <td>{{ record.price | currency }}</td>
-                                <td>{{ record.createdAt | date: 'short' }}</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-            }
         </div>
 
-        <footer>
-            @if (currentMode() === 'view') {
+        @if (mode() !== 'add' && form.controls.priceHistory.value && form.controls.priceHistory.value.length > 0) {
+            <div class="price-history">
+                <span class="k-header">{{ 'priceHistory' | lang: 'good' }}</span>
+                <p-table [value]="form.controls.priceHistory.value"
+                         [tableStyle]="{ 'min-width': '20rem' }"
+                         class="price-history-table"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>{{ 'id' | lang: 'priceHistory' }}</th>
+                            <th>{{ 'price' | lang: 'priceHistory' }}</th>
+                            <th>{{ 'createdAt' | lang: 'priceHistory' }}</th>
+                            <th>{{ 'createdBy' | lang: 'priceHistory' }}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-record>
+                        <tr>
+                            <td>{{ record.id }}</td>
+                            <td>{{ record.price | currency: '₴' }}</td>
+                            <td>{{ record.createdAt | date: 'short' }}</td>
+                            <td>{{ record.createdBy }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        }
+
+        <div class="footer">
+            @if (mode() === 'view') {
                 <p-button class="btn btn-primary"
                           (onClick)="enableEdit()"
                           [label]="('editItem' | lang: 'misc')"
@@ -234,6 +241,6 @@
                       icon="pi pi-times"
                       severity="secondary"
             ></p-button>
-        </footer>
+        </div>
     </div>
 </div>

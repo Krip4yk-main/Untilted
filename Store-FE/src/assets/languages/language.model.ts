@@ -3,6 +3,7 @@ import { TUserRole } from '../../app/core/models/user.model';
 import { IGood, IPriceHistoryRecord, TGoodType, TStorageType } from '../../app/core/models/good.model';
 import { TAdminTab } from '../../app/features/admin/admin.component';
 import { TTab } from '../../app/shared/components/header/header.component';
+import { NotificationSeverity } from '../../app/core/services/notification.service';
 
 export type TAvailableLanguage = 'ua';
 export type EAvailableLanguage = `${TAvailableLanguage}Language`;
@@ -18,6 +19,7 @@ export interface ILanguage {
     priceHistory: Record<keyof IPriceHistoryRecord, string>;
     adminTab: Record<TAdminTab, string>;
     headerTab: Record<TTab, string>;
+    notifSeverity: Record<NotificationSeverity, string>;
     misc: {
         logout: string;
         profit: string;
@@ -29,5 +31,13 @@ export interface ILanguage {
         viewItem: string;
         save: string;
         cancel: string;
-    }
+    };
+    success: Record<TSuccess, string>;
+    errors: Record<TError, string>;
 }
+
+export type TSuccessError = 'GOOD001' | 'GOOD002' | 'GOOD003';
+
+export type TSuccess = TSuccessError;
+
+export type TError = TSuccessError;

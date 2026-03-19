@@ -47,8 +47,8 @@ export const uaLanguage: ILanguage = {
         id: 'ID',
         goodId: 'ID товару',
         price: 'Ціна',
-        createdAt: 'Створено',
-        createdBy: 'Створено (ким)',
+        createdAt: 'Оновлено',
+        createdBy: 'Оновлено (ким)',
         deleted: 'Видалено',
     },
     adminTab: {
@@ -61,6 +61,11 @@ export const uaLanguage: ILanguage = {
         admin: 'Адміністрування',
         store: 'Магазин',
     },
+    notifSeverity: {
+        error: 'Помилка',
+        success: 'Успіх',
+        normal: 'Сповіщення',
+    },
     misc: {
         logout: 'Вийти',
         profit: 'Прибуток',
@@ -72,5 +77,15 @@ export const uaLanguage: ILanguage = {
         viewItem: 'Переглянути товар',
         save: 'Зберегти',
         cancel: 'Скасувати',
+    },
+    success: {
+        GOOD001: 'Товар успішно додано',
+        GOOD002: 'Товар успішно оновлено',
+        GOOD003: 'Товар успішно видалено',
+    },
+    errors: {
+        GOOD001: 'Виникла помилка при додаванні товару. Спробуйте пізніше',
+        GOOD002: 'Виникла помилка при оновленні товару. Спробуйте пізніше',
+        GOOD003: 'Виникла помилка при видаленні товару. Спробуйте пізніше',
     },
 };

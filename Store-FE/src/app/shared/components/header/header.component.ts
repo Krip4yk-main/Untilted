@@ -4,15 +4,13 @@ import { CoreAuthService } from '../../../core/services/core-auth.service';
 import { StorageService } from '../../../core/services/storage.service';
 import { Button } from 'primeng/button';
 import { ITelegramUser } from '../../../core/models/user.model';
-import { NgOptimizedImage } from '@angular/common';
 import { LangPipe } from '../../../core/pipes/lang-pipe';
-import { SafeResourseUrlPipe } from '../../../core/pipes/safe-resourse-url-pipe';
 
 export type TTab = 'store' | 'admin';
 
 @Component({
     selector: 'app-header',
-    imports: [RouterLink, RouterLinkActive, Button, NgOptimizedImage, LangPipe, SafeResourseUrlPipe],
+    imports: [RouterLink, RouterLinkActive, Button, LangPipe],
     templateUrl: './header.component.html',
     styleUrl: './header.component.less',
 })

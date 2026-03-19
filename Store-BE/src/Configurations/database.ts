@@ -82,10 +82,6 @@ export class DatabaseConfig {
             let type: TDBInputType | null;
             switch (typeof data[rKey]) {
             case 'string': {
-                if (key.toLowerCase().includes('date')) {
-                    type = sql.Date;
-                    break;
-                }
                 type = this.getSqlStringType(data[rKey]);
                 break;
             }
@@ -113,11 +109,16 @@ export class DatabaseConfig {
             insertionKeys += `${key}, `;
             insertionValues += `@${key}, `;
         }
+        insertionKeys = insertionKeys.slice(0, -2);
+        insertionValues = insertionValues.slice(0, -2);
         insertionKeys = `(${insertionKeys})`;
         insertionValues = `(${insertionValues})`;
 
         const result = await this.executeQuery(request, `INSERT INTO ${table} ${insertionKeys} VALUES ${insertionValues}`);
-        return result.recordset;
+        if (result.rowsAffected?.[0] !== 1) {
+            return null;
+        }
+        return [];
     }
 
     async readAll(table: TDBTable) {
@@ -125,6 +126,15 @@ export class DatabaseConfig {
         const result = await this.executeQuery(request, `SELECT *
                                                          FROM ${table}
                                                          WHERE deleted = 0`);
+        return result.recordset;
+    }
+
+    async readLast(table: TDBTable) {
+        const request = this.getRequest();
+        const result = await this.executeQuery(request, `SELECT TOP 1 *
+                                                         FROM ${table}
+                                                         WHERE deleted = 0
+                                                         ORDER BY id DESC`);
         return result.recordset;
     }
 
@@ -182,13 +192,11 @@ export class DatabaseConfig {
                                                          SET ${insertionKeys}
                                                          WHERE id = @id
                                                            AND deleted = 0`);
-        if (!result.recordset?.length) {
-            if (result.rowsAffected[0] === 1) {
-                return [];
-            }
+
+        if (result.rowsAffected?.[0] !== 1) {
             return null;
         }
-        return result.recordset;
+        return [];
     }
 
     async softDeleteByID(table: TDBTable, id: number) {

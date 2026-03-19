@@ -28,6 +28,14 @@ export class UsersService {
         return this.convertRawUsers(res as IUserRaw[]);
     }
 
+    public async getLastUser(): Promise<IUser | null> {
+        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+        if (!res) {
+            return res;
+        }
+        return this.convertRawUser(res[0] as IUserRaw);
+    }
+
     public async getUserById(id: number): Promise<IUser | null> {
         const column: keyof IUserRaw = 'Id'; // mandatory type check
         const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
@@ -51,7 +59,7 @@ export class UsersService {
         if (!res) {
             return res;
         }
-        return this.convertRawUser(res[0] as IUserRaw);
+        return this.getLastUser();
     }
 
     public async updateUser(id: number, user: Partial<IUser>): Promise<[] | null> {

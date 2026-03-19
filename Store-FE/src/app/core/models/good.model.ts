@@ -1,5 +1,3 @@
-import { TNumString } from '../services/utils.types';
-
 export type TGoodType = 'poly' | 'poly_lam' | 'SLA' | 'FDM' | 'wood' | 'clothes';
 export type TStorageType = 'items' | 'meters';
 
@@ -27,8 +25,8 @@ export interface IGoodTemplate {
     sellPrice: number;
     wholePrice: number;
     wholeCount: number;
-    createdAt: TNumString; // timestamp
-    updatedAt: TNumString; // timestamp
+    createdAt: string;
+    updatedAt: string;
     createdBy: string;
     updatedBy: string;
     deleted: boolean;

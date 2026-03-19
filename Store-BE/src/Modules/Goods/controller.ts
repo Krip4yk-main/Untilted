@@ -108,7 +108,7 @@ export class GoodsController {
             const history = await historyService.createHistory({
                 goodId: result.id,
                 price: result.sellPrice,
-                createdAt: `${moment().unix() * 1000}`,
+                createdAt: moment().toISOString(),
                 createdBy: data.createdBy,
                 deleted: false,
             });

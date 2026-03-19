@@ -8,6 +8,7 @@ import { ApiService } from './api.service';
 import { CoreAuthService } from './core-auth.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
+import moment from 'moment';
 
 @Injectable({
     providedIn: 'root',
@@ -105,7 +106,7 @@ export class StorageService {
         return this._users().find((u: IUser) => u.id === id);
     }
 
-    updateGood(updatedGood: IGood) {
+    async updateGood(updatedGood: IGood) {
         this._goods.update((goods: IGood[]) => {
             const index = goods.findIndex((g: IGood) => g.id === updatedGood.id);
             if (index !== -1) {
@@ -118,7 +119,7 @@ export class StorageService {
                             id: -1,
                             goodId: updatedGood.id,
                             price: updatedGood.sellPrice,
-                            createdAt: new Date().toISOString(),
+                            createdAt: moment().toISOString(),
                             createdBy: this.coreAuthService.user()!.username,
                             deleted: false,
                         },
@@ -131,8 +132,8 @@ export class StorageService {
         });
     }
 
-    addGood(good: IGood) {
-        this.apiService.createGood(good)
+    async addGood(good: IGood) {
+        return this.apiService.createGood(good)
             .then((createdGood: IGood) => {
                 this._goods.update((goods: IGood[]) => [
                     ...goods,
@@ -141,7 +142,7 @@ export class StorageService {
             });
     }
 
-    deleteGood(id: number) {
+    async deleteGood(id: number) {
         this._goods.update((goods: IGood[]) => goods.filter((g: IGood) => g.id !== id));
     }
 
@@ -155,7 +156,7 @@ export class StorageService {
                     id: -1,
                     goodId: g.id,
                     price: newPrice,
-                    createdAt: new Date().toISOString(),
+                    createdAt: moment().toISOString(),
                     createdBy: this.coreAuthService.user()!.username,
                     deleted: false,
                 },
