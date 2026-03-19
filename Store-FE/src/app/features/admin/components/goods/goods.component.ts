@@ -9,6 +9,8 @@ import { Button } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { LangPipe } from '../../../../core/pipes/lang-pipe';
 
+type TTableskeys = 'goodsTable' | 'actionsTable'
+
 @Component({
     selector: 'app-goods-tab',
     standalone: true,

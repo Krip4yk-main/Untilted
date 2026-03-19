@@ -42,6 +42,7 @@ testem.log
 __screenshots__/
 coverage_*.txt
 .output.txt
+temp
 
 # System files
 .DS_Store
