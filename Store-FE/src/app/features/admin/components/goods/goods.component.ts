@@ -2,7 +2,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service';
 import { CoreAuthService } from '../../../../core/services/core-auth.service';
-import { emptyGood, IGood, ZIGood } from '../../../../core/models/good.model';
+import { emptyGood, emptyGoodTemplate, IGood, IGoodTemplate, ZIGood } from '../../../../core/models/good.model';
 import { EditorMode, GoodEditorComponent } from '../good-editor/good-editor.component';
 import { PriceModifierComponent } from './price-modifier.component';
 import { Button } from 'primeng/button';
@@ -16,6 +16,7 @@ import { languagesService } from '../../../../../assets/languages/languages.serv
 import readXlsxFile, { CellValue, Row } from 'read-excel-file/browser';
 import { COPY } from '../../../../core/services/utils.service';
 import { TAny, TAnyObject } from '../../../../core/services/utils.types';
+import { ApiService } from '../../../../core/services/api.service';
 
 @Component({
     selector: 'app-goods-tab',
@@ -29,6 +30,7 @@ export class GoodsTabComponent {
     protected readonly storageService: StorageService = inject(StorageService);
     protected readonly authService: CoreAuthService = inject(CoreAuthService);
     protected readonly notificationService: NotificationService = inject(NotificationService);
+    protected readonly apiService: ApiService = inject(ApiService);
 
     protected isEditorOpen: WritableSignal<boolean> = signal(false);
     protected editorMode: WritableSignal<EditorMode> = signal('view');
@@ -73,8 +75,6 @@ export class GoodsTabComponent {
         }
         readXlsxFile(event.currentFiles[0])
             .then((rows: Row[]) => {
-                console.log('rows: ', rows);
-
                 const nullCheck = (_rows: Row[]): boolean => {
                     const nonNullKeys: CellValue[] | undefined = _rows[0]
                         ?.filter((row: CellValue | null) => row !== null);
@@ -204,12 +204,107 @@ export class GoodsTabComponent {
                     return;
                 }
 
-                console.log('goods added: ', goods);
+                let updateGoods: Partial<IGood>[] = [];
+                const newGoods: Partial<IGood>[] = [];
+                goods.forEach((good: Partial<IGood>) => {
+                    if (good.id) {
+                        updateGoods.push(good);
+                    } else {
+                        newGoods.push(good);
+                    }
+                });
 
-                // add new goods bundle
+                const filterNewGoods =
+                    (_newGoods: Partial<IGood>[]) => _newGoods.map((good: Partial<IGood>): IGoodTemplate | undefined => {
+                        const newGoodRequiredKeys: (keyof IGood)[] = [
+                            'name',
+                            'type',
+                            'imageUrl',
+                            'description',
+                            'shortDescription',
+                            'storage',
+                            'storageType',
+                            'nullPrice',
+                            'sellPrice',
+                            'wholePrice',
+                            'wholeCount',
+                        ];
+                        const newGoodKeys: (keyof IGood)[] = Object.keys(good) as (keyof IGood)[];
+                        const missingKeys: string[] = [];
+                        newGoodRequiredKeys.forEach((key: keyof IGood) => {
+                            if (!newGoodKeys.includes(key) || good[key] === undefined || good[key] === null) {
+                                missingKeys.push(key);
+                            }
+                        });
+                        const wrongNewGoods = new Map<Partial<IGood>, string>();
+                        if (missingKeys.length) {
+                            wrongNewGoods.set(good, `Missing required keys: ${missingKeys.join(', ')}`);
+                            this.notificationService.show(languagesService
+                                .transform('errors', 'good_file_6') + `\n${good.id}`, 'error');
+                            console.error(wrongNewGoods);
+                            return undefined;
+                        }
+                        const missingKeysGood: Partial<IGood> = {};
+                        newGoodKeys.forEach((key: keyof Partial<IGood>) => {
+                            try {
+                                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                // @ts-expect-error
+                                missingKeysGood[key] = good[key];
+                            } catch (e: unknown) {
+                                console.error(e);
+                            }
+                        });
+                        return {
+                            ...emptyGoodTemplate,
+                            ...missingKeysGood,
+                        };
+                    })
+                        .filter((good: IGoodTemplate | undefined) => good !== undefined);
+
+                const filteredNewGoods: IGoodTemplate[] = filterNewGoods(newGoods);
+
+                if (updateGoods.length) {
+                    updateGoods = updateGoods.map((good: Partial<IGood>) => {
+                        if (this.storageService.goods().find((storageGood: IGood) => storageGood.id === good.id)) {
+                            return good;
+                        }
+                        this.notificationService.show(languagesService
+                            .transform('errors', 'good_file_7') + `\n${good.id}`, 'error');
+                        console.error(good, `Wrong given ID: ${good.id}`);
+                        return undefined;
+                    }).filter((good: Partial<IGood> | undefined) => good !== undefined);
+                }
+
+                if (!filteredNewGoods.length && !updateGoods.length) {
+                    this.notificationService.show(languagesService
+                        .transform('errors', 'good_file_8'), 'error');
+                    return;
+                }
+
+                if (filteredNewGoods.length) {
+                    this.apiService.createGoodBundle(filteredNewGoods)
+                        .then((result: IGoodTemplate[]) => {
+                            this.notificationService.show(languagesService
+                                .transform('success', 'good_file_1') + result.length, 'success');
+                        })
+                        .catch(console.error)
+                        .finally(() => {
+                            this.storageService.fetchGoods();
+                        });
+                }
+
+                if (updateGoods.length) {
+                    this.apiService.updateGoodBundle(updateGoods)
+                        .then((result: [][]) => {
+                            this.notificationService.show(languagesService
+                                .transform('success', 'good_file_2') + result.length, 'success');
+                        })
+                        .catch(console.error)
+                        .finally(() => {
+                            this.storageService.fetchGoods();
+                        });
+                }
             });
-
-        console.log(event);
     }
 
     getAndSortGoodKeys() {

@@ -40,8 +40,16 @@ export class ApiService {
         return lastValueFrom(this.http.post<IGood>(`${this.apiUrl}/goods/`, data));
     }
 
-    updateGood(id: number, data: IGoodTemplate) {
+    createGoodBundle(data: IGoodTemplate[]) {
+        return lastValueFrom(this.http.post<IGood[]>(`${this.apiUrl}/goods/bundle`, data));
+    }
+
+    updateGood(id: number, data: Partial<IGood>) {
         return lastValueFrom(this.http.put<[]>(`${this.apiUrl}/goods/${id}`, data));
+    }
+
+    updateGoodBundle(data: Partial<IGood>[]) {
+        return lastValueFrom(this.http.put<[][]>(`${this.apiUrl}/goods/bundle`, data));
     }
 
     deleteGood(id: number) {

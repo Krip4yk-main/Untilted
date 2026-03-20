@@ -4,6 +4,7 @@ import type { IGood } from '../../Models/good.model.js';
 import type { TNumString } from '../../Core/utils.types.js';
 import { historyService } from './historyService.js';
 import moment from 'moment';
+import { authService } from '../../Core/auth.service.js';
 
 export class GoodsController {
 
@@ -96,7 +97,7 @@ export class GoodsController {
 
     public async createGood(req: Request, res: Response): Promise<void> {
         try {
-            const data: IGood = req.body;
+            const data: Partial<IGood> = req.body;
             if (!data?.id) {
                 throw new Error('User is required');
             }
@@ -109,14 +110,64 @@ export class GoodsController {
                 goodId: result.id,
                 price: result.sellPrice,
                 createdAt: moment().toISOString(),
-                createdBy: data.createdBy,
+                createdBy: authService.loggedUserData!.name,
                 deleted: false,
             });
 
             if (!history) {
-                console.error('Failed to create history');
+                await goodsService.deleteGood(result.id);
+                throw new Error('Failed to create history. Good deleted');
             } else {
                 result.priceHistory = [history];
+            }
+
+            res.status(201)
+                .json(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.trace(err);
+            res.status(500)
+                .json({ error: err.message });
+        }
+    }
+
+    public async createGoodBundle(req: Request, res: Response): Promise<void> {
+        try {
+            const data: Partial<IGood>[] = req.body;
+            if (!data?.length) {
+                throw new Error('User array is required');
+            }
+            const result: IGood[] = [];
+
+            const createGood = async(item: Partial<IGood>) => {
+                const newGood: IGood | null = await goodsService.createGood(item);
+                if (!newGood) {
+                    console.error('Failed to create good');
+                    return;
+                }
+                const history = await historyService.createHistory({
+                    goodId: newGood.id,
+                    price: newGood.sellPrice,
+                    createdAt: moment().toISOString(),
+                    createdBy: authService.loggedUserData!.name,
+                    deleted: false,
+                });
+
+                if (!history) {
+                    await goodsService.deleteGood(newGood.id);
+                    throw new Error('Failed to create history. Good deleted');
+                }
+                newGood.priceHistory = [history];
+
+                result.push(newGood);
+            };
+
+            const promises = data.map(createGood);
+            await Promise.all(promises)
+                .catch(console.error);
+
+            if (!result.length) {
+                throw new Error('Failed to create good');
             }
 
             res.status(201)
@@ -148,6 +199,42 @@ export class GoodsController {
             }
 
             res.status(200)
+                .json(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.trace(err);
+            res.status(500)
+                .json({ error: err.message });
+        }
+    }
+
+    public async updateGoodBundle(req: Request, res: Response): Promise<void> {
+        try {
+            const data: Partial<IGood>[] = req.body;
+            if (!data?.length || !data.every((item: Partial<IGood>) => !!item.id)) {
+                throw new Error('User is required');
+            }
+
+            const result: [][] = [];
+
+            const updateGood = async(item: Partial<IGood>) => {
+                const updated: [] | null = await goodsService.updateGood(item.id!, item);
+                if (!updated) {
+                    console.error('Failed to update good');
+                    return;
+                }
+                result.push(updated);
+            };
+
+            const promises = data.map(updateGood);
+            await Promise.all(promises)
+                .catch(console.error);
+
+            if (!result.length) {
+                throw new Error('Failed to create goods');
+            }
+
+            res.status(201)
                 .json(result);
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {

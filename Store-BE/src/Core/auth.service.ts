@@ -16,6 +16,8 @@ export class AuthService {
         jwksUri: 'https://oauth.telegram.org/.well-known/jwks.json',
     });
 
+    loggedUserData: ITelegramUserNested | undefined = undefined;
+
     private constructor() {
         // intentionally empty
     }
@@ -85,35 +87,46 @@ export class AuthService {
     ) {
         if (err) {
             console.error('JWT verification failed:', err);
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
         if (!decoded) {
             console.error('Invalid JWT: Empty');
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
         if (typeof decoded === 'string') {
             console.error('Invalid JWT: String');
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
         if (decoded.iss !== 'https://oauth.telegram.org') {
             console.error('Invalid JWT: Issuer mismatch');
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
         if (!decoded?.aud || decoded.aud !== this.tgBotId) {
             console.error('Invalid JWT: ID mismatch');
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
         if (moment(decoded.exp).isAfter(moment(Date.now()))) {
             console.error('Invalid JWT: Expired');
+            this.clearLoggedUserData();
             resolve(null);
             return;
         }
+        this.loggedUserData = decoded as ITelegramUserNested;
         resolve(decoded);
+    }
+
+    clearLoggedUserData() {
+        this.loggedUserData = undefined;
     }
 
 }

@@ -37,9 +37,9 @@ export interface ILanguage {
     errors: Record<TError, string>;
 }
 
-export type TSuccessError = 'good_1' | 'good_2' | 'good_3' | 'good_file_1';
+export type TSuccessError = 'good_1' | 'good_2' | 'good_3' | 'good_file_1' | 'good_file_2';
 
 export type TSuccess = TSuccessError;
 
 export type TError = TSuccessError |
-    'good_file_2' | 'good_file_3' | 'good_file_4' | 'good_file_5';
+    'good_file_3' | 'good_file_4' | 'good_file_5' | 'good_file_6' | 'good_file_7' | 'good_file_8';

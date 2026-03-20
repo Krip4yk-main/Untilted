@@ -37,25 +37,21 @@
     overflow-y: scroll;
 
     .goods-table {
-      display: flex;
       width: 100%;
       min-width: 0;
-      height: 100%;
     }
 
     .actions-table {
-      position: relative;
-      display: flex;
       flex-shrink: 0;
       width: fit-content;
-      height: 100%;
     }
 
     .goods-table, .actions-table {
+      display: flex;
       position: relative;
       overflow-x: scroll;
       overflow-y: hidden;
-      height: fit-content;
+      height: 100%;
 
       ::ng-deep .p-datatable-table-container {
         overflow: unset !important;

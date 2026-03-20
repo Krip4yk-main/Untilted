@@ -19,8 +19,6 @@ export const authGuard = async(req: Request, res: Response, next: NextFunction):
     try {
         const decoded = await authService.verifyOwnToken(token);
         if (decoded) {
-            // eslint-disable-next-line require-atomic-updates
-            req.headers['user-data'] = JSON.stringify(decoded);
             next();
         } else {
             res.status(401).json({ message: 'Unauthorized: Invalid token' });

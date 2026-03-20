@@ -95,7 +95,7 @@ export class GoodsService {
         const dataRaw = {
             ...this.convertToRaw(data),
             // eslint-disable-next-line camelcase
-            updated_at: `${moment().unix() * 1000}`,
+            updated_at: moment().toISOString(),
         };
         const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, dataRaw);
         if (!res) {
@@ -191,6 +191,10 @@ export class GoodsService {
                 continue;
             }
 
+            if (pair[0] === 'deleted') {
+                result[pair[1]] = data[pair[0]] ? 1 : 0;
+                continue;
+            }
             result[pair[1]] = data[pair[0]];
         }
 
