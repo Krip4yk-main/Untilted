@@ -1,4 +1,4 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, Signal, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../../../core/services/storage.service';
 import { CoreAuthService } from '../../../../core/services/core-auth.service';
@@ -35,8 +35,9 @@ export class GoodsTabComponent {
     protected isEditorOpen: WritableSignal<boolean> = signal(false);
     protected editorMode: WritableSignal<EditorMode> = signal('view');
     protected selectedItem: WritableSignal<IGood | null> = signal(null);
-
     protected isPriceModifierOpen: WritableSignal<boolean> = signal(false);
+    protected filteredGoods: Signal<IGood[]> = computed(() => this.storageService.goods()
+        .sort((a: IGood, b: IGood) => a.id - b.id));
 
     protected readonly goodKeys: (keyof IGood)[] = this.getAndSortGoodKeys();
 

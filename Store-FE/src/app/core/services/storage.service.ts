@@ -107,7 +107,7 @@ export class StorageService {
     }
 
     async updateGood(updatedGood: IGood) {
-        return this.apiService.updateGood(updatedGood.id, updatedGood);
+        return this.apiService.updateGood(updatedGood);
     }
 
     async addGood(good: IGood) {

@@ -33,7 +33,7 @@
 
     <div class="tables">
         <p-table class="goods-table"
-                 [value]="storageService.goods()"
+                 [value]="filteredGoods()"
         >
             <ng-template pTemplate="header">
                 <tr>
@@ -135,7 +135,7 @@
             </ng-template>
         </p-table>
         <p-table class="actions-table"
-                 [value]="storageService.goods()"
+                 [value]="filteredGoods()"
         >
             <ng-template pTemplate="header">
                 <tr>

@@ -44,8 +44,8 @@ export class ApiService {
         return lastValueFrom(this.http.post<IGood[]>(`${this.apiUrl}/goods/bundle`, data));
     }
 
-    updateGood(id: number, data: Partial<IGood>) {
-        return lastValueFrom(this.http.put<[]>(`${this.apiUrl}/goods/${id}`, data));
+    updateGood(data: Partial<IGood>) {
+        return lastValueFrom(this.http.put<[]>(`${this.apiUrl}/goods/`, data));
     }
 
     updateGoodBundle(data: Partial<IGood>[]) {

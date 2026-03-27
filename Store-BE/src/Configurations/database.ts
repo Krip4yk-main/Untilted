@@ -167,11 +167,7 @@ export class DatabaseConfig {
             let type: TDBInputType;
             switch (typeof data[rKey]) {
             case 'string': {
-                if (key.toLowerCase().includes('date')) {
-                    type = sql.Date;
-                    break;
-                }
-                type = this.getSqlStringType(data[rKey]);
+                type = sql.NVarChar();
                 break;
             }
             case 'number': {

@@ -11,7 +11,7 @@ router.post('/code', goodsController.getGoodByUniqueCode);
 router.post('/bundle', authGuard, goodsController.createGoodBundle);
 router.post('/', authGuard, goodsController.createGood);
 router.put('/bundle', authGuard, goodsController.updateGoodBundle);
-router.put('/:id', authGuard, goodsController.updateGood);
+router.put('/', authGuard, goodsController.updateGood);
 router.delete('/:id', authGuard, goodsController.deleteGood);
 
 export default router;

@@ -11,6 +11,7 @@ import type { TAnyObject, TNumString } from '../../Core/utils.types.js';
 import { type IPriceHistoryRecord } from '../../Models/goodsPriceHistory.model.js';
 import { historyService } from './historyService.js';
 import moment from 'moment';
+import { authService } from '../../Core/auth.service.js';
 
 export class GoodsService {
 
@@ -73,13 +74,13 @@ export class GoodsService {
     }
 
     public async createGood(data: Partial<IGood>): Promise<IGood | null> {
-        const dataRaw = {
-            ...this.convertToRaw(data),
-            // eslint-disable-next-line camelcase
-            created_at: moment().toISOString(),
-            // eslint-disable-next-line camelcase
-            updated_at: moment().toISOString(),
-        };
+        const dataRaw = this.convertToRaw({
+            ...data,
+            createdBy: authService.loggedUserData!.preferred_username,
+            updatedBy: authService.loggedUserData!.preferred_username,
+            createdAt: moment().toISOString(),
+            updatedAt: moment().toISOString(),
+        });
         const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, dataRaw);
         if (!res) {
             return res;
@@ -92,11 +93,11 @@ export class GoodsService {
         if (!existingGood) {
             return null;
         }
-        const dataRaw = {
-            ...this.convertToRaw(data),
-            // eslint-disable-next-line camelcase
-            updated_at: moment().toISOString(),
-        };
+        const dataRaw = this.convertToRaw({
+            ...data,
+            updatedBy: authService.loggedUserData!.preferred_username,
+            updatedAt: moment().toISOString(),
+        });
         const res: unknown[] | null = await AzureDB.updateByID(this.TABLE_NAME, id, dataRaw);
         if (!res) {
             return null;

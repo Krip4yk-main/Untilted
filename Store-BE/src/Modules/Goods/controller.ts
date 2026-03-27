@@ -110,7 +110,7 @@ export class GoodsController {
                 goodId: result.id,
                 price: result.sellPrice,
                 createdAt: moment().toISOString(),
-                createdBy: authService.loggedUserData!.name,
+                createdBy: authService.loggedUserData!.preferred_username,
                 deleted: false,
             });
 
@@ -149,7 +149,7 @@ export class GoodsController {
                     goodId: newGood.id,
                     price: newGood.sellPrice,
                     createdAt: moment().toISOString(),
-                    createdBy: authService.loggedUserData!.name,
+                    createdBy: authService.loggedUserData!.preferred_username,
                     deleted: false,
                 });
 
@@ -182,16 +182,15 @@ export class GoodsController {
 
     public async updateGood(req: Request, res: Response): Promise<void> {
         try {
-            const data: IGood = req.body;
-            const id: number = Number(req.query.id);
-            if (!id) {
-                throw new Error('User ID is required');
-            }
+            const data: Partial<IGood> = req.body;
             if (!data) {
                 throw new Error('User is required');
             }
+            if (!data.id) {
+                throw new Error('User ID is required');
+            }
 
-            const result = await goodsService.updateGood(id, data);
+            const result = await goodsService.updateGood(data.id, data);
             if (!result) {
                 res.status(404)
                     .json({ error: 'User not found' });
