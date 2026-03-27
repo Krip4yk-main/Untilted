@@ -53,6 +53,7 @@ export type TSuccess = TSuccessError |
     'good_5';
 
 export type TError =
+    'unauthorized' |
     TSuccessError |
     'good_file_1' |
     'good_file_2' |

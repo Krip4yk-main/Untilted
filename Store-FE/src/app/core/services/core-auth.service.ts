@@ -95,6 +95,7 @@ export class CoreAuthService {
     logout() {
         this._user.set(null);
         this.localStorageService.clear();
+        this.router.navigate(['/']);
     }
 
 }
