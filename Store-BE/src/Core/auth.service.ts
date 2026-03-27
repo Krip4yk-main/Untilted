@@ -63,9 +63,9 @@ export class AuthService {
         if (!this.secretJWT) {
             throw new Error('Secret JWT is not defined');
         }
-        user.exp = moment().add(Number(this.expireIn ?? '0'), 'days')
+        user.exp = moment().add(Number(this.expireIn ?? '1'), 'days')
             .endOf('day')
-            .unix() * 1000;
+            .unix();
         return jwt.sign(user, this.secretJWT);
     }
 

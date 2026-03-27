@@ -82,7 +82,11 @@ export class DatabaseConfig {
             let type: TDBInputType | null;
             switch (typeof data[rKey]) {
             case 'string': {
-                type = this.getSqlStringType(data[rKey]);
+                if (RegExp('[a-zA-Z0-9]').test(data[rKey])) {
+                    type = sql.VarChar(data[rKey].length);
+                } else {
+                    type = sql.NVarChar(data[rKey].length);
+                }
                 break;
             }
             case 'number': {
