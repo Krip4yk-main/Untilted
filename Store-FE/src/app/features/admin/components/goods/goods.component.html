@@ -108,12 +108,20 @@
                             }
                             @case ('deleted') {
                                 <td>
-                                    {{ ((item.sellPrice - item.nullPrice) / item.nullPrice) | currency: '₴' }}
+                                    @if (item.nullPrice === 0) {
+                                        ∞
+                                    } @else {
+                                        {{ ((item.sellPrice - item.nullPrice) / item.nullPrice) | currency: '₴' }}
+                                    }
                                 </td>
                             }
                             @case ('storage') {
                                 <td>
-                                    {{ item[key] + ' ' + (item['storageType'] | lang: 'storageType') }}
+                                    @if (item['storage'] === -1) {
+                                        ∞
+                                    } @else {
+                                        {{ item[key] + ' ' + (item['storageType'] | lang: 'storageType') }}
+                                    }
                                 </td>
                             }
                             @case ('priceHistory') {

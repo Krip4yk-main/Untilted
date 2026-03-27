@@ -149,6 +149,10 @@ export class GoodEditorComponent implements OnInit {
         }
     }
 
+    onCloseX() {
+        this.modalClose.emit();
+    }
+
     onClose() {
         this.modalClose.emit();
         this.localStorageService.removeItem(this.STORAGE_KEY);
@@ -220,7 +224,7 @@ export class GoodEditorComponent implements OnInit {
                 nonNullable: true,
                 validators: [
                     Validators.required,
-                    Validators.min(0),
+                    Validators.min(-1),
                 ],
             }),
             storageType: new FormControl(initial.storageType ?? 'items', {
