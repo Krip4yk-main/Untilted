@@ -64,7 +64,7 @@ export class GoodsService {
     }
 
     public async getGoodByUniqueCode(id: TNumString): Promise<IGood | null> {
-        const column: keyof IGoodRaw = 'unique_code'; // mandatory type check
+        const column: keyof IGoodRaw = 'unique_barcode'; // mandatory type check
         const res: unknown[] | null = await AzureDB.readByKey(this.TABLE_NAME, id, column);
         if (!res) {
             return res;
@@ -122,7 +122,7 @@ export class GoodsService {
         return {
             id: data.id,
             uniqueId: data.unique_id,
-            uniqueCode: data.unique_code,
+            uniqueCode: data.unique_barcode,
             name: data.name,
             type: data.type,
             imageUrl: data.image_url,
@@ -162,7 +162,7 @@ export class GoodsService {
         const result: TAnyObject = {};
         const keysPairs: [keyof IGoodTemplate, keyof IGoodRawTemplate][] = [
             ['uniqueId', 'unique_id'],
-            ['uniqueCode', 'unique_code'],
+            ['uniqueCode', 'unique_barcode'],
             ['name', 'name'],
             ['type', 'type'],
             ['imageUrl', 'image_url'],

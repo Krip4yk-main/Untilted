@@ -54,7 +54,7 @@ export const emptyGoodTemplate: IGoodTemplate = {
 
 export interface IGoodRawTemplate {
     unique_id: string | null;
-    unique_code: string | null;
+    unique_barcode: string | null;
     name: string;
     type: TGoodType;
     image_url: string;
