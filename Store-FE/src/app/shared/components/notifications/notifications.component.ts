@@ -31,7 +31,7 @@ export class NotificationsComponent {
             const timer = setTimeout(() => {
                 this.notificationService.dismiss(id);
                 this.timers.delete(id);
-            }, 10000);
+            }, 6000);
             this.timers.set(id, timer);
         }
     }
