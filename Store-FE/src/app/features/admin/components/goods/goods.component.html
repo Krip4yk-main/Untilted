@@ -111,7 +111,7 @@
                                     @if (item.nullPrice === 0) {
                                         ∞
                                     } @else {
-                                        {{ ((item.sellPrice - item.nullPrice) / item.nullPrice) | currency: '₴' }}
+                                        {{ (((item.sellPrice - item.nullPrice) / item.nullPrice) * 100).toFixed(0) }}
                                     }
                                 </td>
                             }

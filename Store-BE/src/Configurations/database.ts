@@ -86,7 +86,11 @@ export class DatabaseConfig {
                 break;
             }
             case 'number': {
-                type = sql.Int;
+                if (Number(data[rKey].toFixed(0)) === data[rKey]) {
+                    type = sql.Int;
+                } else {
+                    type = sql.Float;
+                }
                 break;
             }
             case 'boolean': {
@@ -190,7 +194,11 @@ export class DatabaseConfig {
                 break;
             }
             case 'number': {
-                type = sql.Int;
+                if (Number(data[rKey].toFixed(0)) === data[rKey]) {
+                    type = sql.Int;
+                } else {
+                    type = sql.Float;
+                }
                 break;
             }
             case 'boolean': {

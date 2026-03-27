@@ -56,6 +56,10 @@ export class ApiService {
         return lastValueFrom(this.http.delete<[]>(`${this.apiUrl}/goods/${id}`));
     }
 
+    applyPriceModifier(modifier: number) {
+        return lastValueFrom(this.http.post<[]>(`${this.apiUrl}/goods/price-modifier`, { modifier }));
+    }
+
     /*
     * users
     */

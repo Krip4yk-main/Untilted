@@ -113,7 +113,9 @@ export class GoodEditorComponent implements OnInit {
             ...(COPY(emptyGoodTemplate)),
             ...(raw as IGoodTemplate),
             id: baseId,
-            priceHistory: raw.priceHistory ?? [],
+            priceHistory: raw.priceHistory ?
+                raw.priceHistory.sort((a: IPriceHistoryRecord, b: IPriceHistoryRecord) => b.id - a.id) :
+                [],
         };
 
         if (this.mode() === 'add') {
@@ -166,6 +168,8 @@ export class GoodEditorComponent implements OnInit {
         const initial: Partial<TPartialGood> = (this.mode() === 'edit' && this.savedData && this.savedData.id === (base as IGood).id) ?
             { ...base, ...this.savedData } :
             (this.mode() === 'add' && this.savedData && !this.savedData.id) ? { ...base, ...this.savedData } : base;
+
+        initial.priceHistory = initial?.priceHistory?.sort((a: IPriceHistoryRecord, b: IPriceHistoryRecord) => b.id - a.id);
 
         this.form = this.fb.nonNullable.group({
             uniqueId: new FormControl(initial.uniqueId ?? null, {

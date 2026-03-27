@@ -43,7 +43,10 @@ export interface ILanguage {
     errors: Record<TError, string>;
 }
 
-export type TSuccessError = 'good_1' | 'good_2' | 'good_3';
+export type TSuccessError = 'good_1' |
+    'good_2' |
+    'good_3' |
+    `good_6`;
 
 export type TSuccess = TSuccessError |
     'good_4' |

@@ -79,7 +79,20 @@ export class GoodsTabComponent {
     }
 
     applyModifier(multiplier: number) {
-        this.storageService.applyPriceModifier(multiplier);
+        this.storageService.applyPriceModifier(multiplier)
+            .then(() => {
+                this.notificationService.show(languagesService
+                    .transform('success', 'good_3'), 'success');
+
+                // this.modalClose.emit(); // todo replace `confirm` with own popup
+            })
+            .catch(() => {
+                this.notificationService.show(languagesService
+                    .transform('errors', 'good_3'), 'error');
+            })
+            .finally(() => {
+                this.storageService.fetchGoods();
+            });
     }
 
     async onFileSelected(event: FileSelectEvent) {

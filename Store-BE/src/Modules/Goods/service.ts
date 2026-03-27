@@ -207,6 +207,28 @@ export class GoodsService {
         return data.map(this.convertToRaw);
     }
 
+    async updatePriceHistory(data: IGood): Promise<void> {
+        if (data.sellPrice !== null && data.sellPrice !== undefined) {
+            if (!data.priceHistory) {
+                throw new Error('Price history not found for good');
+            }
+
+            if (data.sellPrice !== data.priceHistory[data.priceHistory.length - 1]?.price) {
+                const history = await historyService.createHistory({
+                    goodId: data.id,
+                    price: data.sellPrice,
+                    createdAt: moment().toISOString(),
+                    createdBy: authService.loggedUserData!.preferred_username,
+                    deleted: false,
+                });
+
+                if (!history) {
+                    throw new Error('Failed to create history');
+                }
+            }
+        }
+    }
+
 }
 
 export const goodsService = GoodsService.getInstance();

@@ -8,7 +8,6 @@ import { ApiService } from './api.service';
 import { CoreAuthService } from './core-auth.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
-import moment from 'moment';
 
 @Injectable({
     providedIn: 'root',
@@ -118,24 +117,8 @@ export class StorageService {
         return this.apiService.deleteGood(id);
     }
 
-    applyPriceModifier(multiplier: number) {
-        this._goods.update((goods: IGood[]) => goods.map((g: IGood) => {
-            const newPrice = Number((g.sellPrice * multiplier).toFixed(2));
-            return {
-                ...g,
-                price: newPrice,
-                priceHistory: [{
-                    id: -1,
-                    goodId: g.id,
-                    price: newPrice,
-                    createdAt: moment().toISOString(),
-                    createdBy: this.coreAuthService.user()!.username,
-                    deleted: false,
-                },
-                ...g.priceHistory,
-                ],
-            };
-        }));
+    async applyPriceModifier(multiplier: number) {
+        return this.apiService.applyPriceModifier(multiplier);
     }
 
     updateUser(updatedUser: IUser) {

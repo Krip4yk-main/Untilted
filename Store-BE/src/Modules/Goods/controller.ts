@@ -180,6 +180,46 @@ export class GoodsController {
         }
     }
 
+    public async applyPriceModifier(req: Request, res: Response): Promise<void> {
+        try {
+            const modifier = Number(req.body.modifier);
+            if (!modifier) {
+                throw new Error('Price modifier is required');
+            }
+
+            const allGoods = await goodsService.getGoods();
+            if (!allGoods) {
+                throw new Error('Failed to retrieve goods');
+            }
+
+            const result: IGood[] = [];
+
+            const updateItem = async(data: IGood) => {
+                data.sellPrice = data.sellPrice ? data.sellPrice * modifier : 0;
+                const updated = await goodsService.updateGood(data.id, data);
+                if (!updated) {
+                    res.status(404)
+                        .json({ error: 'Good not found' });
+                    return;
+                }
+                result.push(updated);
+
+                await goodsService.updatePriceHistory(data);
+            };
+            const promises = allGoods.map(updateItem);
+            await Promise.all(promises)
+                .catch(console.error);
+
+            res.status(200)
+                .json(result);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            console.trace(err);
+            res.status(500)
+                .json({ error: err.message });
+        }
+    }
+
     public async updateGood(req: Request, res: Response): Promise<void> {
         try {
             const data: Partial<IGood> = req.body;
@@ -197,25 +237,7 @@ export class GoodsController {
                 return;
             }
 
-            if (data.sellPrice !== null && data.sellPrice !== undefined) {
-                if (!data.priceHistory) {
-                    throw new Error('Price history not found for good');
-                }
-
-                if (data.sellPrice !== data.priceHistory[data.priceHistory.length - 1]?.price) {
-                    const history = await historyService.createHistory({
-                        goodId: data.id,
-                        price: data.sellPrice,
-                        createdAt: moment().toISOString(),
-                        createdBy: authService.loggedUserData!.preferred_username,
-                        deleted: false,
-                    });
-
-                    if (!history) {
-                        throw new Error('Failed to create history');
-                    }
-                }
-            }
+            await goodsService.updatePriceHistory(result);
 
             res.status(200)
                 .json(result);
@@ -241,6 +263,7 @@ export class GoodsController {
                 if (!updated) {
                     throw new Error('Failed to update good');
                 }
+                result.push(updated);
 
                 if (item.sellPrice) {
                     const lastHistory = await historyService.getLastHistoryByGoodId(item.id!);
@@ -267,7 +290,6 @@ export class GoodsController {
                         }
                     }
                 }
-                result.push(updated);
             };
 
             const promises = data.map(updateGood);

@@ -14,6 +14,7 @@ import { LocalStorageBuckets, LocalStorageService } from '../../../../core/servi
 import { Button } from 'primeng/button';
 import { InputNumber } from 'primeng/inputnumber';
 import { LangPipe } from '../../../../core/pipes/lang-pipe';
+import { IGood } from '../../../../core/models/good.model';
 
 @Component({
     selector: 'app-price-modifier',
@@ -42,8 +43,9 @@ export class PriceModifierComponent implements OnInit {
             multiplier: [multiplier, [Validators.required, Validators.min(0.01)]],
         });
 
-        this.form.valueChanges.subscribe((value) => {
-            this.localStorageService.setItem(this.STORAGE_KEY, value);
+        this.form.valueChanges.subscribe(() => {
+            const value = this.form.getRawValue();
+            this.localStorageService.setItem(this.STORAGE_KEY, value as unknown as IGood);
         });
     }
 

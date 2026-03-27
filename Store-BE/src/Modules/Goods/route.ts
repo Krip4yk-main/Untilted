@@ -9,6 +9,7 @@ router.get('/:id', goodsController.getGoodById);
 router.post('/id', goodsController.getGoodByUniqueId);
 router.post('/code', goodsController.getGoodByUniqueCode);
 router.post('/bundle', authGuard, goodsController.createGoodBundle);
+router.post('/price-modifier', authGuard, goodsController.applyPriceModifier);
 router.post('/', authGuard, goodsController.createGood);
 router.put('/bundle', authGuard, goodsController.updateGoodBundle);
 router.put('/', authGuard, goodsController.updateGood);
