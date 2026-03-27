@@ -212,7 +212,7 @@
                         <tr>
                             <td>{{ record.id }}</td>
                             <td>{{ record.price | currency: '₴' }}</td>
-                            <td>{{ record.createdAt | date: 'short' }}</td>
+                            <td>{{ record.createdAt | date: 'medium' : undefined : 'uk' }}</td>
                             <td>{{ record.createdBy }}</td>
                         </tr>
                     </ng-template>

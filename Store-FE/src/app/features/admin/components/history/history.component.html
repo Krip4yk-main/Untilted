@@ -24,7 +24,7 @@
                     </td>
                     <td>{{ sale.goodName }}</td>
                     <td>{{ sale.price | currency }}</td>
-                    <td>{{ sale.date | date: 'short' }}</td>
+                    <td>{{ sale.date | date: 'medium' : undefined : 'uk' }}</td>
                 </tr>
             }
             @if (storageService.sales().length === 0) {

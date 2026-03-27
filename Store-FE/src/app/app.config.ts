@@ -9,6 +9,11 @@ import { routes } from './app.routes';
 import { intercept } from './core/guards/auth.interseptor';
 import { definePreset } from '@primeuix/themes';
 
+import { registerLocaleData } from '@angular/common';
+import localeUk from '@angular/common/locales/uk';
+
+registerLocaleData(localeUk, 'uk');
+
 const MIARPreset = definePreset(Aura, {
     semantic: {
         primary: {

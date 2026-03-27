@@ -124,6 +124,16 @@
                                     }
                                 </td>
                             }
+                            @case ('createdAt') {
+                                <td>
+                                    {{ item[key] | date: 'medium' : undefined : 'uk' }}
+                                </td>
+                            }
+                            @case ('updatedAt') {
+                                <td>
+                                    {{ item[key] | date: 'medium' : undefined : 'uk' }}
+                                </td>
+                            }
                             @case ('priceHistory') {
                             }
                             @case ('description') {

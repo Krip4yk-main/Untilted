@@ -22,7 +22,8 @@
                 <label>
                     Role
                     <select [(ngModel)]="formData().role" (ngModelChange)="onDataChange()"
-                            [disabled]="currentMode() === 'view'">
+                            [disabled]="currentMode() === 'view'"
+                    >
                         <option value="client">Client</option>
                         <option value="manager">Manager</option>
                         <option value="admin">Admin</option>
@@ -56,7 +57,7 @@
                                 <tr>
                                     <td>{{ sale.goodName }}</td>
                                     <td>{{ sale.price | currency }}</td>
-                                    <td>{{ sale.date | date: 'short' }}</td>
+                                    <td>{{ sale.date | date: 'medium' : undefined : 'uk' }}</td>
                                 </tr>
                             }
                         </tbody>
