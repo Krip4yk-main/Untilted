@@ -78,18 +78,10 @@ export class GoodEditorComponent implements OnInit {
         priceHistory: FormControl<IPriceHistoryRecord[]>;
     }>;
 
+    protected readonly savedData: Partial<IGood> | null = this.localStorageService.getItem<Partial<IGood>>(this.STORAGE_KEY);
+
     ngOnInit() {
-        const savedData = this.localStorageService.getItem<Partial<IGood>>(this.STORAGE_KEY);
-
-        const base: TPartialGood = this.item() ?
-            { ...(this.item() as IGood) } :
-            { ...COPY(emptyGoodTemplate), priceHistory: [] };
-
-        const initial: Partial<TPartialGood> = (this.mode() === 'edit' && savedData && savedData.id === (base as IGood).id) ?
-            { ...base, ...savedData } :
-            (this.mode() === 'add' && savedData && !savedData.id) ? { ...base, ...savedData } : base;
-
-        this.initForm(initial);
+        this.initForm();
 
         // Disable form in view mode
         if (this.mode() === 'view') {
@@ -106,6 +98,7 @@ export class GoodEditorComponent implements OnInit {
 
     enableEdit() {
         this.modeChange.emit('edit');
+        this.initForm();
     }
 
     onSave() {
@@ -161,7 +154,15 @@ export class GoodEditorComponent implements OnInit {
         this.localStorageService.removeItem(this.STORAGE_KEY);
     }
 
-    initForm(initial: Partial<TPartialGood>) {
+    initForm() {
+        const base: TPartialGood = this.item() ?
+            { ...(this.item() as IGood) } :
+            { ...COPY(emptyGoodTemplate), priceHistory: [] };
+
+        const initial: Partial<TPartialGood> = (this.mode() === 'edit' && this.savedData && this.savedData.id === (base as IGood).id) ?
+            { ...base, ...this.savedData } :
+            (this.mode() === 'add' && this.savedData && !this.savedData.id) ? { ...base, ...this.savedData } : base;
+
         this.form = this.fb.nonNullable.group({
             uniqueId: new FormControl(initial.uniqueId ?? null, {
                 validators: [

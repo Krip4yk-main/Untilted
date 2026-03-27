@@ -32,6 +32,12 @@ export interface ILanguage {
         viewItem: string;
         save: string;
         cancel: string;
+        close: string;
+        apply: string;
+        multiplier: string;
+        priceModifier: string;
+        priceModifierDesc: string;
+        confirmPriceModifier: string;
     };
     success: Record<TSuccess, string>;
     errors: Record<TError, string>;

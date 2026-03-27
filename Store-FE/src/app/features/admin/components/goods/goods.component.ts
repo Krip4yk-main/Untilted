@@ -305,7 +305,7 @@ export class GoodsTabComponent {
 
                 if (updateGoods.length) {
                     this.apiService.updateGoodBundle(updateGoods)
-                        .then((result: [][]) => {
+                        .then((result: IGood[]) => {
                             this.notificationService.show(languagesService
                                 .transform('success', 'good_5') + result.length, 'success');
                         })

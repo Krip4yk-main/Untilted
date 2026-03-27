@@ -78,6 +78,12 @@ export const uaLanguage: ILanguage = {
         viewItem: 'Переглянути товар',
         save: 'Зберегти',
         cancel: 'Скасувати',
+        close: 'Закрити',
+        apply: 'Застосувати',
+        multiplier: 'Множник (напр. 1.1 для +10%, 0.9 для -10%)',
+        priceModifier: 'Модифікатор ціни',
+        priceModifierDesc: 'Налаштуйте ціну для всіх товарів за допомогою множника.',
+        confirmPriceModifier: 'Ви впевнені, що хочете застосувати цей множник до ВСІХ товарів?',
     },
     success: {
         good_1: 'Товар успішно додано',

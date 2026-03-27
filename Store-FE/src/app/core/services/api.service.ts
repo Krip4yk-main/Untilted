@@ -45,11 +45,11 @@ export class ApiService {
     }
 
     updateGood(data: Partial<IGood>) {
-        return lastValueFrom(this.http.put<[]>(`${this.apiUrl}/goods/`, data));
+        return lastValueFrom(this.http.put<IGood>(`${this.apiUrl}/goods/`, data));
     }
 
     updateGoodBundle(data: Partial<IGood>[]) {
-        return lastValueFrom(this.http.put<[][]>(`${this.apiUrl}/goods/bundle`, data));
+        return lastValueFrom(this.http.put<IGood[]>(`${this.apiUrl}/goods/bundle`, data));
     }
 
     deleteGood(id: number) {

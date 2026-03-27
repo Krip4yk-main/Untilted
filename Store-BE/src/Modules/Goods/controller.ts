@@ -46,7 +46,7 @@ export class GoodsController {
             const result = await goodsService.getGoodById(id);
             if (!result) {
                 res.status(404)
-                    .json({ error: 'User not found' });
+                    .json({ error: 'Good not found' });
                 return;
             }
             res.status(200)
@@ -99,7 +99,7 @@ export class GoodsController {
         try {
             const data: Partial<IGood> = req.body;
             if (!data?.id) {
-                throw new Error('User is required');
+                throw new Error('Good is required');
             }
 
             const result = await goodsService.createGood(data);
@@ -135,7 +135,7 @@ export class GoodsController {
         try {
             const data: Partial<IGood>[] = req.body;
             if (!data?.length) {
-                throw new Error('User array is required');
+                throw new Error('Good array is required');
             }
             const result: IGood[] = [];
 
@@ -184,17 +184,37 @@ export class GoodsController {
         try {
             const data: Partial<IGood> = req.body;
             if (!data) {
-                throw new Error('User is required');
+                throw new Error('Good is required');
             }
             if (!data.id) {
-                throw new Error('User ID is required');
+                throw new Error('Good ID is required');
             }
 
             const result = await goodsService.updateGood(data.id, data);
             if (!result) {
                 res.status(404)
-                    .json({ error: 'User not found' });
+                    .json({ error: 'Good not found' });
                 return;
+            }
+
+            if (data.sellPrice !== null && data.sellPrice !== undefined) {
+                if (!data.priceHistory) {
+                    throw new Error('Price history not found for good');
+                }
+
+                if (data.sellPrice !== data.priceHistory[data.priceHistory.length - 1]?.price) {
+                    const history = await historyService.createHistory({
+                        goodId: data.id,
+                        price: data.sellPrice,
+                        createdAt: moment().toISOString(),
+                        createdBy: authService.loggedUserData!.preferred_username,
+                        deleted: false,
+                    });
+
+                    if (!history) {
+                        throw new Error('Failed to create history');
+                    }
+                }
             }
 
             res.status(200)
@@ -211,16 +231,41 @@ export class GoodsController {
         try {
             const data: Partial<IGood>[] = req.body;
             if (!data?.length || !data.every((item: Partial<IGood>) => !!item.id)) {
-                throw new Error('User is required');
+                throw new Error('Good is required');
             }
 
-            const result: [][] = [];
+            const result: IGood[] = [];
 
             const updateGood = async(item: Partial<IGood>) => {
-                const updated: [] | null = await goodsService.updateGood(item.id!, item);
+                const updated: IGood | null = await goodsService.updateGood(item.id!, item);
                 if (!updated) {
-                    console.error('Failed to update good');
-                    return;
+                    throw new Error('Failed to update good');
+                }
+
+                if (item.sellPrice) {
+                    const lastHistory = await historyService.getLastHistoryByGoodId(item.id!);
+
+                    if (!lastHistory) {
+                        throw new Error('Last history not found for good');
+                    }
+
+                    if (!item.priceHistory) {
+                        throw new Error('Price history not found for good');
+                    }
+
+                    if (item.priceHistory[item.priceHistory.length - 1]?.price !== lastHistory?.price) {
+                        const history = await historyService.createHistory({
+                            goodId: item.id!,
+                            price: item.sellPrice,
+                            createdAt: moment().toISOString(),
+                            createdBy: authService.loggedUserData!.preferred_username,
+                            deleted: false,
+                        });
+
+                        if (!history) {
+                            throw new Error('Failed to create history');
+                        }
+                    }
                 }
                 result.push(updated);
             };
@@ -252,7 +297,7 @@ export class GoodsController {
             const deleted = await goodsService.deleteGood(id);
             if (!deleted) {
                 res.status(404)
-                    .json({ error: 'User not found' });
+                    .json({ error: 'Good not found' });
                 return;
             }
 

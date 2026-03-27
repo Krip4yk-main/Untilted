@@ -26,8 +26,8 @@ export class HistoryService {
         return HistoryService.instance;
     }
 
-    public async getLastHistory(): Promise<IPriceHistoryRecord | null> {
-        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+    public async getLastHistoryByGoodId(goodId: number): Promise<IPriceHistoryRecord | null> {
+        const res: unknown[] | null = await AzureDB.readLastByKey(this.TABLE_NAME, goodId, 'good_id');
         if (!res) {
             return res;
         }
@@ -58,10 +58,10 @@ export class HistoryService {
         if (!res) {
             return res;
         }
-        return this.getLastHistory();
+        return this.getLastHistoryByGoodId(data.goodId);
     }
 
-    public async updateHistory(id: number, data: Partial<IPriceHistoryRecord>): Promise<[] | null> {
+    public async updateHistory(id: number, data: Partial<IPriceHistoryRecord>): Promise<IPriceHistoryRecord | null> {
         const existingHistory = await this.getHistoryById(id);
         if (!existingHistory) {
             return null;
@@ -71,7 +71,7 @@ export class HistoryService {
         if (!res) {
             return res;
         }
-        return [];
+        return this.getHistoryById(id);
     }
 
     public async deleteHistory(id: number): Promise<IPriceHistoryRecord | null> {

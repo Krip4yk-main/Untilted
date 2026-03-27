@@ -125,7 +125,8 @@ export class DatabaseConfig {
         const request = this.getRequest();
         const result = await this.executeQuery(request, `SELECT *
                                                          FROM ${table}
-                                                         WHERE deleted = 0`);
+                                                         WHERE deleted = 0
+                                                         ORDER BY id ASC`);
         return result.recordset;
     }
 
@@ -134,6 +135,23 @@ export class DatabaseConfig {
         const result = await this.executeQuery(request, `SELECT TOP 1 *
                                                          FROM ${table}
                                                          WHERE deleted = 0
+                                                         ORDER BY id DESC`);
+        return result.recordset;
+    }
+
+    async readLastByKey(table: TDBTable, value: number | string, key: string) {
+        const request = this.getRequest();
+
+        if (typeof value === 'string') {
+            request.input(key, this.getSqlStringType(value as string), value);
+        } else {
+            request.input(key, sql.Int, +value);
+        }
+
+        const result = await this.executeQuery(request, `SELECT TOP 1 *
+                                                         FROM ${table}
+                                                         WHERE ${key} = @${key}
+                                                           AND deleted = 0
                                                          ORDER BY id DESC`);
         return result.recordset;
     }
@@ -150,7 +168,8 @@ export class DatabaseConfig {
         const result = await this.executeQuery(request, `SELECT *
                                                          FROM ${table}
                                                          WHERE ${key} = @${key}
-                                                           AND deleted = 0`);
+                                                           AND deleted = 0
+                                                         ORDER BY id ASC`);
         return result.recordset;
     }
 

@@ -38,8 +38,8 @@ export class GoodsService {
         return this.convertFromRawArr(res as IGoodRaw[]);
     }
 
-    public async getLastGood(): Promise<IGood | null> {
-        const res: unknown[] | null = await AzureDB.readAll(this.TABLE_NAME);
+    public async getGoodByCreatedDate(createdAt: string): Promise<IGood | null> {
+        const res: unknown[] | null = await AzureDB.readLastByKey(this.TABLE_NAME, createdAt, 'created_at');
         if (!res) {
             return res;
         }
@@ -74,21 +74,22 @@ export class GoodsService {
     }
 
     public async createGood(data: Partial<IGood>): Promise<IGood | null> {
+        const date: string = moment().toISOString();
         const dataRaw = this.convertToRaw({
             ...data,
             createdBy: authService.loggedUserData!.preferred_username,
             updatedBy: authService.loggedUserData!.preferred_username,
-            createdAt: moment().toISOString(),
-            updatedAt: moment().toISOString(),
+            createdAt: date,
+            updatedAt: date,
         });
         const res: unknown[] | null = await AzureDB.insert(this.TABLE_NAME, dataRaw);
         if (!res) {
             return res;
         }
-        return this.getLastGood();
+        return this.getGoodByCreatedDate(dataRaw.created_at!);
     }
 
-    public async updateGood(id: number, data: Partial<IGood>): Promise<[] | null> {
+    public async updateGood(id: number, data: Partial<IGood>): Promise<IGood | null> {
         const existingGood = await this.getGoodById(id);
         if (!existingGood) {
             return null;
@@ -102,7 +103,7 @@ export class GoodsService {
         if (!res) {
             return null;
         }
-        return [];
+        return this.getGoodById(id);
     }
 
     public async deleteGood(id: number): Promise<[] | null> {

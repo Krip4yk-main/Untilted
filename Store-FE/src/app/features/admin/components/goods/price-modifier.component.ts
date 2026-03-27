@@ -1,37 +1,50 @@
-import { Component, inject, OnInit, output, OutputEmitterRef, signal, WritableSignal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+    output,
+    OutputEmitterRef,
+    signal,
+    WritableSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LocalStorageBuckets, LocalStorageService } from '../../../../core/services/local-storage.service';
 import { Button } from 'primeng/button';
 import { InputNumber } from 'primeng/inputnumber';
+import { LangPipe } from '../../../../core/pipes/lang-pipe';
 
 @Component({
     selector: 'app-price-modifier',
-    standalone: true,
-    imports: [CommonModule, FormsModule, Button, InputNumber],
+    imports: [CommonModule, ReactiveFormsModule, Button, InputNumber, LangPipe],
     templateUrl: './price-modifier.component.html',
     styleUrl: './price-modifier.component.less',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PriceModifierComponent implements OnInit {
 
     private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
     private readonly STORAGE_KEY: LocalStorageBuckets = LocalStorageBuckets.PRICE_MODIFIER;
+    private readonly fb: FormBuilder = inject(FormBuilder);
 
     applyModifier: OutputEmitterRef<number> = output();
     modalClose: OutputEmitterRef<void> = output();
 
-    protected multiplier: number = 1.0;
+    protected form!: FormGroup;
     protected showConfirmation: WritableSignal<boolean> = signal(false);
 
     ngOnInit() {
         const savedData = this.localStorageService.getItem<{ multiplier: number }>(this.STORAGE_KEY);
-        if (savedData) {
-            this.multiplier = savedData.multiplier;
-        }
-    }
+        const multiplier = savedData?.multiplier ?? 1.0;
 
-    onMultiplierChange() {
-        this.localStorageService.setItem(this.STORAGE_KEY, { multiplier: this.multiplier });
+        this.form = this.fb.group({
+            multiplier: [multiplier, [Validators.required, Validators.min(0.01)]],
+        });
+
+        this.form.valueChanges.subscribe((value) => {
+            this.localStorageService.setItem(this.STORAGE_KEY, value);
+        });
     }
 
     confirm() {
@@ -39,7 +52,8 @@ export class PriceModifierComponent implements OnInit {
     }
 
     apply() {
-        this.applyModifier.emit(this.multiplier);
+        const multiplier = this.form.get('multiplier')?.value;
+        this.applyModifier.emit(multiplier);
         this.localStorageService.removeItem(this.STORAGE_KEY);
         this.modalClose.emit();
     }
