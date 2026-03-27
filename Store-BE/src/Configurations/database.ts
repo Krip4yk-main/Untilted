@@ -178,6 +178,10 @@ export class DatabaseConfig {
                 type = sql.Int;
                 break;
             }
+            case 'boolean': {
+                type = sql.Bit;
+                break;
+            }
             default: {
                 throw new Error(`Unsupported data type for key '${key}': ${typeof data[rKey]}`);
             }

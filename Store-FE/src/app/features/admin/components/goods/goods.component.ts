@@ -60,7 +60,20 @@ export class GoodsTabComponent {
 
     deleteItem(id: number) {
         if (confirm('Are you sure you want to delete this item?')) {
-            this.storageService.deleteGood(id);
+            this.storageService.deleteGood(id)
+                .then(() => {
+                    this.notificationService.show(languagesService
+                        .transform('success', 'good_3'), 'success');
+
+                    // this.modalClose.emit(); // todo replace `confirm` with own popup
+                })
+                .catch(() => {
+                    this.notificationService.show(languagesService
+                        .transform('errors', 'good_3'), 'error');
+                })
+                .finally(() => {
+                    this.storageService.fetchGoods();
+                });
         }
     }
 
@@ -281,7 +294,7 @@ export class GoodsTabComponent {
                     await this.apiService.createGoodBundle(filteredNewGoods)
                         .then((result: IGoodTemplate[]) => {
                             this.notificationService.show(languagesService
-                                .transform('success', 'good_file_1') + result.length, 'success');
+                                .transform('success', 'good_4') + result.length, 'success');
                         })
                         .catch(console.error)
                         .finally(() => {
@@ -293,7 +306,7 @@ export class GoodsTabComponent {
                     this.apiService.updateGoodBundle(updateGoods)
                         .then((result: [][]) => {
                             this.notificationService.show(languagesService
-                                .transform('success', 'good_file_2') + result.length, 'success');
+                                .transform('success', 'good_5') + result.length, 'success');
                         })
                         .catch(console.error)
                         .finally(() => {

@@ -107,43 +107,15 @@ export class StorageService {
     }
 
     async updateGood(updatedGood: IGood) {
-        this._goods.update((goods: IGood[]) => {
-            const index = goods.findIndex((g: IGood) => g.id === updatedGood.id);
-            if (index !== -1) {
-                const newGoods = [...goods];
-                const oldGood = goods[index];
-                if (oldGood.sellPrice !== updatedGood.sellPrice) {
-                    updatedGood.priceHistory = [
-                        ...oldGood.priceHistory,
-                        {
-                            id: -1,
-                            goodId: updatedGood.id,
-                            price: updatedGood.sellPrice,
-                            createdAt: moment().toISOString(),
-                            createdBy: this.coreAuthService.user()!.username,
-                            deleted: false,
-                        },
-                    ];
-                }
-                newGoods[index] = updatedGood;
-                return newGoods;
-            }
-            return goods;
-        });
+        return this.apiService.updateGood(updatedGood.id, updatedGood);
     }
 
     async addGood(good: IGood) {
-        return this.apiService.createGood(good)
-            .then((createdGood: IGood) => {
-                this._goods.update((goods: IGood[]) => [
-                    ...goods,
-                    createdGood,
-                ]);
-            });
+        return this.apiService.createGood(good);
     }
 
     async deleteGood(id: number) {
-        this._goods.update((goods: IGood[]) => goods.filter((g: IGood) => g.id !== id));
+        return this.apiService.deleteGood(id);
     }
 
     applyPriceModifier(multiplier: number) {

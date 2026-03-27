@@ -134,6 +134,9 @@ export class GoodEditorComponent implements OnInit {
                 .catch(() => {
                     this.notificationService.show(languagesService
                         .transform('errors', 'good_1'), 'error');
+                })
+                .finally(() => {
+                    this.storageService.fetchGoods();
                 });
         } else {
             this.storageService.updateGood(result)
@@ -146,6 +149,9 @@ export class GoodEditorComponent implements OnInit {
                 .catch(() => {
                     this.notificationService.show(languagesService
                         .transform('errors', 'good_2'), 'error');
+                })
+                .finally(() => {
+                    this.storageService.fetchGoods();
                 });
         }
     }
